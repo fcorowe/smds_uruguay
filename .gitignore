@@ -1,0 +1,14 @@
+/.quarto/
+.Rproj.user
+.ipynb_checkpoints/
+
+**/*.quarto_ipynb
+.DS_Store
+.Rhistory
+*.log
+*conflicted copy*
+*.tex
+.DS_Store
+.Rhistory
+*.log
+*conflicted copy*

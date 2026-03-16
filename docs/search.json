@@ -1,0 +1,122 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Spatial Modelling for Data Scientists",
+    "section": "",
+    "text": "Welcome\nWelcome to the Uruguay course edition of Spatial Modelling for Data Scientists. This version of the course has been adapted from Rowe and Arribas-Bel (2022) for the course at Universidad de la Republica, Uruguay, held from 23 to 27 March 2026.\nThe aim is practical and focused: to help students understand what makes spatial data different, work with spatial objects in R and apply a small set of core methods to Uruguay-relevant examples. Rather than trying to cover the whole book, this course concentrates on a coherent sequence from introduction to modelling.\n\n\n\n\n\n\nRowe, Francisco, and Dani Arribas-Bel. 2022. “Spatial Modelling for Data Scientists.” 2022. https://gdsl-ul.github.io/san/.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "course-overview.html",
+    "href": "course-overview.html",
+    "title": "Course Overview",
+    "section": "",
+    "text": "Course aims\nThis chapter explains what the course is trying to do, how it is organised, and what you need to have ready before the first session. It is designed to be shared with students before the course begins so everyone arrives with the same expectations and a working setup. The practical sessions start straight away, so this overview should be read as preparation material as well as orientation.\nThe course introduces a compact but useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied: students should leave with a clearer understanding of what makes spatial data distinctive, when different spatial methods are appropriate, and how to implement them in R.\nRather than trying to cover every branch of spatial analysis, the course focuses on a coherent sequence of methods that build on one another. By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#who-this-course-is-for",
+    "href": "course-overview.html#who-this-course-is-for",
+    "title": "Course Overview",
+    "section": "Who this course is for",
+    "text": "Who this course is for\nThis course is designed primarily for MSc and PhD students in the social sciences, as well as applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with R, Quarto, or reproducible computational workflows.\nThe course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data, but it does not assume that students already have specialist training in GIS, spatial econometrics, or programming beyond basic familiarity.",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#how-the-course-is-organised",
+    "href": "course-overview.html#how-the-course-is-organised",
+    "title": "Course Overview",
+    "section": "How the course is organised",
+    "text": "How the course is organised\nThe course is structured as a progression from spatial data foundations to applied modelling. Each chapter builds on the previous one, so the sequence matters even though the examples and geographies vary across the course.\nPart I introduces the main ideas behind spatial thinking and the practical tools needed to work with spatial data in R.\nPart II focuses on point patterns and flows, showing how to analyse events in space and connections between places.\nPart III introduces models for spatial dependence and spatial heterogeneity, helping us understand why spatial relationships are often clustered and uneven across space.\nThe practical teaching sequence is:\n\nwelcome and course orientation\nembedding space\nspatial data wrangling\npoint patterns\nspatial interaction modelling\nspatial dependence\nspatial heterogeneity",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#how-this-course-fits-in-the-wider-toolkit",
+    "href": "course-overview.html#how-this-course-fits-in-the-wider-toolkit",
+    "title": "Course Overview",
+    "section": "How this course fits in the wider toolkit",
+    "text": "How this course fits in the wider toolkit\nThis course does not try to replace a full GIS course, a full econometrics course, or a full statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in R, with an emphasis on social-science applications.\nStudents who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling, and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#what-you-need-before-the-course-starts",
+    "href": "course-overview.html#what-you-need-before-the-course-starts",
+    "title": "Course Overview",
+    "section": "What you need before the course starts",
+    "text": "What you need before the course starts\n\n\n\n\n\n\nImportant\n\n\n\nPlease do this before the first session. We will not have time during the course to help everyone complete software installation, and we will begin the practical work immediately.\n\n\nYou will need a laptop with the software below installed and working before the first session. Please make sure everything is installed and opens correctly in advance so you can take part in the practical work from the start.\nYou should install:\n\nR\nRStudio Desktop\nQuarto\n\nAfter installing these, please check that:\n\nR opens successfully\nRStudio opens successfully and detects your R installation\nQuarto is installed and available to RStudio",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#r-package-dependencies",
+    "href": "course-overview.html#r-package-dependencies",
+    "title": "Course Overview",
+    "section": "R package dependencies",
+    "text": "R package dependencies\nThe course uses R packages for data manipulation, spatial data handling, mapping, and modelling. Some chapters may introduce additional libraries, but the core setup should include the packages already referenced in the course materials and chapter files.\nThe most important package families include:\n\ntidy data tools such as dplyr, tidyr, and readr\nspatial data tools such as sf\nmapping tools such as ggplot2 and tmap\nspatial analysis and modelling tools that appear in later chapters\n\nTo install packages from inside R, you can use commands such as:\ninstall.packages(c(\n  \"dplyr\",\n  \"tidyr\",\n  \"readr\",\n  \"ggplot2\",\n  \"sf\",\n  \"tmap\"\n))\nIf a package used in a chapter is missing on your machine, R will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter.\nUseful references:\n\nInstalling packages in R\nsf package\nggplot2 documentation\ntmap documentation",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#how-to-use-the-repository",
+    "href": "course-overview.html#how-to-use-the-repository",
+    "title": "Course Overview",
+    "section": "How to use the repository",
+    "text": "How to use the repository\nThe course materials are organised as a Quarto book repository. This means the files include not only narrative text, but also executable code, figures, and references. Students are encouraged to download the repository, run the code locally, and reuse the structure for their own learning and future work.\nThere are two simple ways to get the repository onto your computer:\n\nOption 1: Download the repository as a ZIP file\nIf you are less familiar with Git, the easiest option is usually to download the repository as a ZIP file from GitHub, extract it to a folder on your laptop, and open the project in RStudio.\nGeneral steps:\n\nopen the repository page in your browser\nchoose the option to download the repository as a ZIP file\nextract the ZIP file to a location you can easily find\nopen the project folder in RStudio\n\n\n\nOption 2: Clone the repository with Git\nIf you already use Git, you can clone the repository to your laptop and work with it locally. This is often the cleaner option if you expect to make your own edits, keep notes, or update your local copy later.\nGeneral steps:\n\ncopy the repository URL\nclone it to your laptop with Git\nopen the project folder in RStudio",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#opening-the-project-in-rstudio",
+    "href": "course-overview.html#opening-the-project-in-rstudio",
+    "title": "Course Overview",
+    "section": "Opening the project in RStudio",
+    "text": "Opening the project in RStudio\nOnce the repository is on your machine, open the project folder in RStudio. If there is an .Rproj file in the repository, open that file directly. This usually gives the cleanest working setup and helps keep paths and files organised correctly.\nWithin RStudio, students should be able to:\n\nopen and read the .qmd chapter files\nrun code chunks\ninspect the data files used in the course\nrender documents if needed",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#reusing-the-repository-for-your-own-work",
+    "href": "course-overview.html#reusing-the-repository-for-your-own-work",
+    "title": "Course Overview",
+    "section": "Reusing the repository for your own work",
+    "text": "Reusing the repository for your own work\nOne of the goals of the course is not only to teach specific methods, but also to provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.\nThis is one of the strengths of working with Quarto and R: the narrative, code, and output live together in a form that is easier to reproduce, revise, and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "course-overview.html#preparation-checklist",
+    "href": "course-overview.html#preparation-checklist",
+    "title": "Course Overview",
+    "section": "Preparation checklist",
+    "text": "Preparation checklist\nBefore the course starts, please make sure that you have:\n\ninstalled R\ninstalled RStudio Desktop\ninstalled Quarto\ninstalled the core R packages used in the course\ndownloaded or cloned the repository\nopened the project successfully on your laptop",
+    "crumbs": [
+      "Course Overview"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Rowe, Francisco, and Dani Arribas-Bel. 2022. “Spatial Modelling\nfor Data Scientists.” 2022. https://gdsl-ul.github.io/san/.",
+    "crumbs": [
+      "References"
+    ]
+  }
+]

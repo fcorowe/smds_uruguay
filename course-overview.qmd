@@ -1,0 +1,147 @@
+# Course Overview {.unnumbered}
+
+This chapter explains what the course is trying to do, how it is organised, and what you need to have ready before the first session. It is designed to be shared with students before the course begins so everyone arrives with the same expectations and a working setup. The practical sessions start straight away, so this overview should be read as preparation material as well as orientation.
+
+## Course aims
+
+The course introduces a compact but useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied: students should leave with a clearer understanding of what makes spatial data distinctive, when different spatial methods are appropriate, and how to implement them in `R`.
+
+Rather than trying to cover every branch of spatial analysis, the course focuses on a coherent sequence of methods that build on one another. By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.
+
+## Who this course is for
+
+This course is designed primarily for MSc and PhD students in the social sciences, as well as applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with `R`, Quarto, or reproducible computational workflows.
+
+The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data, but it does not assume that students already have specialist training in GIS, spatial econometrics, or programming beyond basic familiarity.
+
+## How the course is organised
+
+The course is structured as a progression from spatial data foundations to applied modelling. Each chapter builds on the previous one, so the sequence matters even though the examples and geographies vary across the course.
+
+**Part I** introduces the main ideas behind spatial thinking and the practical tools needed to work with spatial data in `R`.  
+**Part II** focuses on point patterns and flows, showing how to analyse events in space and connections between places.  
+**Part III** introduces models for spatial dependence and spatial heterogeneity, helping us understand why spatial relationships are often clustered and uneven across space.
+
+The practical teaching sequence is:
+
+1. welcome and course orientation
+2. embedding space
+3. spatial data wrangling
+4. point patterns
+5. spatial interaction modelling
+6. spatial dependence
+7. spatial heterogeneity
+
+## How this course fits in the wider toolkit
+
+This course does not try to replace a full GIS course, a full econometrics course, or a full statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in `R`, with an emphasis on social-science applications.
+
+Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling, and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.
+
+## What you need before the course starts
+
+::: {.callout-important}
+Please do this before the first session. We will not have time during the course to help everyone complete software installation, and we will begin the practical work immediately.
+:::
+
+You will need a laptop with the software below installed and working before the first session. Please make sure everything is installed and opens correctly in advance so you can take part in the practical work from the start.
+
+You should install:
+
+- [R](https://cran.r-project.org/)
+- [RStudio Desktop](https://posit.co/download/rstudio-desktop/)
+- [Quarto](https://quarto.org/docs/get-started/)
+
+After installing these, please check that:
+
+- `R` opens successfully
+- RStudio opens successfully and detects your R installation
+- Quarto is installed and available to RStudio
+
+## R package dependencies
+
+The course uses `R` packages for data manipulation, spatial data handling, mapping, and modelling. Some chapters may introduce additional libraries, but the core setup should include the packages already referenced in the course materials and chapter files.
+
+The most important package families include:
+
+- tidy data tools such as `dplyr`, `tidyr`, and `readr`
+- spatial data tools such as `sf`
+- mapping tools such as `ggplot2` and `tmap`
+- spatial analysis and modelling tools that appear in later chapters
+
+To install packages from inside `R`, you can use commands such as:
+
+```r
+install.packages(c(
+  "dplyr",
+  "tidyr",
+  "readr",
+  "ggplot2",
+  "sf",
+  "tmap"
+))
+```
+
+If a package used in a chapter is missing on your machine, `R` will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter.
+
+Useful references:
+
+- [Installing packages in R](https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Installing-packages)
+- [`sf` package](https://r-spatial.github.io/sf/)
+- [`ggplot2` documentation](https://ggplot2.tidyverse.org/)
+- [`tmap` documentation](https://r-tmap.github.io/tmap/)
+
+## How to use the repository
+
+The course materials are organised as a Quarto book repository. This means the files include not only narrative text, but also executable code, figures, and references. Students are encouraged to download the repository, run the code locally, and reuse the structure for their own learning and future work.
+
+There are two simple ways to get the repository onto your computer:
+
+### Option 1: Download the repository as a ZIP file
+
+If you are less familiar with Git, the easiest option is usually to download the repository as a ZIP file from GitHub, extract it to a folder on your laptop, and open the project in RStudio.
+
+General steps:
+
+1. open the repository page in your browser
+2. choose the option to download the repository as a ZIP file
+3. extract the ZIP file to a location you can easily find
+4. open the project folder in RStudio
+
+### Option 2: Clone the repository with Git
+
+If you already use Git, you can clone the repository to your laptop and work with it locally. This is often the cleaner option if you expect to make your own edits, keep notes, or update your local copy later.
+
+General steps:
+
+1. copy the repository URL
+2. clone it to your laptop with Git
+3. open the project folder in RStudio
+
+## Opening the project in RStudio
+
+Once the repository is on your machine, open the project folder in RStudio. If there is an `.Rproj` file in the repository, open that file directly. This usually gives the cleanest working setup and helps keep paths and files organised correctly.
+
+Within RStudio, students should be able to:
+
+- open and read the `.qmd` chapter files
+- run code chunks
+- inspect the data files used in the course
+- render documents if needed
+
+## Reusing the repository for your own work
+
+One of the goals of the course is not only to teach specific methods, but also to provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.
+
+This is one of the strengths of working with Quarto and `R`: the narrative, code, and output live together in a form that is easier to reproduce, revise, and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.
+
+## Preparation checklist
+
+Before the course starts, please make sure that you have:
+
+- installed [R](https://cran.r-project.org/)
+- installed [RStudio Desktop](https://posit.co/download/rstudio-desktop/)
+- installed [Quarto](https://quarto.org/docs/get-started/)
+- installed the core `R` packages used in the course
+- downloaded or cloned the repository
+- opened the project successfully on your laptop

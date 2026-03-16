@@ -1,0 +1,77 @@
+project:
+  type: book
+  output-dir: docs
+
+book:
+  title: "Spatial Modelling for Data Scientists"
+  author: "Francisco Rowe"
+  reader-mode: true
+  search: true
+  repo-url: https://github.com/fcorowe/smds_uruguay
+  repo-actions:  [edit, issue, source]
+  favicon: figs/cover/cover.ico
+  cover-image: figs/cover/uruguay-course-logo.svg
+ # downloads: [pdf]
+
+  sidebar:
+    style: docked
+    background: "#ffffff"
+  date: "today"
+  date-format: long
+
+  page-footer:
+    left: |
+      All content licensed under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/) <br> &copy; [Francisco Rowe](https://www.franciscorowe.com).
+    center: "[GitHub](https://github.com/fcorowe/smds_uruguay)"
+    right: Built with [Quarto](https://quarto.org/).
+    background: "#f8f9fa"
+
+  chapters:
+    - index.qmd
+    - course-overview.qmd
+    - references.qmd
+
+  sharing: [twitter, facebook]
+  twitter-card:
+    creator: "fcorowe"
+
+bibliography: references.bib
+
+format:
+  html:
+    theme:
+      light: [default, style/custom.scss]
+    fontsize: "15px"
+    linestretch: 1.6
+    mainfont: "Roboto"
+    monofont: "Fira Mono"
+    smooth-scroll: true
+    toc-depth: 3
+    code-link: true
+    code-tools:
+      toggle: true
+    code-fold: false
+    highlight-style: printing
+    code-block-bg: true
+    code-overflow: wrap
+    reference-location: margin
+    mermaid:
+      theme: neutral
+
+#  latex-auto-install: true
+
+ # knitr:
+ #   opts_chunk:
+ #     cache: true
+ #     cache.lazy: false
+ #     dpi: 600
+ #     fig.width: 5.5
+ #     fig.height: 3
+ #     out.width: "100%"
+ #     split: true
+ #     R.options:
+ #      knitr.graphics.auto_pdf: true
+ #      datatable.print.nrows: 10
+ #      datatable.print.class: false
+ #      datatable.print.keys: false
+ #      datatable.print.trunc.cols: TRUE
