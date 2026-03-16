@@ -60,14 +60,16 @@ After installing these, please check that:
 
 ## R package dependencies
 
-The course uses `R` packages for data manipulation, spatial data handling, mapping, and modelling. Some chapters may introduce additional libraries, but the core setup should include the packages already referenced in the course materials and chapter files.
+The course uses `R` packages for data manipulation, spatial data handling, mapping, and modelling. The full chapter sources for `01` to `06` are still being finalised in this repository, so the list below should be read as the **core install set** based on the methods already planned for the course. It is designed to minimise setup problems before the first class while keeping the installation burden manageable.
 
-The most important package families include:
+The most important package groups include:
 
-- tidy data tools such as `dplyr`, `tidyr`, and `readr`
-- spatial data tools such as `sf`
-- mapping tools such as `ggplot2` and `tmap`
-- spatial analysis and modelling tools that appear in later chapters
+- tidy data tools such as `dplyr`, `tidyr`, `readr`, `stringr`, and `purrr`
+- date and data-cleaning tools such as `lubridate` and `janitor`
+- spatial data tools such as `sf` and `units`
+- mapping and visualisation tools such as `ggplot2`, `tmap`, `scales`, and `viridis`
+- point-pattern support tools such as `hexbin`
+- spatial analysis and modelling tools such as `spdep` and `spatialreg`
 
 To install packages from inside `R`, you can use commands such as:
 
@@ -76,13 +78,23 @@ install.packages(c(
   "dplyr",
   "tidyr",
   "readr",
+  "stringr",
+  "purrr",
+  "lubridate",
+  "janitor",
   "ggplot2",
   "sf",
-  "tmap"
+  "units",
+  "tmap",
+  "scales",
+  "viridis",
+  "hexbin",
+  "spdep",
+  "spatialreg"
 ))
 ```
 
-If a package used in a chapter is missing on your machine, `R` will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter.
+If a package used in a chapter is missing on your machine, `R` will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter once those chapter files are released in their final course form.
 
 Useful references:
 
@@ -90,6 +102,8 @@ Useful references:
 - [`sf` package](https://r-spatial.github.io/sf/)
 - [`ggplot2` documentation](https://ggplot2.tidyverse.org/)
 - [`tmap` documentation](https://r-tmap.github.io/tmap/)
+- [`spdep` package](https://r-spatial.github.io/spdep/)
+- [`spatialreg` package](https://r-spatial.github.io/spatialreg/)
 
 ## How to use the repository
 
