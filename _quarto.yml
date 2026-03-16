@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 book:
-  title: "Spatial Modelling for Data Scientists"
+  title: "Spatial Data Modelling for Social Scientists"
   author: "Francisco Rowe"
   reader-mode: true
   search: true
