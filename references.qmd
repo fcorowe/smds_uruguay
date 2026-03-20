@@ -1,3 +1,13 @@
+---
+nocite: |
+  @rowe2020
+  @fotheringham1989spatial
+  @lovelace2019
+  @bivand2013
+  @arribas2014spatial
+  @comber2015
+---
+
 # References {.unnumbered}
 
 ::: {#refs}

@@ -1,0 +1,205 @@
+gadm_id,department_name,gadm36_name,label_short,label_full,label_source,label_confidence,transformed_id,gadm40_name,gadm40_type
+URY.1.1_1,Artigas,n.a2,Artigas unit 2,Unlabelled GADM 3.6 unit 2 in Artigas,department_unit_fallback,low,URY.1.1_2,,
+URY.1.2_1,Artigas,n.a3,Baltasar Brum,"Baltasar Brum (Artigas, Municipiality)",gadm40_exact_id,high,URY.1.2_2,Baltasar Brum,Municipiality
+URY.1.3_1,Artigas,n.a4,Bella Unión,"Bella Unión (Artigas, Municipiality)",gadm40_exact_id,high,URY.1.3_2,Bella Unión,Municipiality
+URY.1.4_1,Artigas,n.a5,Tomás Gomensoro,"Tomás Gomensoro (Artigas, Municipiality)",gadm40_exact_id,high,URY.1.4_2,Tomás Gomensoro,Municipiality
+URY.1.5_1,Artigas,n.a6,Artigas unit 6,Unlabelled GADM 3.6 unit 6 in Artigas,department_unit_fallback,low,URY.1.5_2,,
+URY.1.6_1,Artigas,n.a7,Artigas unit 7,Unlabelled GADM 3.6 unit 7 in Artigas,department_unit_fallback,low,URY.1.6_2,,
+URY.1.7_1,Artigas,n.a8,Artigas unit 8,Unlabelled GADM 3.6 unit 8 in Artigas,department_unit_fallback,low,URY.1.7_2,,
+URY.1.8_1,Artigas,n.a9,Artigas unit 9,Unlabelled GADM 3.6 unit 9 in Artigas,department_unit_fallback,low,URY.1.8_2,,
+URY.2.1_1,Canelones,n.a162,18 de Mayo,"18 de Mayo (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.1_2,18 de Mayo,Municipiality
+URY.2.2_1,Canelones,n.a165,Aguas Corrientes,"Aguas Corrientes (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.2_2,Aguas Corrientes,Municipiality
+URY.2.3_1,Canelones,n.a171,Atlántida,"Atlántida (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.3_2,Atlántida,Municipiality
+URY.2.4_1,Canelones,n.a172,Barros Blancos,"Barros Blancos (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.4_2,Barros Blancos,Municipiality
+URY.2.5_1,Canelones,n.a175,Canelones,"Canelones (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.5_2,Canelones,Municipiality
+URY.2.6_1,Canelones,n.a181,Ciudad de la Costa,"Ciudad de la Costa (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.6_2,Ciudad de la Costa,Municipiality
+URY.2.7_1,Canelones,n.a182,Empalme Olmos,"Empalme Olmos (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.7_2,Empalme Olmos,Municipiality
+URY.2.8_1,Canelones,n.a183,La Floresta,"La Floresta (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.8_2,La Floresta,Municipiality
+URY.2.9_1,Canelones,n.a324,La Paz,"La Paz (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.9_2,La Paz,Municipiality
+URY.2.10_1,Canelones,n.a338,Las Piedras,"Las Piedras (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.10_2,Las Piedras,Municipiality
+URY.2.11_1,Canelones,n.a340,Los Cerrillos,"Los Cerrillos (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.11_2,Los Cerrillos,Municipiality
+URY.2.12_1,Canelones,n.a342,Migues,"Migues (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.12_2,Migues,Municipiality
+URY.2.13_1,Canelones,n.a343,Montes,"Montes (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.13_2,Montes,Municipiality
+URY.2.14_1,Canelones,n.a344,Colonia Nicolich,"Colonia Nicolich (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.14_2,Colonia Nicolich,Municipiality
+URY.2.15_1,Canelones,n.a346,Pando,"Pando (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.15_2,Pando,Municipiality
+URY.2.16_1,Canelones,n.a347,Parque del Plata,"Parque del Plata (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.16_2,Parque del Plata,Municipiality
+URY.2.17_1,Canelones,n.a348,Paso Carrasco,"Paso Carrasco (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.17_2,Paso Carrasco,Municipiality
+URY.2.18_1,Canelones,n.a349,Progreso,"Progreso (Canelones, Municipiality)",gadm40_exact_id,high,URY.2.18_2,Progreso,Municipiality
+URY.3.1_1,Cerro Largo,n.a34,Cerro Largo unit 34,Unlabelled GADM 3.6 unit 34 in Cerro Largo,department_unit_fallback,low,URY.3.1_2,,
+URY.3.2_1,Cerro Largo,n.a46,Aceguá,"Aceguá (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.2_2,Aceguá,Municipiality
+URY.3.3_1,Cerro Largo,n.a47,Arbolito,"Arbolito (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.3_2,Arbolito,Municipiality
+URY.3.4_1,Cerro Largo,n.a52,Arévalo,"Arévalo (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.4_2,Arévalo,Municipiality
+URY.3.5_1,Cerro Largo,n.a54,Bañado de Medina,"Bañado de Medina (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.5_2,Bañado de Medina,Municipiality
+URY.3.6_1,Cerro Largo,n.a55,Centurión,"Centurión (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.6_2,Centurión,Municipiality
+URY.3.7_1,Cerro Largo,n.a57,Cerro de las Cuentas,"Cerro de las Cuentas (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.7_2,Cerro de las Cuentas,Municipiality
+URY.3.8_1,Cerro Largo,n.a61,Fraile Muerto,"Fraile Muerto (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.8_2,Fraile Muerto,Municipiality
+URY.3.9_1,Cerro Largo,n.a62,Isidoro Noblía,"Isidoro Noblía (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.9_2,Isidoro Noblía,Municipiality
+URY.3.10_1,Cerro Largo,n.a65,Las Cañas,"Las Cañas (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.10_2,Las Cañas,Municipiality
+URY.3.11_1,Cerro Largo,n.a66,Plácido Rosas,"Plácido Rosas (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.11_2,Plácido Rosas,Municipiality
+URY.3.12_1,Cerro Largo,n.a67,Quebracho,"Quebracho (Cerro Largo, Municipiality)",gadm40_exact_id,high,URY.3.12_2,Quebracho,Municipiality
+URY.4.1_1,Colonia,n.a139,Colonia unit 139,Unlabelled GADM 3.6 unit 139 in Colonia,department_unit_fallback,low,URY.4.1_2,,
+URY.4.2_1,Colonia,n.a145,Carmelo,"Carmelo (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.2_2,Carmelo,Municipiality
+URY.4.3_1,Colonia,n.a146,Colonia Valdense,"Colonia Valdense (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.3_2,Colonia Valdense,Municipiality
+URY.4.4_1,Colonia,n.a152,Florencio Sánchez,"Florencio Sánchez (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.4_2,Florencio Sánchez,Municipiality
+URY.4.5_1,Colonia,n.a197,Juan L. Lacaze,"Juan L. Lacaze (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.5_2,Juan L. Lacaze,Municipiality
+URY.4.6_1,Colonia,n.a310,La Paz,"La Paz (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.6_2,La Paz,Municipiality
+URY.4.7_1,Colonia,n.a314,Miguelete,"Miguelete (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.7_2,Miguelete,Municipiality
+URY.4.8_1,Colonia,n.a315,Nueva Helvecia,"Nueva Helvecia (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.8_2,Nueva Helvecia,Municipiality
+URY.4.9_1,Colonia,n.a356,Nueva Palmira,"Nueva Palmira (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.9_2,Nueva Palmira,Municipiality
+URY.4.10_1,Colonia,n.a382,Ombúes de Lavalle,"Ombúes de Lavalle (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.10_2,Ombúes de Lavalle,Municipiality
+URY.4.11_1,Colonia,n.a461,Rosario,"Rosario (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.11_2,Rosario,Municipiality
+URY.4.12_1,Colonia,n.a528,Tarariras,"Tarariras (Colonia, Municipiality)",gadm40_exact_id,high,URY.4.12_2,Tarariras,Municipiality
+URY.4.13_1,Colonia,n.a531,Colonia unit 531,Unlabelled GADM 3.6 unit 531 in Colonia,department_unit_fallback,low,URY.4.13_2,,
+URY.4.14_1,Colonia,n.a540,Colonia unit 540,Unlabelled GADM 3.6 unit 540 in Colonia,department_unit_fallback,low,URY.4.14_2,,
+URY.5.1_1,Durazno,n.a114,Durazno unit 114,Unlabelled GADM 3.6 unit 114 in Durazno,department_unit_fallback,low,URY.5.1_2,,
+URY.5.2_1,Durazno,n.a63,Sarandí del Yí,"Sarandí del Yí (Durazno, Municipiality)",gadm40_exact_id,high,URY.5.2_2,Sarandí del Yí,Municipiality
+URY.5.3_1,Durazno,n.a71,Villa del Carmen,"Villa del Carmen (Durazno, Municipiality)",gadm40_exact_id,high,URY.5.3_2,Villa del Carmen,Municipiality
+URY.5.4_1,Durazno,n.a72,Durazno unit 72,Unlabelled GADM 3.6 unit 72 in Durazno,department_unit_fallback,low,URY.5.4_2,,
+URY.5.5_1,Durazno,n.a79,Durazno unit 79,Unlabelled GADM 3.6 unit 79 in Durazno,department_unit_fallback,low,URY.5.5_2,,
+URY.5.6_1,Durazno,n.a80,Durazno unit 80,Unlabelled GADM 3.6 unit 80 in Durazno,department_unit_fallback,low,URY.5.6_2,,
+URY.5.7_1,Durazno,n.a81,Durazno unit 81,Unlabelled GADM 3.6 unit 81 in Durazno,department_unit_fallback,low,URY.5.7_2,,
+URY.5.8_1,Durazno,n.a85,Durazno unit 85,Unlabelled GADM 3.6 unit 85 in Durazno,department_unit_fallback,low,URY.5.8_2,,
+URY.5.9_1,Durazno,n.a89,Durazno unit 89,Unlabelled GADM 3.6 unit 89 in Durazno,department_unit_fallback,low,URY.5.9_2,,
+URY.5.10_1,Durazno,n.a92,Durazno unit 92,Unlabelled GADM 3.6 unit 92 in Durazno,department_unit_fallback,low,URY.5.10_2,,
+URY.5.11_1,Durazno,n.a93,Durazno unit 93,Unlabelled GADM 3.6 unit 93 in Durazno,department_unit_fallback,low,URY.5.11_2,,
+URY.5.12_1,Durazno,n.a95,Durazno unit 95,Unlabelled GADM 3.6 unit 95 in Durazno,department_unit_fallback,low,URY.5.12_2,,
+URY.5.13_1,Durazno,n.a97,Durazno unit 97,Unlabelled GADM 3.6 unit 97 in Durazno,department_unit_fallback,low,URY.5.13_2,,
+URY.6.1_1,Flores,n.a100,Flores unit 100,Unlabelled GADM 3.6 unit 100 in Flores,department_unit_fallback,low,URY.6.1_2,,
+URY.6.2_1,Flores,n.a102,Ismael Cortinas,"Ismael Cortinas (Flores, Municipality)",gadm40_exact_id,high,URY.6.2_2,Ismael Cortinas,Municipality
+URY.6.3_1,Flores,n.a106,Flores unit 106,Unlabelled GADM 3.6 unit 106 in Flores,department_unit_fallback,low,URY.6.3_2,,
+URY.6.4_1,Flores,n.a118,Flores unit 118,Unlabelled GADM 3.6 unit 118 in Flores,department_unit_fallback,low,URY.6.4_2,,
+URY.6.5_1,Flores,n.a124,Flores unit 124,Unlabelled GADM 3.6 unit 124 in Flores,department_unit_fallback,low,URY.6.5_2,,
+URY.6.6_1,Flores,n.a130,Flores unit 130,Unlabelled GADM 3.6 unit 130 in Flores,department_unit_fallback,low,URY.6.6_2,,
+URY.7.1_1,Florida,n.a101,Casupá,"Casupá (Florida, Municipiality)",gadm40_exact_id,high,URY.7.1_2,Casupá,Municipiality
+URY.7.2_1,Florida,n.a113,Fray Marcos,"Fray Marcos (Florida, Municipiality)",gadm40_exact_id,high,URY.7.2_2,Fray Marcos,Municipiality
+URY.7.3_1,Florida,n.a116,Sarandí Grande,"Sarandí Grande (Florida, Municipiality)",gadm40_exact_id,high,URY.7.3_2,Sarandí Grande,Municipiality
+URY.7.4_1,Florida,n.a117,Florida unit 117,Unlabelled GADM 3.6 unit 117 in Florida,department_unit_fallback,low,URY.7.4_2,,
+URY.7.5_1,Florida,n.a119,Florida unit 119,Unlabelled GADM 3.6 unit 119 in Florida,department_unit_fallback,low,URY.7.5_2,,
+URY.7.6_1,Florida,n.a131,Florida unit 131,Unlabelled GADM 3.6 unit 131 in Florida,department_unit_fallback,low,URY.7.6_2,,
+URY.7.7_1,Florida,n.a132,Florida unit 132,Unlabelled GADM 3.6 unit 132 in Florida,department_unit_fallback,low,URY.7.7_2,,
+URY.7.8_1,Florida,n.a135,Florida unit 135,Unlabelled GADM 3.6 unit 135 in Florida,department_unit_fallback,low,URY.7.8_2,,
+URY.7.9_1,Florida,n.a140,Florida unit 140,Unlabelled GADM 3.6 unit 140 in Florida,department_unit_fallback,low,URY.7.9_2,,
+URY.7.10_1,Florida,n.a141,Florida unit 141,Unlabelled GADM 3.6 unit 141 in Florida,department_unit_fallback,low,URY.7.10_2,,
+URY.7.11_1,Florida,n.a147,Florida unit 147,Unlabelled GADM 3.6 unit 147 in Florida,department_unit_fallback,low,URY.7.11_2,,
+URY.7.12_1,Florida,n.a149,Florida unit 149,Unlabelled GADM 3.6 unit 149 in Florida,department_unit_fallback,low,URY.7.12_2,,
+URY.7.13_1,Florida,n.a169,Florida unit 169,Unlabelled GADM 3.6 unit 169 in Florida,department_unit_fallback,low,URY.7.13_2,,
+URY.8.1_1,Lavalleja,n.a109,Lavalleja unit 109,Unlabelled GADM 3.6 unit 109 in Lavalleja,department_unit_fallback,low,URY.8.1_2,,
+URY.8.2_1,Lavalleja,n.a110,José Batlle y Ordóñez,"José Batlle y Ordóñez (Lavalleja, Municipiality)",gadm40_exact_id,high,URY.8.2_2,José Batlle y Ordóñez,Municipiality
+URY.8.3_1,Lavalleja,n.a115,José Pedro Varela,"José Pedro Varela (Lavalleja, Municipiality)",gadm40_exact_id,high,URY.8.3_2,José Pedro Varela,Municipiality
+URY.8.4_1,Lavalleja,n.a121,Mariscala,"Mariscala (Lavalleja, Municipiality)",gadm40_exact_id,high,URY.8.4_2,Mariscala,Municipiality
+URY.8.5_1,Lavalleja,n.a133,Solís de Mataojo,"Solís de Mataojo (Lavalleja, Municipiality)",gadm40_exact_id,high,URY.8.5_2,Solís de Mataojo,Municipiality
+URY.8.6_1,Lavalleja,n.a137,Lavalleja unit 137,Unlabelled GADM 3.6 unit 137 in Lavalleja,department_unit_fallback,low,URY.8.6_2,,
+URY.8.7_1,Lavalleja,n.a138,Lavalleja unit 138,Unlabelled GADM 3.6 unit 138 in Lavalleja,department_unit_fallback,low,URY.8.7_2,,
+URY.8.8_1,Lavalleja,n.a144,Lavalleja unit 144,Unlabelled GADM 3.6 unit 144 in Lavalleja,department_unit_fallback,low,URY.8.8_2,,
+URY.8.9_1,Lavalleja,n.a156,Lavalleja unit 156,Unlabelled GADM 3.6 unit 156 in Lavalleja,department_unit_fallback,low,URY.8.9_2,,
+URY.8.10_1,Lavalleja,n.a157,Lavalleja unit 157,Unlabelled GADM 3.6 unit 157 in Lavalleja,department_unit_fallback,low,URY.8.10_2,,
+URY.8.11_1,Lavalleja,n.a161,Lavalleja unit 161,Unlabelled GADM 3.6 unit 161 in Lavalleja,department_unit_fallback,low,URY.8.11_2,,
+URY.8.12_1,Lavalleja,n.a166,Lavalleja unit 166,Unlabelled GADM 3.6 unit 166 in Lavalleja,department_unit_fallback,low,URY.8.12_2,,
+URY.8.13_1,Lavalleja,n.a179,Lavalleja unit 179,Unlabelled GADM 3.6 unit 179 in Lavalleja,department_unit_fallback,low,URY.8.13_2,,
+URY.9.1_1,Maldonado,n.a307,Aiguá,"Aiguá (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.1_2,Aiguá,Municipiality
+URY.9.2_1,Maldonado,n.a321,Garzon,"Garzon (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.2_2,Garzon,Municipiality
+URY.9.3_1,Maldonado,n.a332,Maldonado,"Maldonado (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.3_2,Maldonado,Municipiality
+URY.9.4_1,Maldonado,n.a337,Pan de Azúcar,"Pan de Azúcar (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.4_2,Pan de Azúcar,Municipiality
+URY.9.5_1,Maldonado,n.a339,Piriápolis,"Piriápolis (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.5_2,Piriápolis,Municipiality
+URY.9.6_1,Maldonado,n.a341,Punta del Este,"Punta del Este (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.6_2,Punta del Este,Municipiality
+URY.9.7_1,Maldonado,n.a345,San Carlos,"San Carlos (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.7_2,San Carlos,Municipiality
+URY.9.8_1,Maldonado,n.a351,Solís Grande,"Solís Grande (Maldonado, Municipiality)",gadm40_exact_id,high,URY.9.8_2,Solís Grande,Municipiality
+URY.9.9_1,Maldonado,n.a523,Maldonado unit 523,Unlabelled GADM 3.6 unit 523 in Maldonado,department_unit_fallback,low,URY.9.9_2,,
+URY.10.1_1,Montevideo,n.a354,Municipio A,"Municipio A (Montevideo, Municipiality)",gadm40_exact_id,high,URY.10.1_2,Municipio A,Municipiality
+URY.11.1_1,Paysandú,n.a26,Paysandú unit 26,Unlabelled GADM 3.6 unit 26 in Paysandú,department_unit_fallback,low,URY.11.1_2,,
+URY.11.2_1,Paysandú,n.a31,Chapicuy,"Chapicuy (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.2_2,Chapicuy,Municipiality
+URY.11.3_1,Paysandú,n.a35,Guichón,"Guichón (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.3_2,Guichón,Municipiality
+URY.11.4_1,Paysandú,n.a37,Lorenzo Geyres,"Lorenzo Geyres (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.4_2,Lorenzo Geyres,Municipiality
+URY.11.5_1,Paysandú,n.a39,Piedras Coloradas,"Piedras Coloradas (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.5_2,Piedras Coloradas,Municipiality
+URY.11.6_1,Paysandú,n.a40,Porvenir,"Porvenir (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.6_2,Porvenir,Municipiality
+URY.11.7_1,Paysandú,n.a41,Quebracho,"Quebracho (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.7_2,Quebracho,Municipiality
+URY.11.8_1,Paysandú,n.a45,Tambores,"Tambores (Paysandú, Municipiality)",gadm40_exact_id,high,URY.11.8_2,Tambores,Municipiality
+URY.11.9_1,Paysandú,n.a48,Paysandú unit 48,Unlabelled GADM 3.6 unit 48 in Paysandú,department_unit_fallback,low,URY.11.9_2,,
+URY.11.10_1,Paysandú,n.a49,Paysandú unit 49,Unlabelled GADM 3.6 unit 49 in Paysandú,department_unit_fallback,low,URY.11.10_2,,
+URY.11.11_1,Paysandú,n.a50,Paysandú unit 50,Unlabelled GADM 3.6 unit 50 in Paysandú,department_unit_fallback,low,URY.11.11_2,,
+URY.11.12_1,Paysandú,n.a56,Paysandú unit 56,Unlabelled GADM 3.6 unit 56 in Paysandú,department_unit_fallback,low,URY.11.12_2,,
+URY.12.1_1,Río Negro,n.a58,Río Negro unit 58,Unlabelled GADM 3.6 unit 58 in Río Negro,department_unit_fallback,low,URY.12.1_2,,
+URY.12.2_1,Río Negro,n.a59,Nuevo Berlín,"Nuevo Berlín (Río Negro, Municipiality)",gadm40_exact_id,high,URY.12.2_2,Nuevo Berlín,Municipiality
+URY.12.3_1,Río Negro,n.a60,San Javier,"San Javier (Río Negro, Municipiality)",gadm40_exact_id,high,URY.12.3_2,San Javier,Municipiality
+URY.12.4_1,Río Negro,n.a64,Young,"Young (Río Negro, Municipiality)",gadm40_exact_id,high,URY.12.4_2,Young,Municipiality
+URY.12.5_1,Río Negro,n.a69,Río Negro unit 69,Unlabelled GADM 3.6 unit 69 in Río Negro,department_unit_fallback,low,URY.12.5_2,,
+URY.12.6_1,Río Negro,n.a70,Río Negro unit 70,Unlabelled GADM 3.6 unit 70 in Río Negro,department_unit_fallback,low,URY.12.6_2,,
+URY.12.7_1,Río Negro,n.a73,Río Negro unit 73,Unlabelled GADM 3.6 unit 73 in Río Negro,department_unit_fallback,low,URY.12.7_2,,
+URY.12.8_1,Río Negro,n.a74,Río Negro unit 74,Unlabelled GADM 3.6 unit 74 in Río Negro,department_unit_fallback,low,URY.12.8_2,,
+URY.12.9_1,Río Negro,n.a75,Río Negro unit 75,Unlabelled GADM 3.6 unit 75 in Río Negro,department_unit_fallback,low,URY.12.9_2,,
+URY.12.10_1,Río Negro,n.a76,Río Negro unit 76,Unlabelled GADM 3.6 unit 76 in Río Negro,department_unit_fallback,low,URY.12.10_2,,
+URY.12.11_1,Río Negro,n.a84,Río Negro unit 84,Unlabelled GADM 3.6 unit 84 in Río Negro,department_unit_fallback,low,URY.12.11_2,,
+URY.12.12_1,Río Negro,n.a99,Río Negro unit 99,Unlabelled GADM 3.6 unit 99 in Río Negro,department_unit_fallback,low,URY.12.12_2,,
+URY.13.1_1,Rivera,n.a12,Rivera unit 12,Unlabelled GADM 3.6 unit 12 in Rivera,department_unit_fallback,low,URY.13.1_2,,
+URY.13.2_1,Rivera,n.a15,Minas de Corrales,"Minas de Corrales (Rivera, Municipiality)",gadm40_exact_id,high,URY.13.2_2,Minas de Corrales,Municipiality
+URY.13.3_1,Rivera,n.a16,Tranqueras,"Tranqueras (Rivera, Municipiality)",gadm40_exact_id,high,URY.13.3_2,Tranqueras,Municipiality
+URY.13.4_1,Rivera,n.a17,Vichadero,"Vichadero (Rivera, Municipiality)",gadm40_exact_id,high,URY.13.4_2,Vichadero,Municipiality
+URY.13.5_1,Rivera,n.a22,Rivera unit 22,Unlabelled GADM 3.6 unit 22 in Rivera,department_unit_fallback,low,URY.13.5_2,,
+URY.13.6_1,Rivera,n.a23,Rivera unit 23,Unlabelled GADM 3.6 unit 23 in Rivera,department_unit_fallback,low,URY.13.6_2,,
+URY.13.7_1,Rivera,n.a25,Rivera unit 25,Unlabelled GADM 3.6 unit 25 in Rivera,department_unit_fallback,low,URY.13.7_2,,
+URY.13.8_1,Rivera,n.a28,Rivera unit 28,Unlabelled GADM 3.6 unit 28 in Rivera,department_unit_fallback,low,URY.13.8_2,,
+URY.14.1_1,Rocha,n.a103,Rocha unit 103,Unlabelled GADM 3.6 unit 103 in Rocha,department_unit_fallback,low,URY.14.1_2,,
+URY.14.2_1,Rocha,n.a128,Castillos,"Castillos (Rocha, Municipiality)",gadm40_exact_id,high,URY.14.2_2,Castillos,Municipiality
+URY.14.3_1,Rocha,n.a289,Chuy,"Chuy (Rocha, Municipiality)",gadm40_exact_id,high,URY.14.3_2,Chuy,Municipiality
+URY.14.4_1,Rocha,n.a291,La Paloma,"La Paloma (Rocha, Municipiality)",gadm40_exact_id,high,URY.14.4_2,La Paloma,Municipiality
+URY.14.5_1,Rocha,n.a294,Lascano,"Lascano (Rocha, Municipiality)",gadm40_exact_id,high,URY.14.5_2,Lascano,Municipiality
+URY.14.6_1,Rocha,n.a308,Rocha unit 308,Unlabelled GADM 3.6 unit 308 in Rocha,department_unit_fallback,low,URY.14.6_2,,
+URY.14.7_1,Rocha,n.a317,Rocha unit 317,Unlabelled GADM 3.6 unit 317 in Rocha,department_unit_fallback,low,URY.14.7_2,,
+URY.14.8_1,Rocha,n.a320,Rocha unit 320,Unlabelled GADM 3.6 unit 320 in Rocha,department_unit_fallback,low,URY.14.8_2,,
+URY.14.9_1,Rocha,n.a328,Rocha unit 328,Unlabelled GADM 3.6 unit 328 in Rocha,department_unit_fallback,low,URY.14.9_2,,
+URY.14.10_1,Rocha,n.a521,Rocha unit 521,Unlabelled GADM 3.6 unit 521 in Rocha,department_unit_fallback,low,URY.14.10_2,,
+URY.15.1_1,Salto,n.a11,Salto unit 11,Unlabelled GADM 3.6 unit 11 in Salto,department_unit_fallback,low,URY.15.1_2,,
+URY.15.2_1,Salto,n.a13,Belén,"Belén (Salto, Municipiality)",gadm40_exact_id,high,URY.15.2_2,Belén,Municipiality
+URY.15.3_1,Salto,n.a14,Colonia Lavalleja,"Colonia Lavalleja (Salto, Municipiality)",gadm40_exact_id,high,URY.15.3_2,Colonia Lavalleja,Municipiality
+URY.15.4_1,Salto,n.a150,Mataojo,"Mataojo (Salto, Municipiality)",gadm40_exact_id,high,URY.15.4_2,Mataojo,Municipiality
+URY.15.5_1,Salto,n.a151,San Antonio,"San Antonio (Salto, Municipiality)",gadm40_exact_id,high,URY.15.5_2,San Antonio,Municipiality
+URY.15.6_1,Salto,n.a18,Valentín,"Valentín (Salto, Municipiality)",gadm40_exact_id,high,URY.15.6_2,Valentín,Municipiality
+URY.15.7_1,Salto,n.a19,Villa Constitución,"Villa Constitución (Salto, Municipiality)",gadm40_exact_id,high,URY.15.7_2,Villa Constitución,Municipiality
+URY.15.8_1,Salto,n.a21,Salto unit 21,Unlabelled GADM 3.6 unit 21 in Salto,department_unit_fallback,low,URY.15.8_2,,
+URY.15.9_1,Salto,n.a250,Salto unit 250,Unlabelled GADM 3.6 unit 250 in Salto,department_unit_fallback,low,URY.15.9_2,,
+URY.15.10_1,Salto,n.a27,Salto unit 27,Unlabelled GADM 3.6 unit 27 in Salto,department_unit_fallback,low,URY.15.10_2,,
+URY.16.1_1,San José,n.a142,San José unit 142,Unlabelled GADM 3.6 unit 142 in San José,department_unit_fallback,low,URY.16.1_2,,
+URY.16.2_1,San José,n.a153,Ciudad del Plata,"Ciudad del Plata (San José, Municipiality)",gadm40_exact_id,high,URY.16.2_2,Ciudad del Plata,Municipiality
+URY.16.3_1,San José,n.a154,Ecilda Paullier,"Ecilda Paullier (San José, Municipiality)",gadm40_exact_id,high,URY.16.3_2,Ecilda Paullier,Municipiality
+URY.16.4_1,San José,n.a159,Libertad,"Libertad (San José, Municipiality)",gadm40_exact_id,high,URY.16.4_2,Libertad,Municipiality
+URY.16.5_1,San José,n.a167,Rodríguez,"Rodríguez (San José, Municipiality)",gadm40_exact_id,high,URY.16.5_2,Rodríguez,Municipiality
+URY.16.6_1,San José,n.a312,San José unit 312,Unlabelled GADM 3.6 unit 312 in San José,department_unit_fallback,low,URY.16.6_2,,
+URY.16.7_1,San José,n.a336,San José unit 336,Unlabelled GADM 3.6 unit 336 in San José,department_unit_fallback,low,URY.16.7_2,,
+URY.17.1_1,Soriano,n.a105,Soriano unit 105,Unlabelled GADM 3.6 unit 105 in Soriano,department_unit_fallback,low,URY.17.1_2,,
+URY.17.2_1,Soriano,n.a107,Cardona,"Cardona (Soriano, Municipiality)",gadm40_exact_id,high,URY.17.2_2,Cardona,Municipiality
+URY.17.3_1,Soriano,n.a111,Dolores,"Dolores (Soriano, Municipiality)",gadm40_exact_id,high,URY.17.3_2,Dolores,Municipiality
+URY.17.4_1,Soriano,n.a112,José Enrique Rodó,"José Enrique Rodó (Soriano, Municipiality)",gadm40_exact_id,high,URY.17.4_2,José Enrique Rodó,Municipiality
+URY.17.5_1,Soriano,n.a120,Palmitas,"Palmitas (Soriano, Municipiality)",gadm40_exact_id,high,URY.17.5_2,Palmitas,Municipiality
+URY.17.6_1,Soriano,n.a122,Soriano unit 122,Unlabelled GADM 3.6 unit 122 in Soriano,department_unit_fallback,low,URY.17.6_2,,
+URY.17.7_1,Soriano,n.a123,Soriano unit 123,Unlabelled GADM 3.6 unit 123 in Soriano,department_unit_fallback,low,URY.17.7_2,,
+URY.17.8_1,Soriano,n.a125,Soriano unit 125,Unlabelled GADM 3.6 unit 125 in Soriano,department_unit_fallback,low,URY.17.8_2,,
+URY.17.9_1,Soriano,n.a126,Soriano unit 126,Unlabelled GADM 3.6 unit 126 in Soriano,department_unit_fallback,low,URY.17.9_2,,
+URY.17.10_1,Soriano,n.a129,Soriano unit 129,Unlabelled GADM 3.6 unit 129 in Soriano,department_unit_fallback,low,URY.17.10_2,,
+URY.17.11_1,Soriano,n.a136,Soriano unit 136,Unlabelled GADM 3.6 unit 136 in Soriano,department_unit_fallback,low,URY.17.11_2,,
+URY.17.12_1,Soriano,n.a90,Soriano unit 90,Unlabelled GADM 3.6 unit 90 in Soriano,department_unit_fallback,low,URY.17.12_2,,
+URY.17.13_1,Soriano,n.a96,Soriano unit 96,Unlabelled GADM 3.6 unit 96 in Soriano,department_unit_fallback,low,URY.17.13_2,,
+URY.17.14_1,Soriano,n.a98,Soriano unit 98,Unlabelled GADM 3.6 unit 98 in Soriano,department_unit_fallback,low,URY.17.14_2,,
+URY.18.1_1,Tacuarembó,n.a20,Tacuarembó unit 20,Unlabelled GADM 3.6 unit 20 in Tacuarembó,department_unit_fallback,low,URY.18.1_2,,
+URY.18.2_1,Tacuarembó,n.a24,Ansina,"Ansina (Tacuarembó, Municipiality)",gadm40_exact_id,high,URY.18.2_2,Ansina,Municipiality
+URY.18.3_1,Tacuarembó,n.a29,Paso de los Toros,"Paso de los Toros (Tacuarembó, Municipiality)",gadm40_exact_id,high,URY.18.3_2,Paso de los Toros,Municipiality
+URY.18.4_1,Tacuarembó,n.a30,San Gregorio de Polanco,"San Gregorio de Polanco (Tacuarembó, Municipiality)",gadm40_exact_id,high,URY.18.4_2,San Gregorio de Polanco,Municipiality
+URY.18.5_1,Tacuarembó,n.a32,Tacuarembó unit 32,Unlabelled GADM 3.6 unit 32 in Tacuarembó,department_unit_fallback,low,URY.18.5_2,,
+URY.18.6_1,Tacuarembó,n.a33,Tacuarembó unit 33,Unlabelled GADM 3.6 unit 33 in Tacuarembó,department_unit_fallback,low,URY.18.6_2,,
+URY.18.7_1,Tacuarembó,n.a36,Tacuarembó unit 36,Unlabelled GADM 3.6 unit 36 in Tacuarembó,department_unit_fallback,low,URY.18.7_2,,
+URY.18.8_1,Tacuarembó,n.a38,Tacuarembó unit 38,Unlabelled GADM 3.6 unit 38 in Tacuarembó,department_unit_fallback,low,URY.18.8_2,,
+URY.18.9_1,Tacuarembó,n.a42,Tacuarembó unit 42,Unlabelled GADM 3.6 unit 42 in Tacuarembó,department_unit_fallback,low,URY.18.9_2,,
+URY.18.10_1,Tacuarembó,n.a43,Tacuarembó unit 43,Unlabelled GADM 3.6 unit 43 in Tacuarembó,department_unit_fallback,low,URY.18.10_2,,
+URY.18.11_1,Tacuarembó,n.a44,Tacuarembó unit 44,Unlabelled GADM 3.6 unit 44 in Tacuarembó,department_unit_fallback,low,URY.18.11_2,,
+URY.18.12_1,Tacuarembó,n.a51,Tacuarembó unit 51,Unlabelled GADM 3.6 unit 51 in Tacuarembó,department_unit_fallback,low,URY.18.12_2,,
+URY.18.13_1,Tacuarembó,n.a53,Tacuarembó unit 53,Unlabelled GADM 3.6 unit 53 in Tacuarembó,department_unit_fallback,low,URY.18.13_2,,
+URY.18.14_1,Tacuarembó,n.a68,Tacuarembó unit 68,Unlabelled GADM 3.6 unit 68 in Tacuarembó,department_unit_fallback,low,URY.18.14_2,,
+URY.19.1_1,Treinta y Tres,n.a1,Treinta y Tres unit 1,Unlabelled GADM 3.6 unit 1 in Treinta y Tres,department_unit_fallback,low,URY.19.1_2,,
+URY.19.2_1,Treinta y Tres,n.a104,Cerro Chato,"Cerro Chato (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.2_2,Cerro Chato,Municipiality
+URY.19.3_1,Treinta y Tres,n.a108,Enrique Martínez,"Enrique Martínez (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.3_2,Enrique Martínez,Municipiality
+URY.19.4_1,Treinta y Tres,n.a78,Rincón,"Rincón (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.4_2,Rincón,Municipiality
+URY.19.5_1,Treinta y Tres,n.a82,Santa Clara de Olimar,"Santa Clara de Olimar (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.5_2,Santa Clara de Olimar,Municipiality
+URY.19.6_1,Treinta y Tres,n.a83,Vergara,"Vergara (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.6_2,Vergara,Municipiality
+URY.19.7_1,Treinta y Tres,n.a86,Villa Sara,"Villa Sara (Treinta y Tres, Municipiality)",gadm40_exact_id,high,URY.19.7_2,Villa Sara,Municipiality
+URY.19.8_1,Treinta y Tres,n.a87,Treinta y Tres unit 87,Unlabelled GADM 3.6 unit 87 in Treinta y Tres,department_unit_fallback,low,URY.19.8_2,,
+URY.19.9_1,Treinta y Tres,n.a88,Treinta y Tres unit 88,Unlabelled GADM 3.6 unit 88 in Treinta y Tres,department_unit_fallback,low,URY.19.9_2,,
+URY.19.10_1,Treinta y Tres,n.a91,Treinta y Tres unit 91,Unlabelled GADM 3.6 unit 91 in Treinta y Tres,department_unit_fallback,low,URY.19.10_2,,

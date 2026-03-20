@@ -1,0 +1,590 @@
+# Spatial data wrangling
+
+This chapter introduces the core practical skills needed to work with spatial data in `R`. The emphasis is on what is specific about spatial data rather than on general `R` basics: geometry, coordinate reference systems, the relationship between attributes and location, and the spatial operations that support later modelling work [@lovelace2019; @comber2015]. These are not just technical preliminaries. They shape what patterns we can see, what measurements we can trust, and how confidently we can interpret the outputs of later chapters.
+
+The chapter follows a course logic. We begin with simple features and why they matter, then move through geometry types, Coordinate Reference Systems (CRS), attribute wrangling, topological relations, spatial joins and aggregation, and finally a small mapping progression from base `plot()` to `tmap` and `ggplot2`. Throughout, we use a coherent Montevideo case built from two local files in the `data` folder: traffic injury records stored as a CSV with coordinates and a roads layer stored as a GeoPackage. This pairing is especially useful for chapter 2 because it allows us to demonstrate both main routes into `sf`, work with both point and line geometries, and teach projection changes, topological relations, joins, and mapping using one consistent applied example.
+
+## Dependencies
+
+```{r}
+#| include: false
+rm(list = ls())
+```
+
+```{r}
+#| warning: false
+library(tidyverse)
+library(sf)
+library(tmap)
+library(viridis)
+library(ggthemes)
+library(grid)
+
+# Load the shared course plotting and mapping style when available
+theme_loaded <- try(source("style/data-visualisation_theme.R"), silent = TRUE)
+
+if (inherits(theme_loaded, "try-error")) {
+  course_text_theme <- function() {
+    theme(
+      text = element_text(family = "sans"),
+      plot.title = element_text(size = 18, face = "bold"),
+      plot.subtitle = element_text(size = 13, margin = margin(b = 10)),
+      plot.caption = element_text(size = 10, colour = "grey30"),
+      plot.title.position = "plot",
+      plot.caption.position = "plot",
+      legend.title = element_text(size = 11, face = "bold"),
+      legend.text = element_text(size = 10)
+    )
+  }
+
+  theme_map_course <- function(...) {
+    theme_tufte(...) +
+      course_text_theme() +
+      theme(
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.ticks = element_blank(),
+        axis.title = element_blank(),
+        panel.grid = element_blank(),
+        legend.position = "right",
+        legend.key.height = unit(0.45, "cm")
+      )
+  }
+
+  scale_fill_course_seq_c <- function(...) {
+    scale_fill_viridis_c(...)
+  }
+}
+```
+
+## Why `sf` and simple features matter
+
+Most of the course relies on the `sf` package. The name stands for **simple features**, a standard way of representing vector spatial data that is widely used across GIS software and open-source geospatial tools [@lovelace2019; @bivand2013]. In practice, `sf` matters because it lets us work with spatial data as if they were ordinary data frames while still preserving geometry, projection metadata, and spatial relationships. This makes it much easier to move between cleaning, mapping and analysis without constantly converting objects from one format to another.
+
+An `sf` object combines two things:
+
+-   **attribute data**, the familiar columns that describe observations
+-   **geometry**, a special list-column that stores location and shape
+
+That combination is one of the great strengths of modern spatial workflows in `R`. The same verbs used for tabular wrangling such as `select()`, `filter()`, `mutate()` and `summarise()` also work on spatial tables. Students therefore do not need to learn one workflow for tables and a separate one for maps. Instead, they can build a single pipeline in which geometry remains visible and usable throughout the analysis.
+
+This is also why `sf` has become such a useful bridge between GIS and data science. Earlier spatial workflows in `R` often relied on older class systems that were historically important but less intuitive for teaching and less aligned with contemporary data pipelines. For course purposes, `sf` is usually the best place to start because it makes the structure of spatial data easier to inspect, easier to manipulate, and easier to connect to visualisation packages such as `tmap` and `ggplot2`.
+
+## Reading spatial data: two common routes
+
+In applied work, spatial data usually arrive through one of two routes. Sometimes they already come as spatial files such as a GeoPackage, shapefile or GeoJSON. In those cases, we normally use `st_read()`. At other times, the data arrive as an ordinary table with coordinate columns. In that case, we first read the table with a function such as `read_csv()` and then convert it to an `sf` object with `st_as_sf()`.
+
+This distinction is worth making explicit because it explains why different chapters may begin with different import steps. The important skill is not memorising a single command, but recognising the structure of the source data and choosing the correct route into an `sf` workflow. Once the data are in `sf` form, the later steps are much more consistent.
+
+```{r}
+#| eval: false
+# Example 1: read Montevideo roads from a spatial file
+roads <- st_read("data/osm/montevideo_roads.gpkg")
+
+# Example 2: read Montevideo incidents from a CSV and convert to sf
+injuries_raw <- read_csv("data/montevideo-traffic-injuries-2022.csv")
+injuries <- st_as_sf(injuries_raw, coords = c("X", "Y"), crs = 32721)
+```
+
+For this chapter, we use both routes. The Montevideo injuries data are stored as a CSV, and the course brief notes that the coordinate columns `X` and `Y` are already in **EPSG:32721**, a projected CRS for UTM zone 21S. The roads file, by contrast, is already a spatial layer and is stored in longitude and latitude. That contrast makes the pair a particularly good teaching example because students immediately encounter two core issues of spatial wrangling: different ways of reading data into `sf`, and different CRSs that must be understood before layers can be combined safely.
+
+## Reading and inspecting the working data
+
+We begin by reading the Montevideo injuries table, converting it into an `sf` object, and collapsing person-level rows to unique crash events so the unit of analysis matches the point-pattern logic used in the next chapter. We also read the Montevideo roads GeoPackage and transform it into the same projected CRS so that points and lines can be overlaid, joined and measured consistently.
+
+To support polygon-based operations in the same local case study, we derive a set of Montevideo analytical units from the bounding box of the crash events. These are not official administrative areas, but they are a practical teaching device: they let us illustrate point-in-polygon joins, topological relations and choropleth mapping without leaving the Montevideo case. Unlike the earlier fallback design, this keeps the whole chapter anchored in real local files from the `data` folder.
+
+```{r}
+injuries_raw <- read_csv(
+  "data/montevideo-traffic-injuries-2022.csv",
+  show_col_types = FALSE
+) |>
+  # Standardise names once so later code is easier to read
+  rename_with(\(x) {
+    x |>
+      iconv(to = "ASCII//TRANSLIT", sub = "") |>
+      make.names(unique = TRUE) |>
+      str_to_lower()
+  })
+
+crash_events_tbl <- injuries_raw |>
+  # Collapse person-level rows to unique crash events
+  group_by(novedad, x, y) |>
+  summarise(
+    persons_recorded = n(),
+    fecha = first(fecha),
+    hora = first(hora),
+    tipo.de.resultado = first(tipo.de.resultado),
+    tipo.de.vehiculo = first(tipo.de.vehiculo),
+    calle = first(calle),
+    zona = first(zona),
+    .groups = "drop"
+  )
+
+crash_events <- st_as_sf(
+  crash_events_tbl,
+  # Turn the coordinate columns into sf point geometry
+  coords = c("x", "y"),
+  crs = 32721,
+  remove = FALSE
+)
+
+roads <- st_read("data/osm/montevideo_roads.gpkg", quiet = TRUE)
+roads_utm <- st_transform(roads, 32721)
+
+study_window <- st_as_sfc(st_bbox(crash_events)) |>
+  st_buffer(1500)
+
+analysis_units <- st_make_grid(
+  study_window,
+  cellsize = 2500,
+  square = TRUE
+) |>
+  st_as_sf() |>
+  mutate(unit_id = row_number())
+```
+
+The first thing we should do after import is inspect the object carefully. Spatial analysis often goes wrong not because the later model is too advanced, but because the spatial object was poorly understood at the start. A few simple checks can prevent a lot of avoidable confusion.
+
+```{r}
+class(crash_events)
+st_geometry_type(crash_events, by_geometry = FALSE)
+st_crs(crash_events)
+names(crash_events)
+glimpse(crash_events)
+class(roads)
+st_geometry_type(roads, by_geometry = FALSE)
+st_crs(roads)
+class(analysis_units)
+st_geometry_type(analysis_units, by_geometry = FALSE)
+```
+
+Three basic questions are worth asking every time you load spatial data:
+
+1.  What does one row represent?
+2.  What geometry type does the object store?
+3.  What CRS is attached to the layer?
+
+For `crash_events`, one row represents one unique crash event, the geometry type is `POINT`, and the CRS is EPSG:32721. For `roads`, one row represents one road segment stored as a `LINESTRING` in geographic coordinates, while for `analysis_units` one row represents a polygonal analytical unit covering the Montevideo study area. These may sound like simple checks, but they answer the practical questions that shape everything that follows. What is the observational unit? What kinds of operations make sense for this object? What measurements can we trust? Many downstream errors in spatial analysis come from skipping exactly this stage.
+
+## Attribute data versus geometry
+
+One of the most useful habits in spatial wrangling is to keep the distinction between **attribute data** and **geometry** very clear. The attributes tell us about the observation in substantive terms, such as injury outcome, time of day, vehicle type or locality. The geometry tells us where the observation is, and that location is what allows us to map it, join it to another layer, measure distance, or aggregate it into another geography.
+
+This distinction matters because not every operation is spatial in the same sense. Counting the number of injury outcomes is a tabular operation even if the data are stored in an `sf` object. By contrast, assigning each injury record to a grid cell or a polygon boundary depends on geometry and location. Good spatial work means recognising when we are operating on the attribute side of the data and when we are operating on the spatial side.
+
+```{r}
+st_geometry(crash_events)[1:3]
+```
+
+```{r}
+crash_events |>
+  st_drop_geometry() |>
+  glimpse()
+```
+
+`st_drop_geometry()` is especially useful because it allows us to switch temporarily into a purely tabular workflow without losing track of the fact that the original object is spatial. This is often the cleanest way to produce summary tables or quick diagnostic checks before returning to mapping or spatial joins. Learning when to keep the geometry and when to drop it is part of efficient spatial wrangling.
+
+## Geometry basics
+
+Vector spatial data are usually represented with three main geometry types:
+
+-   **points** for events or locations
+-   **lines** for routes, flows or network segments
+-   **polygons** for areas such as departments, municipalities or census zones
+
+These geometry types are not merely visual conventions. They define what operations make sense and what kinds of questions are natural to ask. Point data often invite clustering or density analysis. Line data emphasise movement, connectivity and path structure. Polygon data bring in questions of area, adjacency, containment and aggregation. In other words, geometry is part of the analytical model, not just part of the display.
+
+The easiest way to see the difference is to build a tiny geometry collection from scratch.
+
+```{r}
+geom_examples <- st_sf(
+  type = c("Point", "Line", "Polygon"),
+  geometry = st_sfc(
+    st_point(c(0, 0)),
+    st_linestring(matrix(c(1, 0, 2, 1, 3, 1), ncol = 2, byrow = TRUE)),
+    st_polygon(list(matrix(
+      c(4, 0, 5, 0, 5, 1, 4, 1, 4, 0),
+      ncol = 2,
+      byrow = TRUE
+    )))
+  ),
+  crs = 4326
+)
+
+plot(geom_examples["type"], key.pos = 1)
+```
+
+We can also derive new geometry types from an existing layer. Starting from the polygon study window around the Montevideo crash events, `st_boundary()` returns lines and `st_centroid()` returns points. This is helpful because the same empirical unit is often represented in different ways depending on the task. A region may be treated as an area when mapping counts, as a centroid when measuring separation between units, and as a boundary when the concern is limit or edge rather than area.
+
+```{r}
+study_window_boundary <- st_boundary(study_window)
+study_window_centroid <- st_centroid(study_window)
+
+par(mfrow = c(1, 3))
+plot(st_geometry(study_window), main = "Polygon")
+plot(st_geometry(study_window_boundary), main = "Boundary as line")
+plot(st_geometry(study_window_centroid), main = "Centroid as point")
+par(mfrow = c(1, 1))
+```
+
+This ability to move between geometry types is more important than it may first appear. Many later spatial methods depend on it, including distance matrices between centroids, polygon adjacency structures, flow-line construction and point aggregation. Once students understand that these are different representations of related spatial information, the logic of later chapters becomes much easier to follow.
+
+Another reason geometry types matter is that they imply different kinds of uncertainty. A point may represent an exact observed location, a geocoded approximation, or the centroid of a larger area. A polygon may represent a legal boundary, an administrative reporting unit, or an analytical zone that we created ourselves. Being clear about what the geometry actually stands for is therefore part of substantive interpretation, not just technical housekeeping.
+
+## Coordinate Reference Systems
+
+Coordinate Reference Systems tell us how coordinates relate to the Earth. In practice, CRS choice affects whether a layer is suitable for display, for measuring distances or areas, and for combining with other layers [@lovelace2019; @comber2015]. Students often first meet CRS as a technical detail, but it is better understood as the measurement framework within which the spatial data become meaningful.
+
+The two most common CRS situations you will encounter are:
+
+-   **geographic CRS**, such as EPSG:4326, which use longitude and latitude
+-   **projected CRS**, such as EPSG:32721, which use planar coordinates in meters
+
+The Montevideo roads layer is stored in EPSG:4326. Our crash-events layer is in EPSG:32721. Before combining them, they need to share a common CRS. This is one of the most important practical checks in spatial analysis, because mismatched CRSs can produce overlays that fail silently or measurements that look plausible but are wrong.
+
+```{r}
+st_crs(roads)
+st_crs(crash_events)
+
+crash_events_ll <- st_transform(crash_events, 4326)
+roads_utm <- st_transform(roads, 32721)
+```
+
+A useful rule of thumb is:
+
+-   use a projected CRS when measuring distance, length or area
+-   use longitude/latitude mainly for storage, exchange and web mapping
+
+For example, the area of the Montevideo study window should be computed in a projected CRS rather than directly in longitude/latitude.
+
+```{r}
+st_area(study_window) / 10^6
+```
+
+The same logic applies to buffers, nearest-neighbour distances, travel-cost approximations and many accessibility indicators. Later chapters will rely on those ideas more heavily, so it is worth making the CRS logic explicit here rather than treating it as background trivia.
+
+Because both layers now have comparable CRSs, we can safely overlay crash events on the Montevideo roads network.
+
+```{r}
+plot(st_geometry(roads), col = "grey80")
+plot(
+  st_geometry(crash_events_ll),
+  col = scales::alpha("firebrick", 0.2),
+  pch = 16,
+  cex = 0.3,
+  add = TRUE
+)
+```
+
+The crash points line up with the local road network rather than floating in empty space. Even this very simple overlay is useful because it checks that the geometry and projection behave as expected. It also reminds us that a map can be both an analytical output and a data-quality diagnostic. Before asking substantive questions, it is good practice to first ask whether the layers line up in the way we would expect.
+
+One additional distinction is worth keeping in mind: **assigning** a CRS is not the same as **transforming** one. If a layer is missing CRS metadata but you know it is already in EPSG:32721, you would assign that CRS. If the layer is correctly labelled as EPSG:32721 and you want to convert it to EPSG:4326 for display or overlay, you would transform it with `st_transform()`. Confusing those two actions is a common source of avoidable mistakes.
+
+## Topological relations
+
+Topological relations describe how spatial objects relate to one another in space. They are often introduced through binary predicates such as `st_intersects()`, `st_within()`, `st_contains()`, `st_touches()` and `st_disjoint()`, which return `TRUE` or `FALSE` statements about whether a given relation holds between two geometries. As treated in *Geocomputation with R*, these relations are especially useful because they make spatial subsetting and joining much more explicit than simply saying that one layer was “matched” to another [@lovelace2019].
+
+Some of these relations are symmetrical and some are not. If two polygons touch, the order does not matter: if A touches B, B touches A. But order does matter for relations such as `within` and `contains`. If a point is within a polygon, the polygon contains the point, but the reverse statements are not equivalent. That is why it is worth being precise about which geometry plays which role in the operation.
+
+Before applying these ideas to Uruguay data, it helps to visualise them in a very simple setting. In Figure @fig-topological-relations, the blue square is the reference geometry and the orange feature is the comparison geometry. The point of the diagram is not cartographic realism, but conceptual clarity: students can see at a glance what it means for two objects to intersect, touch, remain disjoint, or stand in an asymmetric relation such as `within` and `contains`.
+
+```{r}
+#| label: fig-topological-relations
+#| fig-cap: "A simple diagram of common topological relations. The blue square is the reference geometry A and the orange geometry is B. The labels make the direction of asymmetric relations explicit."
+#| warning: false
+
+make_square <- function(xmin, ymin, xmax, ymax) {
+  st_polygon(list(matrix(
+    c(
+      xmin, ymin,
+      xmax, ymin,
+      xmax, ymax,
+      xmin, ymax,
+      xmin, ymin
+    ),
+    ncol = 2,
+    byrow = TRUE
+  )))
+}
+
+reference_geom <- st_sfc(make_square(0, 0, 4, 4), crs = 4326)
+
+diagram_base <- tibble(
+  relation = c(
+    "intersects(A, B)",
+    "within(B, A)",
+    "contains(A, B)",
+    "touches(A, B)",
+    "disjoint(A, B)"
+  ),
+  geom_type = c("polygon", "point", "point", "polygon", "polygon")
+)
+
+reference_sf <- st_sf(
+  relation = diagram_base$relation,
+  role = "A",
+  geometry = st_sfc(lapply(seq_len(nrow(diagram_base)), \(i) reference_geom[[1]]), crs = 4326)
+)
+
+comparison_sf <- st_sf(
+  relation = diagram_base$relation,
+  role = "B",
+  geometry = st_sfc(
+    make_square(2.2, 1.2, 5.2, 4.2),
+    st_point(c(2, 2)),
+    st_point(c(2, 2)),
+    make_square(4, 1.2, 6, 3.2),
+    make_square(5, 1.2, 7, 3.2),
+    crs = 4326
+  )
+)
+
+ggplot() +
+  geom_sf(data = reference_sf, fill = "#9ecae1", colour = "#2b8cbe", linewidth = 0.8) +
+  geom_sf(data = comparison_sf, aes(shape = role), fill = "#fdae6b", colour = "#d94801", size = 2.5, linewidth = 0.8) +
+  facet_wrap(~ relation, ncol = 3) +
+  scale_shape_manual(values = c(A = NA, B = 16), guide = "none") +
+  coord_sf(xlim = c(-0.5, 7.2), ylim = c(-0.5, 5), expand = FALSE) +
+  theme_map_course() +
+  theme(
+    strip.text = element_text(face = "bold"),
+    panel.spacing = unit(1, "lines")
+  )
+```
+
+To see how this works in practice, we can focus on one Montevideo analytical unit and ask how it relates to nearby polygons, crash events and road segments.
+
+```{r}
+units_with_points <- analysis_units[lengths(st_intersects(analysis_units, crash_events)) > 0, ]
+selected_unit <- units_with_points |>
+  slice(1)
+
+# Points intersecting the selected polygon
+points_in_unit <- crash_events[selected_unit, , op = st_intersects]
+# Neighboring polygons that share a boundary with it
+touching_units <- analysis_units[selected_unit, , op = st_touches]
+# Polygons with no spatial contact at all
+disjoint_units <- analysis_units[selected_unit, , op = st_disjoint]
+# Road segments intersecting the selected polygon
+roads_in_unit <- roads_utm[selected_unit, , op = st_intersects]
+
+c(
+  points_in_unit = nrow(points_in_unit),
+  touching_units = nrow(touching_units),
+  disjoint_units = nrow(disjoint_units),
+  roads_in_unit = nrow(roads_in_unit)
+)
+```
+
+The example above uses the square-bracket subsetting syntax discussed in *Geocomputation with R*: `x[y, , op = ...]` means “return the features in `x` that satisfy the chosen topological relation with `y`”. Here, the target object changes depending on the question. When `x` is `crash_events`, we ask which point events intersect the selected polygon. When `x` is `analysis_units`, we ask which polygons touch it or which are disjoint from it. When `x` is `roads_utm`, we ask which road segments intersect the same unit.
+
+We can also call the predicates directly. This is helpful when we want to inspect the logical structure of the relationship rather than immediately subset a layer.
+
+```{r}
+st_intersects(selected_unit, touching_units[1:3, ])
+st_contains(selected_unit, points_in_unit[1:min(5, nrow(points_in_unit)), ])
+st_within(points_in_unit[1:min(5, nrow(points_in_unit)), ], selected_unit)
+```
+
+These topological relations matter because they sit underneath many spatial operations that otherwise look quite different. Spatial subsetting, point-in-polygon joins, neighbour definitions, overlay logic and even some forms of spatial weighting all rely on statements about which features intersect, touch, contain or remain separate from others. Once students become comfortable with this language, later spatial methods become easier to understand because they can see the relation being encoded rather than treating it as a black box.
+
+## Geometry validity and safe workflows
+
+Before moving into joins and aggregation, it is worth checking geometry validity. Invalid geometries are more common with polygons than with points, but they matter because they can cause unexpected failures in overlays, intersections or neighbour calculations [@bivand2013]. In applied workflows, it is a good habit to validate layers that will be reused repeatedly.
+
+```{r}
+st_is_valid(roads_utm)[1:5]
+analysis_units <- st_make_valid(analysis_units)
+```
+
+In this example the road and analytical-unit geometries are already usable, so `st_make_valid()` is mainly a defensive step. Even so, it introduces an important principle: spatial wrangling is not only about reshaping attributes. It is also about ensuring the geometry is analytically usable. Later chapters that work with more complex polygon systems will depend much more heavily on this kind of checking.
+
+## Attribute operations with spatial tables
+
+One of the strengths of `sf` is that ordinary data manipulation and spatial operations can be combined in the same workflow. This is especially important in social-science applications, where we rarely work with geometry alone. Most tasks involve switching repeatedly between descriptive variables, geographic relations and derived indicators that bring the two together [@lovelace2019; @comber2015].
+
+We can begin with familiar tabular tasks such as counting categories, selecting variables, and creating new fields. These are not separate from spatial analysis. A large share of spatial wrangling consists of preparing the attribute side of the data carefully enough that mapping, joining and modelling become meaningful rather than mechanical.
+
+```{r}
+crash_events |>
+  st_drop_geometry() |>
+  count(tipo.de.resultado, sort = TRUE)
+```
+
+```{r}
+crash_events_selected <- crash_events |>
+  select(fecha, hora, tipo.de.resultado, tipo.de.vehiculo, geometry) |>
+  mutate(
+    severity = case_when(
+      tipo.de.resultado == "HERIDO LEVE" ~ "Minor injury",
+      TRUE ~ "Other outcome"
+    ),
+    hour_group = case_when(
+      hora < 6 ~ "Night",
+      hora < 12 ~ "Morning",
+      hora < 18 ~ "Afternoon",
+      TRUE ~ "Evening"
+    )
+  )
+
+crash_events_selected |>
+  st_drop_geometry() |>
+  count(hour_group, sort = TRUE)
+```
+
+Filtering works in the same way as with a regular data frame.
+
+```{r}
+serious_crashes <- crash_events_selected |>
+  filter(severity == "Other outcome")
+
+nrow(serious_crashes)
+```
+
+This continuity is one of the main pedagogical advantages of `sf`. Students can carry over familiar `dplyr` habits while gradually adding spatial logic to their workflow. It also makes exploratory analysis faster, because we can create spatial subsets without first discarding the geometry.
+
+It is also useful to distinguish an **attribute join** from a **spatial join**. An attribute join, such as `left_join()`, matches records using a shared identifier such as an area code. A spatial join, such as `st_join()`, matches records using location, for example by assigning points to polygons. In real projects, both kinds of joining often appear in the same analysis, and the ability to tell them apart is important for both debugging and interpretation.
+
+## Basic spatial operations: join, aggregate, filter
+
+The course brief highlights a practical set of spatial verbs: reading, inspecting, transforming, joining, aggregating and validating. We have already covered reading, inspection, transformation, topological relations and validation. We now add two especially important operations:
+
+-   **spatial join**: attach attributes based on location
+-   **spatial aggregation**: summarise many features into fewer spatial units
+
+To illustrate these ideas, we use the Montevideo analytical units created earlier and count how many crash events fall inside each one. We also calculate the amount of road length inside each unit so that the polygons carry more than one attribute and can support a more meaningful mapped comparison. This introduces a general workflow for turning fine-grained observations into an areal representation that is easier to compare across space.
+
+```{r}
+# Join point events to polygon units before counting them
+unit_counts <- st_join(analysis_units, crash_events, join = st_intersects, left = TRUE) |>
+  st_drop_geometry() |>
+  count(unit_id, name = "n_injuries")
+
+road_segments_by_unit <- st_intersection(
+  analysis_units |> select(unit_id),
+  roads_utm |> select(highway, name)
+) 
+
+road_segments_by_unit$road_km <- as.numeric(st_length(road_segments_by_unit)) / 1000
+
+road_lengths <- road_segments_by_unit |>
+  st_drop_geometry() |>
+  group_by(unit_id) |>
+  summarise(road_km = sum(road_km), .groups = "drop")
+
+analysis_units <- analysis_units |>
+  # Attach the aggregated counts back onto the polygon layer
+  left_join(unit_counts, by = "unit_id") |>
+  left_join(road_lengths, by = "unit_id") |>
+  mutate(
+    n_injuries = replace_na(n_injuries, 0),
+    road_km = replace_na(road_km, 0),
+    injuries_per_km = if_else(road_km > 0, n_injuries / road_km, NA_real_)
+  )
+```
+
+This is a simple but very common pattern in spatial data wrangling:
+
+1.  define the target geography
+2.  join observations into that geography
+3.  aggregate the attributes you need
+
+Because the units were built directly from the local study area, we can move directly to summarising their crash and road attributes.
+
+```{r}
+summary(analysis_units$n_injuries)
+summary(analysis_units$road_km)
+```
+
+This example is deliberately basic, but it introduces the logic behind many later tasks: assigning point records to areas, building polygon summaries, and preparing mapped indicators. Students who want to go further will find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.
+
+The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map: raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.
+
+## Mapping from `plot()` to `tmap` to `ggplot2`
+
+The same spatial object can be mapped at different levels of sophistication. A useful progression in applied work is:
+
+1.  `plot()` for a fast check
+2.  `tmap` for clear thematic maps
+3.  `ggplot2` for more customised publication-style output
+
+### A quick base plot
+
+Base plotting is ideal for first inspection because it is fast and requires little setup. In practical workflows, this matters because many maps are made first to check geometry, extent, missing values or obvious outliers rather than to communicate final results. Quick plotting is therefore part of good analysis, not a lesser version of “real” mapping.
+
+```{r}
+plot(analysis_units["n_injuries"], key.pos = 1, main = "Crash events per Montevideo analytical unit")
+```
+
+### A thematic map with `tmap`
+
+`tmap` is especially good for teaching because it makes the separation between data (`tm_shape()`) and visual layers (`tm_fill()`, `tm_borders()`, `tm_dots()`) very explicit. That layered logic helps students see how thematic maps are constructed and how cartographic choices affect interpretation [@lovelace2019]. It is also a useful stepping stone between quick diagnostics and more customised visual communication.
+
+```{r}
+tmap_mode("plot")
+
+tm_shape(analysis_units) +
+  tm_fill(
+    col = "injuries_per_km",
+    palette = "viridis",
+    style = "cont",
+    title = "Crashes per km"
+  ) +
+  tm_borders(col = "white", lwd = 0.4) +
+  tm_layout(frame = FALSE)
+```
+
+### A customised map with `ggplot2`
+
+`ggplot2` is not only for charts, but the `geom_sf()` layer makes it a powerful mapping tool when you want more control over themes, labels and layer composition. For students who continue beyond the course, this is often where spatial data work reconnects with a broader data-visualisation toolkit [@comber2015]. The same grammar can be used to build maps, charts and combined figure layouts in a consistent style.
+
+```{r}
+analysis_units_ll <- st_transform(analysis_units, 4326)
+
+ggplot() +
+  # Fill polygons with a sequential palette from the shared course style
+  geom_sf(data = analysis_units_ll, aes(fill = injuries_per_km), colour = NA) +
+  # Add the road network to keep the analytical units in local context
+  geom_sf(data = roads, colour = "grey50", linewidth = 0.15, alpha = 0.5) +
+  coord_sf(expand = FALSE) +
+  scale_fill_course_seq_c(name = "Crashes per km") +
+  labs(
+    title = "Montevideo crash events aggregated to analytical units",
+    subtitle = "Crash counts standardised by local road length"
+  ) +
+  theme_map_course() +
+  theme(
+    legend.position = "right"
+  )
+```
+
+The important point is not that one package is always better than another. The key lesson is that spatial data wrangling and mapping are tightly connected: once geometry and CRS are handled correctly, the same `sf` object can support quick checks, exploratory analysis and more polished communication. Learning when to move from one level of mapping to another is part of becoming an effective spatial analyst, because different stages of a project demand different balances between speed, clarity and control.
+
+Students who want to explore further will also find that each mapping approach opens onto a slightly different set of skills. Base plotting encourages quick exploratory thinking, `tmap` makes thematic cartography especially accessible, and `ggplot2` connects spatial work to a wider grammar of visualisation. Developing comfort across all three is often more valuable than mastering only one.
+
+## Recap
+
+This chapter has introduced the core spatial workflow used throughout the course:
+
+-   read spatial and non-spatial data
+-   convert tabular coordinates into simple features
+-   inspect geometry type, attributes and CRS
+-   distinguish the attribute side of the data from the geometry side
+-   transform CRSs before overlay or measurement
+-   validate geometry before repeated use
+-   combine attribute wrangling with spatial joins and aggregation
+-   connect point, line and polygon data within a single local case
+-   produce basic maps at increasing levels of control
+
+These are foundational skills. Later chapters build on them when we move to point patterns, flows, spatial dependence and spatial heterogeneity. In that sense, this chapter is not just a technical prelude. It establishes the conceptual and practical habits that make later modelling choices easier to interpret and easier to defend.
+
+For students revisiting the chapter on their own time, there are several productive follow-up directions. One is to experiment with alternative spatial units by changing the size and shape of the Montevideo analytical polygons. Another is to compare projected CRSs and think about why one may be more appropriate than another for a given country or research question. A third is to practice moving back and forth between attribute summaries and spatial summaries, since that rhythm is one of the recurring features of real spatial analysis.
+
+## Tasks
+
+1.  Use `st_drop_geometry()` and `count()` to identify the most common `tipo.de.vehiculo` values in the crash-events table.
+2.  Create a new time-of-day grouping with your own cut-points and compare it with the one used above.
+3.  Change the analytical-unit `cellsize` and see how the mapped pattern changes. What does this suggest about scale and aggregation?
+4.  Modify the `ggplot2` map so that crash events are shown as points on top of the polygon units.
+5.  Create a second polygon-based representation using a different unit size and compare it with the current analytical units.

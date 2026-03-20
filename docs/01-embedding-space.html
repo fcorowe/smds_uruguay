@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>1&nbsp; Embedding space – Spatial Data Modelling for Social Scientists</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./02-spatial-data-wrangling.html" rel="next">
+<link href="./course-overview.html" rel="prev">
+<link href="./figs/cover/uruguay-course-logo.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3d62d204ba1604a696ce2d8f1e6896bb.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e101a6dc663a546a5e09aa12163449fe.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><style>html{ scroll-behavior: smooth; }</style>
+<meta name="mermaid-theme" content="neutral">
+<script src="site_libs/quarto-diagram/mermaid.min.js"></script><script src="site_libs/quarto-diagram/mermaid-init.js"></script><link href="site_libs/quarto-diagram/mermaid.css" rel="stylesheet">
+<meta name="twitter:title" content="1&nbsp; Embedding space – Spatial Data Modelling for Social Scientists">
+<meta name="twitter:description" content="">
+<meta name="twitter:image" content="figs/ch1/datatypes.png">
+<meta name="twitter:creator" content="fcorowe">
+<meta name="twitter:card" content="summary_large_image">
+</head>
+<body class="nav-sidebar docked quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-embedding-space.html">Part I</a></li><li class="breadcrumb-item"><a href="./01-embedding-space.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Embedding space</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">Spatial Data Modelling for Social Scientists</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/fcorowe/smds_uruguay" title="Source Code" class="quarto-navigation-tool px-1" aria-label="Source Code"><i class="bi bi-github"></i></a>
+    <div class="dropdown">
+      <a href="" title="Share" id="quarto-navigation-tool-dropdown-0" class="quarto-navigation-tool dropdown-toggle px-1" data-bs-toggle="dropdown" aria-expanded="false" role="link" aria-label="Share"><i class="bi bi-share"></i></a>
+      <ul class="dropdown-menu" aria-labelledby="quarto-navigation-tool-dropdown-0">
+<li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://twitter.com/intent/tweet?url=|url|">
+              <i class="bi bi-twitter pe-1"></i>
+            Twitter
+            </a>
+          </li>
+          <li>
+            <a class="dropdown-item sidebar-tools-main-item" href="https://www.facebook.com/sharer/sharer.php?u=|url|">
+              <i class="bi bi-facebook pe-1"></i>
+            Facebook
+            </a>
+          </li>
+      </ul>
+</div>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./course-overview.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Course Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part I</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-embedding-space.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Embedding space</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-spatial-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data wrangling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part II</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-points.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Point Patterns</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-spatial-interaction-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Spatial Interaction Modelling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Part III</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-spatial-dependence.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Spatial Dependence</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-spatial-heterogeneity.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Spatial Heterogeneity</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Datasets</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#why-spatial-data-are-special" id="toc-why-spatial-data-are-special" class="nav-link active" data-scroll-target="#why-spatial-data-are-special"><span class="header-section-number">1.1</span> Why spatial data are special</a></li>
+  <li><a href="#the-data-revolution-and-the-rise-of-spatial-data" id="toc-the-data-revolution-and-the-rise-of-spatial-data" class="nav-link" data-scroll-target="#the-data-revolution-and-the-rise-of-spatial-data"><span class="header-section-number">1.2</span> The data revolution and the rise of spatial data</a></li>
+  <li>
+<a href="#main-types-of-spatial-data" id="toc-main-types-of-spatial-data" class="nav-link" data-scroll-target="#main-types-of-spatial-data"><span class="header-section-number">1.3</span> Main types of spatial data</a>
+  <ul class="collapse">
+<li><a href="#areal-or-surface-data" id="toc-areal-or-surface-data" class="nav-link" data-scroll-target="#areal-or-surface-data"><span class="header-section-number">1.3.1</span> Areal or surface data</a></li>
+  <li><a href="#point-data" id="toc-point-data" class="nav-link" data-scroll-target="#point-data"><span class="header-section-number">1.3.2</span> Point data</a></li>
+  <li><a href="#connection-data" id="toc-connection-data" class="nav-link" data-scroll-target="#connection-data"><span class="header-section-number">1.3.3</span> Connection data</a></li>
+  <li><a href="#trajectory-data" id="toc-trajectory-data" class="nav-link" data-scroll-target="#trajectory-data"><span class="header-section-number">1.3.4</span> Trajectory data</a></li>
+  </ul>
+</li>
+  <li><a href="#hierarchies-scale-and-context" id="toc-hierarchies-scale-and-context" class="nav-link" data-scroll-target="#hierarchies-scale-and-context"><span class="header-section-number">1.4</span> Hierarchies, scale and context</a></li>
+  <li><a href="#space-as-proxy-and-model-choice" id="toc-space-as-proxy-and-model-choice" class="nav-link" data-scroll-target="#space-as-proxy-and-model-choice"><span class="header-section-number">1.5</span> Space as proxy and model choice</a></li>
+  <li>
+<a href="#key-complexities-and-challenges" id="toc-key-complexities-and-challenges" class="nav-link" data-scroll-target="#key-complexities-and-challenges"><span class="header-section-number">1.6</span> Key complexities and challenges</a>
+  <ul class="collapse">
+<li><a href="#geometry-topology-and-spatial-relations" id="toc-geometry-topology-and-spatial-relations" class="nav-link" data-scroll-target="#geometry-topology-and-spatial-relations"><span class="header-section-number">1.6.1</span> Geometry, topology and spatial relations</a></li>
+  <li><a href="#coordinate-reference-systems-and-measurement" id="toc-coordinate-reference-systems-and-measurement" class="nav-link" data-scroll-target="#coordinate-reference-systems-and-measurement"><span class="header-section-number">1.6.2</span> Coordinate reference systems and measurement</a></li>
+  <li><a href="#modifiable-areal-unit-problem-maup" id="toc-modifiable-areal-unit-problem-maup" class="nav-link" data-scroll-target="#modifiable-areal-unit-problem-maup"><span class="header-section-number">1.6.3</span> Modifiable Areal Unit Problem (MAUP)</a></li>
+  <li><a href="#ecological-fallacy" id="toc-ecological-fallacy" class="nav-link" data-scroll-target="#ecological-fallacy"><span class="header-section-number">1.6.4</span> Ecological fallacy</a></li>
+  <li><a href="#spatial-dependence" id="toc-spatial-dependence" class="nav-link" data-scroll-target="#spatial-dependence"><span class="header-section-number">1.6.5</span> Spatial dependence</a></li>
+  <li><a href="#spatial-heterogeneity-and-nonstationarity" id="toc-spatial-heterogeneity-and-nonstationarity" class="nav-link" data-scroll-target="#spatial-heterogeneity-and-nonstationarity"><span class="header-section-number">1.6.6</span> Spatial heterogeneity and nonstationarity</a></li>
+  <li><a href="#coverage-quality-and-confidentiality" id="toc-coverage-quality-and-confidentiality" class="nav-link" data-scroll-target="#coverage-quality-and-confidentiality"><span class="header-section-number">1.6.7</span> Coverage, quality and confidentiality</a></li>
+  </ul>
+</li>
+  <li><a href="#what-to-carry-forward" id="toc-what-to-carry-forward" class="nav-link" data-scroll-target="#what-to-carry-forward"><span class="header-section-number">1.7</span> What to carry forward</a></li>
+  </ul><div class="toc-actions"><ul><li><a href="https://github.com/fcorowe/smds_uruguay/edit/main/01-embedding-space.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/fcorowe/smds_uruguay/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/fcorowe/smds_uruguay/blob/main/01-embedding-space.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-embedding-space.html">Part I</a></li><li class="breadcrumb-item"><a href="./01-embedding-space.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Embedding space</span></a></li></ol></nav><div class="quarto-title">
+<div class="quarto-title-block"><div><h1 class="title">
+<span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Embedding space</span>
+</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Code</button></div></div>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>Location is not just another column in a dataset. Once observations happen somewhere, they become part of a spatial structure shaped by distance, adjacency, containment, connectivity and scale. That is why spatial data are analytically different from non-spatial data: geography changes both what we can observe and how safely we can interpret relationships <span class="citation" data-cites="lovelace2019 bivand2013">(<a href="references.html#ref-lovelace2019" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2019</a>; <a href="references.html#ref-bivand2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>.</p>
+<p>This matters even more in the current data-rich environment. Administrative records, mobile devices, transport platforms, satellite systems, environmental sensors and public-service databases now generate large volumes of data with an explicit geographic reference. In practice, many datasets that social scientists work with now contain coordinates, area identifiers, routes, catchments or flows between places, which means that spatial thinking is no longer optional background knowledge but part of core applied data work <span class="citation" data-cites="lovelace2019 comber2015">(<a href="references.html#ref-lovelace2019" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2019</a>; <a href="references.html#ref-comber2015" role="doc-biblioref">Brunsdon and Comber 2015</a>)</span>.</p>
+<p>For this course, the main question is therefore practical: how do we make sense of spatial data rather than merely store it? Across the Uruguay-focused chapters, we will move from describing different spatial data types to handling them in <code>R</code>, exploring point events, modelling flows, and then asking how spatial dependence and heterogeneity shape the results we obtain.</p>
+<section id="why-spatial-data-are-special" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="why-spatial-data-are-special">
+<span class="header-section-number">1.1</span> Why spatial data are special</h2>
+<p>Spatial data are special because the location of an observation changes its meaning. The same value attached to two observations may imply something very different depending on whether those observations are adjacent, far apart, embedded in the same administrative hierarchy or connected by a transport corridor. Spatial context therefore affects description, explanation and policy interpretation all at once.</p>
+<p>Geometry is the first reason. Spatial data usually come with a geometry such as a point, line, polygon or raster cell, and that geometry allows us to compute distance, overlap, contiguity, travel cost, exposure and accessibility. In non-spatial tabular data, records can often be reordered without changing the analysis; in spatial data, relative position is part of the information itself.</p>
+<p>Dependence is the second reason. Nearby places often share infrastructure, labour markets, environmental risks, housing systems, institutional arrangements and social composition, so values observed in one place are frequently related to values observed nearby <span class="citation" data-cites="anselin1988spatial">(<a href="references.html#ref-anselin1988spatial" role="doc-biblioref">Anselin 1988</a>)</span>. This violates the simplifying assumption that observations are independent draws and forces us to think carefully about clustering, spillovers and neighbourhood effects.</p>
+<p>Scale is the third reason. A pattern that looks smooth at the department level can become highly uneven when measured for smaller local areas, and a local hotspot can disappear once data are aggregated upward. Spatial data therefore require decisions about the geographic unit of analysis, and those decisions are not neutral because they shape the patterns we see.</p>
+<p>Finally, spatial data are often nested. Individual events can be grouped into blocks, neighbourhoods, municipalities, departments or functional regions, and data collected at one level are often used to inform decisions at another. That hierarchical structure is part of what makes spatial analysis powerful, but it is also a source of ambiguity if we do not match the question, the scale and the data structure carefully.</p>
+</section><section id="the-data-revolution-and-the-rise-of-spatial-data" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="the-data-revolution-and-the-rise-of-spatial-data">
+<span class="header-section-number">1.2</span> The data revolution and the rise of spatial data</h2>
+<p>One useful way to understand the current importance of spatial data is to think about how many ordinary data systems have become spatially enabled. A census table may contain a small-area code, a health record may include the service area of the nearest hospital, a transport feed may record origin and destination, and a social-media or mobile dataset may include coordinates or inferred locations. Even when the geography is coarse, location has become a key attribute in a growing share of the data used in applied research and policy analysis.</p>
+<p>This expansion has produced a surge of spatial data: data in which location is directly observed, inferred, or embedded through an area identifier. The shift matters because it changes the kinds of questions researchers can ask. Instead of asking only whether unemployment, injuries or access are high or low, we can ask where they are concentrated, how uneven they are, whether nearby places resemble one another, and whether relationships vary across territory.</p>
+<p>The growth of spatial data has not removed the need for judgement. In fact, it has increased it. More coordinates and more maps can create a false sense of precision unless we also understand projections, geocoding errors, confidentiality constraints, aggregation, missing coverage and scale sensitivity <span class="citation" data-cites="lovelace2019 bivand2013">(<a href="references.html#ref-lovelace2019" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2019</a>; <a href="references.html#ref-bivand2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>)</span>. Spatial data skills therefore combine technical handling with interpretation: reading geometry correctly, choosing defensible units of analysis, and connecting outputs to the social or policy process that produced them.</p>
+<p>Most contemporary data science and machine learning workflows do not treat space as a core modelling problem. They may include coordinates as features, or map results at the end, but they often assume that observations are exchangeable and that relationships are invariant across the study area. This course is about what changes once we take space seriously. It introduces the main data structures and modelling questions needed to embed space in a principled way rather than adding geography as an afterthought.</p>
+<p>For this Uruguay course, that means learning to work with several distinct but related data structures:</p>
+<ul>
+<li>area or surface data attached to administrative or analytical units</li>
+<li>point events such as Montevideo traffic injuries</li>
+<li>connections between places, especially origin-destination flows</li>
+<li>outcomes and relationships that may cluster or vary across space</li>
+</ul></section><section id="main-types-of-spatial-data" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="main-types-of-spatial-data">
+<span class="header-section-number">1.3</span> Main types of spatial data</h2>
+<p>There are several valid ways to classify spatial data. A helpful starting distinction is between <strong>vector data</strong>, which represent discrete features using points, lines and polygons, and <strong>raster data</strong>, which represent space as a regular grid of cells <span class="citation" data-cites="lovelace2019 comber2015">(<a href="references.html#ref-lovelace2019" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2019</a>; <a href="references.html#ref-comber2015" role="doc-biblioref">Brunsdon and Comber 2015</a>)</span>. For course purposes, however, it is often clearer to organise the material around the kinds of analytical and modelling strategies the data call for.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="figs/ch1/datatypes.png" class="img-fluid figure-img"></p>
+<figcaption>Data types used to introduce the main families of spatial data covered in the course. Area / lattice data source: <span class="citation" data-cites="onnerfors2019eurostat">Önnerfors et al. (<a href="references.html#ref-onnerfors2019eurostat" role="doc-biblioref">2019</a>)</span>. Point data source: <span class="citation" data-cites="tao2018">Tao et al. (<a href="references.html#ref-tao2018" role="doc-biblioref">2018</a>)</span>. Flow data source: <span class="citation" data-cites="rowe2020">Rowe and Patias (<a href="references.html#ref-rowe2020" role="doc-biblioref">2020</a>)</span>. Trajectory data source: <span class="citation" data-cites="kwan2004geovisualization">Kwan and Lee (<a href="references.html#ref-kwan2004geovisualization" role="doc-biblioref">2004</a>)</span>.</figcaption></figure>
+</div>
+<p>Table <a href="#tbl-spatial-data-types" class="quarto-xref">Table&nbsp;<span>1.1</span></a> summarises the main families of spatial data that matter for this course. The goal is not to create a dense taxonomy for its own sake, but to identify when the structure of the data changes the analytical logic. If the same broad logic applies, it is useful to signal internal variation without multiplying categories unnecessarily.</p>
+<div id="tbl-spatial-data-types" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure"><figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-spatial-data-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.1: Main families of spatial data and the kinds of analytical questions they tend to raise.
+</figcaption><div aria-describedby="tbl-spatial-data-types-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead><tr class="header">
+<th>Type</th>
+<th>Typical geometry</th>
+<th>What a record represents</th>
+<th>Example in this course or nearby applications</th>
+<th>Why it matters analytically</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Areal or surface data</td>
+<td>Polygons or regular grid cells</td>
+<td>An attribute measured for an area or surface unit</td>
+<td>accessibility indicators, census rates, deprivation by local area, land cover, temperature surfaces</td>
+<td>Requires attention to boundaries, aggregation, adjacency, resolution and MAUP</td>
+</tr>
+<tr class="even">
+<td>Point data</td>
+<td>Points</td>
+<td>An event, object or observation at a location</td>
+<td>Montevideo traffic injuries, schools, hospitals, incidents</td>
+<td>Supports density estimation, hotspot analysis and distance-based reasoning</td>
+</tr>
+<tr class="odd">
+<td>Connection data</td>
+<td>Lines, edges, routes, origin-destination links</td>
+<td>A physical connection, route, or interaction between places</td>
+<td>roads, bus routes, rivers, utility lines, commuting, migration, freight</td>
+<td>Emphasises connectivity, topology, direction and separation rather than only point locations</td>
+</tr>
+<tr class="even">
+<td>Trajectory data</td>
+<td>Ordered coordinates through time</td>
+<td>A path followed by a moving person or object</td>
+<td>GPS traces, mobile phone tracks, vehicle logs</td>
+<td>Combines space and time, making sequence and temporality central</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<section id="areal-or-surface-data" class="level3" data-number="1.3.1"><h3 data-number="1.3.1" class="anchored" data-anchor-id="areal-or-surface-data">
+<span class="header-section-number">1.3.1</span> Areal or surface data</h3>
+<p>Areal and gridded data can be treated together in this course because they usually support the same broad analytical logic: attributes are attached to spatial units that partition the study area. Those units may be irregular polygons such as neighbourhoods, census tracts, municipalities or departments, or regular cells such as grids, pixels and raster surfaces. In both cases the data tell us how an outcome, exposure or condition varies across spatial units rather than across individual events or explicit origin-destination links.</p>
+<p>The important differences sit inside the category rather than between completely separate modelling families. Polygon-based area data depend strongly on administrative boundaries and zoning systems, while raster and gridded data depend more strongly on resolution, cell size and resampling choices. But in both cases we still ask similar questions about spatial variation, neighbouring units, aggregation, scale and heterogeneity. For that reason it makes sense to group them together here and then signal their particularities as needed.</p>
+<p>This type of data is central to later chapters in the course. When we look at spatial dependence and spatial heterogeneity, we will work mainly with polygon-based indicators linked to Uruguay areas and ask how neighbouring places are related and whether a single model describes the whole geography equally well. The key lesson is that area or surface data are not just tables with a map attached: the spatial partition itself is part of the analytical problem.</p>
+</section><section id="point-data" class="level3" data-number="1.3.2"><h3 data-number="1.3.2" class="anchored" data-anchor-id="point-data">
+<span class="header-section-number">1.3.2</span> Point data</h3>
+<p>Point data represent discrete locations. A point may indicate where a crash happened, where a school is located, where a household was sampled, or where an environmental reading was recorded. Because point data preserve a relatively fine spatial resolution, they are often the closest available representation of where an observed event or object is actually situated <span class="citation" data-cites="tao2018 comber2015">(<a href="references.html#ref-tao2018" role="doc-biblioref">Tao et al. 2018</a>; <a href="references.html#ref-comber2015" role="doc-biblioref">Brunsdon and Comber 2015</a>)</span>.</p>
+<p>Point data are especially valuable for exploratory analysis. They allow us to ask whether events are concentrated, dispersed, clustered around infrastructure, or unevenly distributed relative to population and services. In this course, the Montevideo traffic injuries data provide a concrete example of how point records can be turned into density surfaces and interpreted as patterns of concentration rather than as isolated observations.</p>
+</section><section id="connection-data" class="level3" data-number="1.3.3"><h3 data-number="1.3.3" class="anchored" data-anchor-id="connection-data">
+<span class="header-section-number">1.3.3</span> Connection data</h3>
+<p>For this course it is useful to group line, network and flow representations into one broader family of <strong>connection data</strong>. They all describe relationships in space rather than isolated locations, even if the underlying concept differs. Sometimes the line represents fixed infrastructure such as a road, rail corridor or river. In other cases it represents an interaction between places, such as commuting, migration, freight, or an activity-space link between an origin and a destination <span class="citation" data-cites="rowe2020">(<a href="references.html#ref-rowe2020" role="doc-biblioref">Rowe and Patias 2020</a>)</span>.</p>
+<p>What these representations share is an emphasis on connectivity, separation and path structure. Two places may be close in straight-line distance but weakly connected in practice, while two more distant places may be strongly linked through transport infrastructure, migration systems or daily mobility. Collapsing them into one category keeps the typology cleaner for the course while still signalling that “connections” can refer to different substantive processes.</p>
+<p>Within this broader category, the course focuses mainly on <strong>flows</strong>. These are origin-destination relationships with a magnitude and often a direction, so the analytical logic differs from point and area data. Distance, travel impedance, origin characteristics and destination attractiveness may all matter at the same time. Later in the course we use Uruguay-focused movement data to show how these relational data can be visualised, summarised and modelled without collapsing them prematurely into attributes of only one place.</p>
+</section><section id="trajectory-data" class="level3" data-number="1.3.4"><h3 data-number="1.3.4" class="anchored" data-anchor-id="trajectory-data">
+<span class="header-section-number">1.3.4</span> Trajectory data</h3>
+<p>Trajectory data record the path of a moving person or object through space and time. They usually come from GPS devices, mobile-phone traces, logistics systems, vehicles or app-based mobility platforms, and they are increasingly common in research on travel behaviour, exposure, segregation and accessibility <span class="citation" data-cites="kwan2004geovisualization kong2018">(<a href="references.html#ref-kwan2004geovisualization" role="doc-biblioref">Kwan and Lee 2004</a>; <a href="references.html#ref-kong2018" role="doc-biblioref">Kong et al. 2018</a>)</span>. Unlike static point data, trajectory data preserve sequence, timing and movement between observations.</p>
+<p>We do not analyse trajectory data directly in this course, but it is worth identifying them as part of the wider spatial-data landscape. They show clearly that spatial analysis is not only about “where” something is, but also about how movement unfolds, how routes are constrained, and how exposure changes over time and across places.</p>
+</section></section><section id="hierarchies-scale-and-context" class="level2" data-number="1.4"><h2 data-number="1.4" class="anchored" data-anchor-id="hierarchies-scale-and-context">
+<span class="header-section-number">1.4</span> Hierarchies, scale and context</h2>
+<p>One of the most important properties of spatial data is that observations are often embedded in multiple geographic levels at once. A crash happens at a point, but it can also be counted inside a street segment, a neighbourhood, a municipality and a department. A hospital serves a catchment area, but it is also located in an administrative unit and connected to a transport network. The same empirical process can therefore be represented in several ways depending on the question we ask.</p>
+<p>This matters because each representation reveals some patterns and hides others. Point data preserve local detail, but they can be noisy and difficult to compare across areas with different population sizes. Area data make comparison easier, but they summarise away within-area variation. Flow data reveal connections across places, but they can conceal what is happening inside each origin or destination. Good spatial analysis requires students to move deliberately between these levels rather than assuming one geography is naturally correct.</p>
+<p>Hierarchy is not only geographical. It can also be temporal and spatio-temporal. Daily observations sit inside weeks and months; hourly mobility traces sit inside daily or weekly trajectories; local events are embedded in both wider territories and longer time frames. In practice, this means that “embedding space” often also means deciding how a process is nested in time and whether the unit we observe is the same unit at which the process operates <span class="citation" data-cites="kwan2004geovisualization kong2018">(<a href="references.html#ref-kwan2004geovisualization" role="doc-biblioref">Kwan and Lee 2004</a>; <a href="references.html#ref-kong2018" role="doc-biblioref">Kong et al. 2018</a>)</span>.</p>
+<div class="cell" data-layout-align="default">
+<div class="cell-output-display">
+<div>
+<p></p><figure class="figure"></figure><p></p>
+<div>
+<pre class="mermaid mermaid-js">flowchart TB
+  subgraph L1["Small statistical areas"]
+    A1["Blocks / output areas"]
+    A2["Blocks / output areas"]
+    A3["Blocks / output areas"]
+    A4["Blocks / output areas"]
+  end
+
+  subgraph L2["Intermediate local areas"]
+    B1["Neighbourhoods / census tracts"]
+    B2["Neighbourhoods / census tracts"]
+  end
+
+  subgraph L3["Administrative areas"]
+    C1["Municipalities / districts"]
+    C2["Departments / provinces / states"]
+  end
+
+  subgraph L4["National territory"]
+    D1["Country"]
+  end
+
+  subgraph L5["Supranational areas"]
+    E1["Macro-region / international region"]
+  end
+
+  A1 --&gt; B1
+  A2 --&gt; B1
+  A3 --&gt; B2
+  A4 --&gt; B2
+  B1 --&gt; C1
+  B2 --&gt; C1
+  C1 --&gt; C2
+  C2 --&gt; D1
+  D1 --&gt; E1
+</pre>
+</div>
+<p></p>
+</div>
+</div>
+</div>
+<p>The diagram above draws on the logic of the UK’s hierarchical statistical-geography representations, but generalises it beyond any one country. The central idea is nesting: small statistical areas are grouped into larger local areas, those into wider administrative units, then into countries, and in some cases into supranational regions. This is exactly why spatial data can be summarised at multiple levels and why a pattern that is visible at one level may look different at another. In the ONS material, the named levels are specific to the UK system; here the labels are intentionally generic so students can map the same principle onto Uruguay or other national contexts.</p>
+</section><section id="space-as-proxy-and-model-choice" class="level2" data-number="1.5"><h2 data-number="1.5" class="anchored" data-anchor-id="space-as-proxy-and-model-choice">
+<span class="header-section-number">1.5</span> Space as proxy and model choice</h2>
+<p>One of the most important ideas to carry through the course is that space is almost always a proxy for something else. A cluster on a map may point to labour-market sorting, service inequality, environmental exposure, historical segregation, administrative practice, network accessibility or some mixture of these. The coordinates or boundaries matter, but they are rarely the substantive mechanism in themselves <span class="citation" data-cites="anselin1988spatial lovelace2019">(<a href="references.html#ref-anselin1988spatial" role="doc-biblioref">Anselin 1988</a>; <a href="references.html#ref-lovelace2019" role="doc-biblioref">Lovelace, Nowosad, and Muenchow 2019</a>)</span>.</p>
+<p>This is why modelling space well requires thinking beyond geometry. The aim is not to “add space” to a model in the abstract. The aim is to decide what aspects of the world a spatial representation is standing in for, and whether that representation preserves the part of reality we care about most. That same logic explains why there is always an element of simplification in spatial modelling. We never model the full complexity of the real world; we create a stylised version that retains the relationships, scales and spatial structures most relevant to the problem at hand <span class="citation" data-cites="bivand2013 comber2015">(<a href="references.html#ref-bivand2013" role="doc-biblioref">Bivand, Pebesma, and Gómez-Rubio 2013</a>; <a href="references.html#ref-comber2015" role="doc-biblioref">Brunsdon and Comber 2015</a>)</span>.</p>
+<p>Those choices shape methodology. If the key issue is local concentration, point-pattern thinking may be appropriate. If the question is about interaction between origins and destinations, we need a flow model. If the problem is unevenness across territorial units, areal or surface data may be the right abstraction. If the concern is whether nearby places influence one another or whether relationships vary across territory, we need to think in terms of spatial dependence and heterogeneity. The modelling strategy follows from the process we think space is proxying.</p>
+</section><section id="key-complexities-and-challenges" class="level2" data-number="1.6"><h2 data-number="1.6" class="anchored" data-anchor-id="key-complexities-and-challenges">
+<span class="header-section-number">1.6</span> Key complexities and challenges</h2>
+<p>Working with spatial data is rewarding because geography helps us explain social and environmental processes more realistically. It is also demanding because spatial data come with extra layers of complexity that affect validity, interpretation and reproducibility. The goal of this section is not to overwhelm students with caveats, but to make clear that these issues are part of ordinary good practice rather than advanced exceptions.</p>
+<section id="geometry-topology-and-spatial-relations" class="level3" data-number="1.6.1"><h3 data-number="1.6.1" class="anchored" data-anchor-id="geometry-topology-and-spatial-relations">
+<span class="header-section-number">1.6.1</span> Geometry, topology and spatial relations</h3>
+<p>Spatial records are not only rows in a table. They also include geometric information that determines whether features touch, overlap, contain one another, intersect or remain disconnected. Small errors in geometry, such as invalid polygons, duplicated vertices or mismatched boundaries, can produce misleading joins, wrong neighbour structures or failed overlays.</p>
+<p>This is one reason the next chapter spends time on inspecting and validating spatial objects rather than only reading them from disk. In spatial work, data cleaning includes checking whether the geometry makes sense for the question at hand and whether the spatial relations implied by the data match the reality the analysis is trying to represent.</p>
+</section><section id="coordinate-reference-systems-and-measurement" class="level3" data-number="1.6.2"><h3 data-number="1.6.2" class="anchored" data-anchor-id="coordinate-reference-systems-and-measurement">
+<span class="header-section-number">1.6.2</span> Coordinate reference systems and measurement</h3>
+<p>Distances, areas and directions only make sense relative to a coordinate reference system (CRS). A dataset stored in geographic coordinates can be perfectly suitable for display while being inappropriate for measuring distances or areas directly. Likewise, combining layers with different CRSs can silently distort overlays if we are not careful about transformation and alignment.</p>
+<p>This is a technical issue, but it also has substantive consequences. A travel-accessibility indicator, a kernel density surface or a buffer around a health facility can all be wrong if the projection is inappropriate. Spatial analysis therefore requires students to understand not only how to map data, but how spatial measurement is encoded mathematically in the data structure itself.</p>
+</section><section id="modifiable-areal-unit-problem-maup" class="level3" data-number="1.6.3"><h3 data-number="1.6.3" class="anchored" data-anchor-id="modifiable-areal-unit-problem-maup">
+<span class="header-section-number">1.6.3</span> Modifiable Areal Unit Problem (MAUP)</h3>
+<p>The Modifiable Areal Unit Problem (MAUP) is one of the classic challenges in spatial analysis <span class="citation" data-cites="openshaw1981modifiable">(<a href="references.html#ref-openshaw1981modifiable" role="doc-biblioref">Openshaw 1981</a>)</span>. It refers to the fact that our results can change when we alter the size of the spatial units used in analysis or when we redraw boundaries while keeping the same underlying observations. Because many social datasets are analysed through administrative or analytical zones, MAUP is a routine problem rather than a rare technical curiosity.</p>
+<p>Two related mechanisms sit inside the MAUP. The <strong>scale effect</strong> appears when we move from smaller units to larger units and patterns become smoother or sharper simply because of aggregation. The <strong>zonation effect</strong> appears when the number of zones stays similar but the boundaries are arranged differently, producing different averages, correlations or apparent clusters <span class="citation" data-cites="fotheringham1991modifiable">(<a href="references.html#ref-fotheringham1991modifiable" role="doc-biblioref">Fotheringham and Wong 1991</a>)</span>.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-maup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-maup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-embedding-space_files/figure-html/fig-maup-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-maup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: A self-generated illustration of the two main MAUP effects. The same 40 individuals are shown on the left, then aggregated into alternative zone systems. The top row shows the scale effect, while the bottom row shows the zonation effect.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Figure <a href="#fig-maup" class="quarto-xref">Figure&nbsp;<span>1.1</span></a> now mirrors the usual textbook logic of the MAUP more directly. The left panel shows the unchanged individual observations, the top row shows the <strong>scale effect</strong> by comparing coarser and finer aggregations of the same points, and the bottom row shows the <strong>zonation effect</strong> by comparing two alternative boundary systems applied to the same observations. The message is simple but important: the underlying people or events do not change, yet the area-level pattern does.</p>
+<p>This has direct implications for applied work in Uruguay and elsewhere. Accessibility, deprivation, educational outcomes or public-health indicators may tell a different story when analysed for broad administrative units than when analysed for smaller local areas. Practical responses include checking sensitivity across scales, using the smallest defensible geography available, and considering functional geographies that better reflect the process under study <span class="citation" data-cites="casado-díaz2017 arribas-bel2021 singleton2013 patias2019">(<a href="references.html#ref-casado-d%C3%ADaz2017" role="doc-biblioref">Casado-Díaz, Martínez-Bernabéu, and Rowe 2017</a>; <a href="references.html#ref-arribas-bel2021" role="doc-biblioref">Arribas-Bel, Garcia-López, and Viladecans-Marsal 2021</a>; <a href="references.html#ref-singleton2013" role="doc-biblioref">Singleton and Spielman 2013</a>; <a href="references.html#ref-patias2019" role="doc-biblioref">Patias, Rowe, and Cavazzi 2019</a>)</span>. None of these strategies eliminates MAUP, but they make its consequences visible and easier to discuss.</p>
+</section><section id="ecological-fallacy" class="level3" data-number="1.6.4"><h3 data-number="1.6.4" class="anchored" data-anchor-id="ecological-fallacy">
+<span class="header-section-number">1.6.4</span> Ecological fallacy</h3>
+<p>Ecological fallacy occurs when we infer something about individuals from patterns that have only been observed for groups or areas. An area-level relationship can be informative and substantively important, but it does not automatically describe the behaviour or characteristics of the individuals living in those areas. The problem arises when we move from statements about places to statements about people without changing the evidence base.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div id="fig-ecological-fallacy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure"><div aria-describedby="fig-ecological-fallacy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="01-embedding-space_files/figure-html/fig-ecological-fallacy-1.png" class="img-fluid figure-img" width="672">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ecological-fallacy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.2: A self-generated illustration of ecological fallacy. The left panel shows individual observations with a negative within-area relationship. The right panel shows the same data aggregated to area means, which now suggest a positive area-level relationship.
+</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Figure <a href="#fig-ecological-fallacy" class="quarto-xref">Figure&nbsp;<span>1.2</span></a> illustrates the logic visually. In the left panel, the individual observations within each area follow a negative relationship: as the predictor increases, the outcome tends to fall. But once those same observations are aggregated to area means, the grouped pattern suggests the opposite, a positive area-level relationship. Nothing about the underlying individuals has changed; only the scale of observation has changed. That is exactly why ecological fallacy is so important in spatial analysis.</p>
+<p>This issue is especially relevant in policy-oriented work because many spatial datasets are aggregated by design. A department with low average accessibility or high deprivation may still contain very different neighbourhoods, households and individual experiences within it. The same problem appears in public health: an area with high average deprivation may also show poor average health outcomes, but that does not mean every deprived individual in that area experiences the same level of health risk, nor that every healthier individual lives in a less deprived context. Robinson’s classic example showed that an aggregate correlation can even point in the opposite direction from the individual-level relationship <span class="citation" data-cites="robinson1950ecological">(<a href="references.html#ref-robinson1950ecological" role="doc-biblioref">Robinson 1950</a>)</span>. The practical lesson is straightforward: keep interpretations at the scale of the evidence unless individual-level data are also available.</p>
+</section><section id="spatial-dependence" class="level3" data-number="1.6.5"><h3 data-number="1.6.5" class="anchored" data-anchor-id="spatial-dependence">
+<span class="header-section-number">1.6.5</span> Spatial dependence</h3>
+<p>Spatial dependence means that values observed in one location are related to values observed in other locations, often nearby ones <span class="citation" data-cites="anselin1988spatial">(<a href="references.html#ref-anselin1988spatial" role="doc-biblioref">Anselin 1988</a>)</span>. This can arise because of spillovers, diffusion, shared context, common infrastructure, environmental exposure or market linkages. In social-science terms, places are often not isolated cases but interdependent settings.</p>
+<p>This matters because many standard statistical tools assume independence across observations. If neighbouring values are related, model residuals can cluster, standard errors can be misleading, and coefficient interpretation can become less reliable. Later in the course we return to this idea with Uruguay polygon data and show how to diagnose dependence and think about neighbour structures more explicitly.</p>
+</section><section id="spatial-heterogeneity-and-nonstationarity" class="level3" data-number="1.6.6"><h3 data-number="1.6.6" class="anchored" data-anchor-id="spatial-heterogeneity-and-nonstationarity">
+<span class="header-section-number">1.6.6</span> Spatial heterogeneity and nonstationarity</h3>
+<p>Spatial heterogeneity refers to unevenness across space. Some places systematically display higher values, lower values or different combinations of characteristics than others, and these contrasts are often visible long before any formal model is fitted. In many applied settings, this is the first substantive reason to map data: not to decorate a result, but to see whether the process of interest is distributed evenly or unevenly across territory.</p>
+<p>Nonstationarity takes the idea a step further. It suggests that the relationship between an outcome and its predictors may itself vary across space rather than remaining constant everywhere. A factor associated with hospital accessibility or population ageing in one part of Uruguay may be weakly related, or differently related, in another. This is why later chapters distinguish between detecting spatial structure and asking whether a single global coefficient hides meaningful local variation.</p>
+</section><section id="coverage-quality-and-confidentiality" class="level3" data-number="1.6.7"><h3 data-number="1.6.7" class="anchored" data-anchor-id="coverage-quality-and-confidentiality">
+<span class="header-section-number">1.6.7</span> Coverage, quality and confidentiality</h3>
+<p>A final challenge is that spatial data are not automatically better just because they are spatially detailed. Coordinates may be missing or imprecise, area codes may change over time, platform data may overrepresent certain groups, and administrative systems may record the place of reporting rather than the place where an event actually occurred. In addition, the more spatially precise the data become, the more confidentiality concerns can restrict access, aggregation choices and reproducibility.</p>
+<p>This is particularly important in course settings because students often encounter datasets that look ready to map but still require substantial judgement before analysis. Making sense of spatial data means asking how the location information was generated, what geography it represents, who or what may be excluded, and how those limitations should affect interpretation.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Course prompt
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Before moving to the next chapter, try to identify the spatial structure of a dataset you already know. Ask yourself four questions: what is the observational unit, what geometry is attached to it, at what scale is it reported, and what might change if the geography were redrawn or aggregated differently? These questions are often enough to reveal whether a problem is mainly about points, areas, networks, flows, or a combination of several data structures.</p>
+</div>
+</div>
+</section></section><section id="what-to-carry-forward" class="level2" data-number="1.7"><h2 data-number="1.7" class="anchored" data-anchor-id="what-to-carry-forward">
+<span class="header-section-number">1.7</span> What to carry forward</h2>
+<p>Three ideas from this chapter should stay with us through the rest of the course.</p>
+<ol type="1">
+<li>Spatial data are different because geometry, distance, adjacency, hierarchy and scale are part of the information, not just contextual detail.</li>
+<li>Different spatial data types invite different descriptive and modelling strategies, so methods should be matched to the structure of the data rather than applied mechanically.</li>
+<li>Good spatial analysis is not only about producing maps. It is about choosing appropriate geographies, recognising common pitfalls such as MAUP and ecological fallacy, and building models that respect spatial structure.</li>
+</ol>
+<p>The next chapter turns to the practical toolkit required to do that work in <code>R</code>: reading spatial data, inspecting geometry, transforming coordinate systems, joining attributes, validating objects and producing clear maps.</p>
+
+
+<!-- -->
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list" style="display: none">
+<div id="ref-anselin1988spatial" class="csl-entry" role="listitem">
+Anselin, Luc. 1988. <em>Spatial Econometrics: Methods and Models</em>. Vol. 4. Springer Science &amp; Business Media.
+</div>
+<div id="ref-arribas-bel2021" class="csl-entry" role="listitem">
+Arribas-Bel, Daniel, M.-À. Garcia-López, and Elisabet Viladecans-Marsal. 2021. <span>“Building(s and) Cities: Delineating Urban Areas with a Machine Learning Algorithm.”</span> <em>Journal of Urban Economics</em> 125 (September): 103217. <a href="https://doi.org/10.1016/j.jue.2019.103217">https://doi.org/10.1016/j.jue.2019.103217</a>.
+</div>
+<div id="ref-bivand2013" class="csl-entry" role="listitem">
+Bivand, Roger S., Edzer Pebesma, and Virgilio Gómez-Rubio. 2013. <em>Applied Spatial Data Analysis with r</em>. Springer New York. <a href="https://doi.org/10.1007/978-1-4614-7618-4">https://doi.org/10.1007/978-1-4614-7618-4</a>.
+</div>
+<div id="ref-comber2015" class="csl-entry" role="listitem">
+Brunsdon, Chris, and Lex Comber. 2015. <em>An Introduction to r for Spatial Analysis &amp; Mapping</em>. Sage.
+</div>
+<div id="ref-casado-díaz2017" class="csl-entry" role="listitem">
+Casado-Díaz, José Manuel, Lucas Martínez-Bernabéu, and Francisco Rowe. 2017. <span>“An Evolutionary Approach to the Delimitation of Labour Market Areas: An Empirical Application for Chile.”</span> <em>Spatial Economic Analysis</em> 12 (4): 379–403. <a href="https://doi.org/10.1080/17421772.2017.1273541">https://doi.org/10.1080/17421772.2017.1273541</a>.
+</div>
+<div id="ref-fotheringham1991modifiable" class="csl-entry" role="listitem">
+Fotheringham, A Stewart, and David WS Wong. 1991. <span>“The Modifiable Areal Unit Problem in Multivariate Statistical Analysis.”</span> <em>Environment and Planning A</em> 23 (7): 1025–44.
+</div>
+<div id="ref-kong2018" class="csl-entry" role="listitem">
+Kong, Xiangjie, Menglin Li, Kai Ma, Kaiqi Tian, Mengyuan Wang, Zhaolong Ning, and Feng Xia. 2018. <span>“Big Trajectory Data: A Survey of Applications and Services.”</span> <em>IEEE Access</em> 6: 58295–306. <a href="https://doi.org/10.1109/access.2018.2873779">https://doi.org/10.1109/access.2018.2873779</a>.
+</div>
+<div id="ref-kwan2004geovisualization" class="csl-entry" role="listitem">
+Kwan, Mei-Po, and Jiyeong Lee. 2004. <span>“Geovisualization of Human Activity Patterns Using 3D GIS: A Time-Geographic Approach.”</span> <em>Spatially Integrated Social Science</em> 27: 721–44.
+</div>
+<div id="ref-lovelace2019" class="csl-entry" role="listitem">
+Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation with r</em>. Chapman; Hall/CRC. <a href="https://doi.org/10.1201/9780203730058">https://doi.org/10.1201/9780203730058</a>.
+</div>
+<div id="ref-onnerfors2019eurostat" class="csl-entry" role="listitem">
+Önnerfors, Åsa, Mariana Kotzeva, Teodóra Brandmüller, et al. 2019. <span>“Eurostat Regional Yearbook 2019 Edition.”</span>
+</div>
+<div id="ref-openshaw1981modifiable" class="csl-entry" role="listitem">
+Openshaw, Stan. 1981. <span>“The Modifiable Areal Unit Problem.”</span> <em>Quantitative Geography: A British View</em>, 60–69.
+</div>
+<div id="ref-patias2019" class="csl-entry" role="listitem">
+Patias, Nikos, Francisco Rowe, and Stefano Cavazzi. 2019. <span>“A Scalable Analytical Framework for Spatio-Temporal Analysis of Neighborhood Change: A Sequence Analysis Approach.”</span> In, 223–41. Springer International Publishing. <a href="https://doi.org/10.1007/978-3-030-14745-7_13">https://doi.org/10.1007/978-3-030-14745-7_13</a>.
+</div>
+<div id="ref-robinson1950ecological" class="csl-entry" role="listitem">
+Robinson, WS. 1950. <span>“Ecological Correlations and Individual Behavior.”</span> <em>American Sociological Review</em> 15 (195): 351–57.
+</div>
+<div id="ref-rowe2020" class="csl-entry" role="listitem">
+Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns of Internal Migration in Europe.”</span> <em>Regional Studies, Regional Science</em> 7 (1): 390–93. <a href="https://doi.org/10.1080/21681376.2020.1811139">https://doi.org/10.1080/21681376.2020.1811139</a>.
+</div>
+<div id="ref-singleton2013" class="csl-entry" role="listitem">
+Singleton, Alexander D., and Seth E. Spielman. 2013. <span>“The Past, Present, and Future of Geodemographic Research in the United States and United Kingdom.”</span> <em>The Professional Geographer</em> 66 (4): 558–67. <a href="https://doi.org/10.1080/00330124.2013.848764">https://doi.org/10.1080/00330124.2013.848764</a>.
+</div>
+<div id="ref-tao2018" class="csl-entry" role="listitem">
+Tao, Sui, Jonathan Corcoran, Francisco Rowe, and Mark Hickman. 2018. <span>“To Travel or Not to Travel: <span>‘</span>Weather<span>’</span> Is the Question. Modelling the Effect of Local Weather Conditions on Bus Ridership.”</span> <em>Transportation Research Part C: Emerging Technologies</em> 86 (January): 147–67. <a href="https://doi.org/10.1016/j.trc.2017.11.005">https://doi.org/10.1016/j.trc.2017.11.005</a>.
+</div>
+</div>
+</section></main><!-- /main --><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+    const viewSource = window.document.getElementById('quarto-view-source') ||
+                       window.document.getElementById('quarto-code-tools-source');
+    if (viewSource) {
+      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
+      viewSource.addEventListener("click", function(e) {
+        if (sourceUrl) {
+          // rstudio viewer pane
+          if (/\bcapabilities=\b/.test(window.location)) {
+            window.open(sourceUrl);
+          } else {
+            window.location.href = sourceUrl;
+          }
+        } else {
+          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
+          modal.show();
+        }
+        return false;
+      });
+    }
+    function toggleCodeHandler(show) {
+      return function(e) {
+        const detailsSrc = window.document.querySelectorAll(".cell > details > .sourceCode");
+        for (let i=0; i<detailsSrc.length; i++) {
+          const details = detailsSrc[i].parentElement;
+          if (show) {
+            details.open = true;
+          } else {
+            details.removeAttribute("open");
+          }
+        }
+        const cellCodeDivs = window.document.querySelectorAll(".cell > .sourceCode");
+        const fromCls = show ? "hidden" : "unhidden";
+        const toCls = show ? "unhidden" : "hidden";
+        for (let i=0; i<cellCodeDivs.length; i++) {
+          const codeDiv = cellCodeDivs[i];
+          if (codeDiv.classList.contains(fromCls)) {
+            codeDiv.classList.remove(fromCls);
+            codeDiv.classList.add(toCls);
+          } 
+        }
+        return false;
+      }
+    }
+    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
+    if (hideAllCode) {
+      hideAllCode.addEventListener("click", toggleCodeHandler(false));
+    }
+    const showAllCode = window.document.getElementById("quarto-show-all-code");
+    if (showAllCode) {
+      showAllCode.addEventListener("click", toggleCodeHandler(true));
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./course-overview.html" class="pagination-link" aria-label="Course Overview">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Course Overview</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./02-spatial-data-wrangling.html" class="pagination-link" aria-label="Spatial data wrangling">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Spatial data wrangling</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Embedding space</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>Location is not just another column in a dataset. Once observations happen somewhere, they become part of a spatial structure shaped by distance, adjacency, containment, connectivity and scale. That is why spatial data are analytically different from non-spatial data: geography changes both what we can observe and how safely we can interpret relationships <span class="co">[</span><span class="ot">@lovelace2019; @bivand2013</span><span class="co">]</span>.</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>This matters even more in the current data-rich environment. Administrative records, mobile devices, transport platforms, satellite systems, environmental sensors and public-service databases now generate large volumes of data with an explicit geographic reference. In practice, many datasets that social scientists work with now contain coordinates, area identifiers, routes, catchments or flows between places, which means that spatial thinking is no longer optional background knowledge but part of core applied data work <span class="co">[</span><span class="ot">@lovelace2019; @comber2015</span><span class="co">]</span>.</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>For this course, the main question is therefore practical: how do we make sense of spatial data rather than merely store it? Across the Uruguay-focused chapters, we will move from describing different spatial data types to handling them in <span class="in">`R`</span>, exploring point events, modelling flows, and then asking how spatial dependence and heterogeneity shape the results we obtain.</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## Why spatial data are special</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>Spatial data are special because the location of an observation changes its meaning. The same value attached to two observations may imply something very different depending on whether those observations are adjacent, far apart, embedded in the same administrative hierarchy or connected by a transport corridor. Spatial context therefore affects description, explanation and policy interpretation all at once.</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Geometry is the first reason. Spatial data usually come with a geometry such as a point, line, polygon or raster cell, and that geometry allows us to compute distance, overlap, contiguity, travel cost, exposure and accessibility. In non-spatial tabular data, records can often be reordered without changing the analysis; in spatial data, relative position is part of the information itself.</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>Dependence is the second reason. Nearby places often share infrastructure, labour markets, environmental risks, housing systems, institutional arrangements and social composition, so values observed in one place are frequently related to values observed nearby <span class="co">[</span><span class="ot">@anselin1988spatial</span><span class="co">]</span>. This violates the simplifying assumption that observations are independent draws and forces us to think carefully about clustering, spillovers and neighbourhood effects.</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>Scale is the third reason. A pattern that looks smooth at the department level can become highly uneven when measured for smaller local areas, and a local hotspot can disappear once data are aggregated upward. Spatial data therefore require decisions about the geographic unit of analysis, and those decisions are not neutral because they shape the patterns we see.</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>Finally, spatial data are often nested. Individual events can be grouped into blocks, neighbourhoods, municipalities, departments or functional regions, and data collected at one level are often used to inform decisions at another. That hierarchical structure is part of what makes spatial analysis powerful, but it is also a source of ambiguity if we do not match the question, the scale and the data structure carefully.</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="fu">## The data revolution and the rise of spatial data</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>One useful way to understand the current importance of spatial data is to think about how many ordinary data systems have become spatially enabled. A census table may contain a small-area code, a health record may include the service area of the nearest hospital, a transport feed may record origin and destination, and a social-media or mobile dataset may include coordinates or inferred locations. Even when the geography is coarse, location has become a key attribute in a growing share of the data used in applied research and policy analysis.</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>This expansion has produced a surge of spatial data: data in which location is directly observed, inferred, or embedded through an area identifier. The shift matters because it changes the kinds of questions researchers can ask. Instead of asking only whether unemployment, injuries or access are high or low, we can ask where they are concentrated, how uneven they are, whether nearby places resemble one another, and whether relationships vary across territory.</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>The growth of spatial data has not removed the need for judgement. In fact, it has increased it. More coordinates and more maps can create a false sense of precision unless we also understand projections, geocoding errors, confidentiality constraints, aggregation, missing coverage and scale sensitivity <span class="co">[</span><span class="ot">@lovelace2019; @bivand2013</span><span class="co">]</span>. Spatial data skills therefore combine technical handling with interpretation: reading geometry correctly, choosing defensible units of analysis, and connecting outputs to the social or policy process that produced them.</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>Most contemporary data science and machine learning workflows do not treat space as a core modelling problem. They may include coordinates as features, or map results at the end, but they often assume that observations are exchangeable and that relationships are invariant across the study area. This course is about what changes once we take space seriously. It introduces the main data structures and modelling questions needed to embed space in a principled way rather than adding geography as an afterthought.</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>For this Uruguay course, that means learning to work with several distinct but related data structures:</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>area or surface data attached to administrative or analytical units</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>point events such as Montevideo traffic injuries</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>connections between places, especially origin-destination flows</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>outcomes and relationships that may cluster or vary across space</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a><span class="fu">## Main types of spatial data</span></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>There are several valid ways to classify spatial data. A helpful starting distinction is between **vector data**, which represent discrete features using points, lines and polygons, and **raster data**, which represent space as a regular grid of cells <span class="co">[</span><span class="ot">@lovelace2019; @comber2015</span><span class="co">]</span>. For course purposes, however, it is often clearer to organise the material around the kinds of analytical and modelling strategies the data call for.</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="al">![Data types used to introduce the main families of spatial data covered in the course. Area / lattice data source: @onnerfors2019eurostat. Point data source: @tao2018. Flow data source: @rowe2020. Trajectory data source: @kwan2004geovisualization.](figs/ch1/datatypes.png)</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>Table @tbl-spatial-data-types summarises the main families of spatial data that matter for this course. The goal is not to create a dense taxonomy for its own sake, but to identify when the structure of the data changes the analytical logic. If the same broad logic applies, it is useful to signal internal variation without multiplying categories unnecessarily.</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Type <span class="pp">|</span> Typical geometry <span class="pp">|</span> What a record represents <span class="pp">|</span> Example in this course or nearby applications <span class="pp">|</span> Why it matters analytically <span class="pp">|</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|---|---|---|</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Areal or surface data <span class="pp">|</span> Polygons or regular grid cells <span class="pp">|</span> An attribute measured for an area or surface unit <span class="pp">|</span> accessibility indicators, census rates, deprivation by local area, land cover, temperature surfaces <span class="pp">|</span> Requires attention to boundaries, aggregation, adjacency, resolution and MAUP <span class="pp">|</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Point data <span class="pp">|</span> Points <span class="pp">|</span> An event, object or observation at a location <span class="pp">|</span> Montevideo traffic injuries, schools, hospitals, incidents <span class="pp">|</span> Supports density estimation, hotspot analysis and distance-based reasoning <span class="pp">|</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Connection data <span class="pp">|</span> Lines, edges, routes, origin-destination links <span class="pp">|</span> A physical connection, route, or interaction between places <span class="pp">|</span> roads, bus routes, rivers, utility lines, commuting, migration, freight <span class="pp">|</span> Emphasises connectivity, topology, direction and separation rather than only point locations <span class="pp">|</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Trajectory data <span class="pp">|</span> Ordered coordinates through time <span class="pp">|</span> A path followed by a moving person or object <span class="pp">|</span> GPS traces, mobile phone tracks, vehicle logs <span class="pp">|</span> Combines space and time, making sequence and temporality central <span class="pp">|</span></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>: Main families of spatial data and the kinds of analytical questions they tend to raise. {#tbl-spatial-data-types}</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="fu">### Areal or surface data</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>Areal and gridded data can be treated together in this course because they usually support the same broad analytical logic: attributes are attached to spatial units that partition the study area. Those units may be irregular polygons such as neighbourhoods, census tracts, municipalities or departments, or regular cells such as grids, pixels and raster surfaces. In both cases the data tell us how an outcome, exposure or condition varies across spatial units rather than across individual events or explicit origin-destination links.</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>The important differences sit inside the category rather than between completely separate modelling families. Polygon-based area data depend strongly on administrative boundaries and zoning systems, while raster and gridded data depend more strongly on resolution, cell size and resampling choices. But in both cases we still ask similar questions about spatial variation, neighbouring units, aggregation, scale and heterogeneity. For that reason it makes sense to group them together here and then signal their particularities as needed.</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>This type of data is central to later chapters in the course. When we look at spatial dependence and spatial heterogeneity, we will work mainly with polygon-based indicators linked to Uruguay areas and ask how neighbouring places are related and whether a single model describes the whole geography equally well. The key lesson is that area or surface data are not just tables with a map attached: the spatial partition itself is part of the analytical problem.</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="fu">### Point data</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>Point data represent discrete locations. A point may indicate where a crash happened, where a school is located, where a household was sampled, or where an environmental reading was recorded. Because point data preserve a relatively fine spatial resolution, they are often the closest available representation of where an observed event or object is actually situated <span class="co">[</span><span class="ot">@tao2018; @comber2015</span><span class="co">]</span>.</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>Point data are especially valuable for exploratory analysis. They allow us to ask whether events are concentrated, dispersed, clustered around infrastructure, or unevenly distributed relative to population and services. In this course, the Montevideo traffic injuries data provide a concrete example of how point records can be turned into density surfaces and interpreted as patterns of concentration rather than as isolated observations.</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a><span class="fu">### Connection data</span></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>For this course it is useful to group line, network and flow representations into one broader family of **connection data**. They all describe relationships in space rather than isolated locations, even if the underlying concept differs. Sometimes the line represents fixed infrastructure such as a road, rail corridor or river. In other cases it represents an interaction between places, such as commuting, migration, freight, or an activity-space link between an origin and a destination <span class="co">[</span><span class="ot">@rowe2020</span><span class="co">]</span>.</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>What these representations share is an emphasis on connectivity, separation and path structure. Two places may be close in straight-line distance but weakly connected in practice, while two more distant places may be strongly linked through transport infrastructure, migration systems or daily mobility. Collapsing them into one category keeps the typology cleaner for the course while still signalling that "connections" can refer to different substantive processes.</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>Within this broader category, the course focuses mainly on **flows**. These are origin-destination relationships with a magnitude and often a direction, so the analytical logic differs from point and area data. Distance, travel impedance, origin characteristics and destination attractiveness may all matter at the same time. Later in the course we use Uruguay-focused movement data to show how these relational data can be visualised, summarised and modelled without collapsing them prematurely into attributes of only one place.</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a><span class="fu">### Trajectory data</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>Trajectory data record the path of a moving person or object through space and time. They usually come from GPS devices, mobile-phone traces, logistics systems, vehicles or app-based mobility platforms, and they are increasingly common in research on travel behaviour, exposure, segregation and accessibility <span class="co">[</span><span class="ot">@kwan2004geovisualization; @kong2018</span><span class="co">]</span>. Unlike static point data, trajectory data preserve sequence, timing and movement between observations.</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>We do not analyse trajectory data directly in this course, but it is worth identifying them as part of the wider spatial-data landscape. They show clearly that spatial analysis is not only about "where" something is, but also about how movement unfolds, how routes are constrained, and how exposure changes over time and across places.</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="fu">## Hierarchies, scale and context</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>One of the most important properties of spatial data is that observations are often embedded in multiple geographic levels at once. A crash happens at a point, but it can also be counted inside a street segment, a neighbourhood, a municipality and a department. A hospital serves a catchment area, but it is also located in an administrative unit and connected to a transport network. The same empirical process can therefore be represented in several ways depending on the question we ask.</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>This matters because each representation reveals some patterns and hides others. Point data preserve local detail, but they can be noisy and difficult to compare across areas with different population sizes. Area data make comparison easier, but they summarise away within-area variation. Flow data reveal connections across places, but they can conceal what is happening inside each origin or destination. Good spatial analysis requires students to move deliberately between these levels rather than assuming one geography is naturally correct.</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>Hierarchy is not only geographical. It can also be temporal and spatio-temporal. Daily observations sit inside weeks and months; hourly mobility traces sit inside daily or weekly trajectories; local events are embedded in both wider territories and longer time frames. In practice, this means that "embedding space" often also means deciding how a process is nested in time and whether the unit we observe is the same unit at which the process operates <span class="co">[</span><span class="ot">@kwan2004geovisualization; @kong2018</span><span class="co">]</span>.</span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="in">```{mermaid}</span></span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a>flowchart TB</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>  subgraph L1[<span class="ot">"</span><span class="st">Small statistical areas</span><span class="ot">"</span>]</span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    A1[<span class="ot">"</span><span class="st">Blocks / output areas</span><span class="ot">"</span>]</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    A2[<span class="ot">"</span><span class="st">Blocks / output areas</span><span class="ot">"</span>]</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    A3[<span class="ot">"</span><span class="st">Blocks / output areas</span><span class="ot">"</span>]</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>    A4[<span class="ot">"</span><span class="st">Blocks / output areas</span><span class="ot">"</span>]</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>  end</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>  subgraph L2[<span class="ot">"</span><span class="st">Intermediate local areas</span><span class="ot">"</span>]</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>    B1[<span class="ot">"</span><span class="st">Neighbourhoods / census tracts</span><span class="ot">"</span>]</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>    B2[<span class="ot">"</span><span class="st">Neighbourhoods / census tracts</span><span class="ot">"</span>]</span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>  end</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a>  subgraph L3[<span class="ot">"</span><span class="st">Administrative areas</span><span class="ot">"</span>]</span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    C1[<span class="ot">"</span><span class="st">Municipalities / districts</span><span class="ot">"</span>]</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>    C2[<span class="ot">"</span><span class="st">Departments / provinces / states</span><span class="ot">"</span>]</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>  end</span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>  subgraph L4[<span class="ot">"</span><span class="st">National territory</span><span class="ot">"</span>]</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>    D1[<span class="ot">"</span><span class="st">Country</span><span class="ot">"</span>]</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>  end</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a>  subgraph L5[<span class="ot">"</span><span class="st">Supranational areas</span><span class="ot">"</span>]</span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>    E1[<span class="ot">"</span><span class="st">Macro-region / international region</span><span class="ot">"</span>]</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a>  end</span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>  A1 --&gt; B1</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>  A2 --&gt; B1</span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>  A3 --&gt; B2</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a>  A4 --&gt; B2</span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a>  B1 --&gt; C1</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a>  B2 --&gt; C1</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>  C1 --&gt; C2</span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>  C2 --&gt; D1</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>  D1 --&gt; E1</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>The diagram above draws on the logic of the UK's hierarchical statistical-geography representations, but generalises it beyond any one country. The central idea is nesting: small statistical areas are grouped into larger local areas, those into wider administrative units, then into countries, and in some cases into supranational regions. This is exactly why spatial data can be summarised at multiple levels and why a pattern that is visible at one level may look different at another. In the ONS material, the named levels are specific to the UK system; here the labels are intentionally generic so students can map the same principle onto Uruguay or other national contexts.</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a><span class="fu">## Space as proxy and model choice</span></span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>One of the most important ideas to carry through the course is that space is almost always a proxy for something else. A cluster on a map may point to labour-market sorting, service inequality, environmental exposure, historical segregation, administrative practice, network accessibility or some mixture of these. The coordinates or boundaries matter, but they are rarely the substantive mechanism in themselves <span class="co">[</span><span class="ot">@anselin1988spatial; @lovelace2019</span><span class="co">]</span>.</span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>This is why modelling space well requires thinking beyond geometry. The aim is not to "add space" to a model in the abstract. The aim is to decide what aspects of the world a spatial representation is standing in for, and whether that representation preserves the part of reality we care about most. That same logic explains why there is always an element of simplification in spatial modelling. We never model the full complexity of the real world; we create a stylised version that retains the relationships, scales and spatial structures most relevant to the problem at hand <span class="co">[</span><span class="ot">@bivand2013; @comber2015</span><span class="co">]</span>.</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>Those choices shape methodology. If the key issue is local concentration, point-pattern thinking may be appropriate. If the question is about interaction between origins and destinations, we need a flow model. If the problem is unevenness across territorial units, areal or surface data may be the right abstraction. If the concern is whether nearby places influence one another or whether relationships vary across territory, we need to think in terms of spatial dependence and heterogeneity. The modelling strategy follows from the process we think space is proxying.</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a><span class="fu">## Key complexities and challenges</span></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>Working with spatial data is rewarding because geography helps us explain social and environmental processes more realistically. It is also demanding because spatial data come with extra layers of complexity that affect validity, interpretation and reproducibility. The goal of this section is not to overwhelm students with caveats, but to make clear that these issues are part of ordinary good practice rather than advanced exceptions.</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a><span class="fu">### Geometry, topology and spatial relations</span></span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>Spatial records are not only rows in a table. They also include geometric information that determines whether features touch, overlap, contain one another, intersect or remain disconnected. Small errors in geometry, such as invalid polygons, duplicated vertices or mismatched boundaries, can produce misleading joins, wrong neighbour structures or failed overlays.</span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>This is one reason the next chapter spends time on inspecting and validating spatial objects rather than only reading them from disk. In spatial work, data cleaning includes checking whether the geometry makes sense for the question at hand and whether the spatial relations implied by the data match the reality the analysis is trying to represent.</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coordinate reference systems and measurement</span></span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a>Distances, areas and directions only make sense relative to a coordinate reference system (CRS). A dataset stored in geographic coordinates can be perfectly suitable for display while being inappropriate for measuring distances or areas directly. Likewise, combining layers with different CRSs can silently distort overlays if we are not careful about transformation and alignment.</span>
+<span id="cb1-154"><a href="#cb1-154" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-155"><a href="#cb1-155" aria-hidden="true" tabindex="-1"></a>This is a technical issue, but it also has substantive consequences. A travel-accessibility indicator, a kernel density surface or a buffer around a health facility can all be wrong if the projection is inappropriate. Spatial analysis therefore requires students to understand not only how to map data, but how spatial measurement is encoded mathematically in the data structure itself.</span>
+<span id="cb1-156"><a href="#cb1-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-157"><a href="#cb1-157" aria-hidden="true" tabindex="-1"></a><span class="fu">### Modifiable Areal Unit Problem (MAUP)</span></span>
+<span id="cb1-158"><a href="#cb1-158" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-159"><a href="#cb1-159" aria-hidden="true" tabindex="-1"></a>The Modifiable Areal Unit Problem (MAUP) is one of the classic challenges in spatial analysis <span class="co">[</span><span class="ot">@openshaw1981modifiable</span><span class="co">]</span>. It refers to the fact that our results can change when we alter the size of the spatial units used in analysis or when we redraw boundaries while keeping the same underlying observations. Because many social datasets are analysed through administrative or analytical zones, MAUP is a routine problem rather than a rare technical curiosity.</span>
+<span id="cb1-160"><a href="#cb1-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-161"><a href="#cb1-161" aria-hidden="true" tabindex="-1"></a>Two related mechanisms sit inside the MAUP. The **scale effect** appears when we move from smaller units to larger units and patterns become smoother or sharper simply because of aggregation. The **zonation effect** appears when the number of zones stays similar but the boundaries are arranged differently, producing different averages, correlations or apparent clusters <span class="co">[</span><span class="ot">@fotheringham1991modifiable</span><span class="co">]</span>.</span>
+<span id="cb1-162"><a href="#cb1-162" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-165"><a href="#cb1-165" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb1-166"><a href="#cb1-166" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-maup</span></span>
+<span id="cb1-167"><a href="#cb1-167" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "A self-generated illustration of the two main MAUP effects. The same 40 individuals are shown on the left, then aggregated into alternative zone systems. The top row shows the scale effect, while the bottom row shows the zonation effect."</span></span>
+<span id="cb1-168"><a href="#cb1-168" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-169"><a href="#cb1-169" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb1-170"><a href="#cb1-170" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb1-171"><a href="#cb1-171" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-172"><a href="#cb1-172" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-173"><a href="#cb1-173" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-174"><a href="#cb1-174" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-175"><a href="#cb1-175" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-176"><a href="#cb1-176" aria-hidden="true" tabindex="-1"></a>push_from_breaks <span class="ot">&lt;-</span> <span class="cf">function</span>(v, breaks, <span class="at">gap =</span> <span class="fl">0.035</span>) {</span>
+<span id="cb1-177"><a href="#cb1-177" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (b <span class="cf">in</span> breaks) {</span>
+<span id="cb1-178"><a href="#cb1-178" aria-hidden="true" tabindex="-1"></a>    close <span class="ot">&lt;-</span> <span class="fu">abs</span>(v <span class="sc">-</span> b) <span class="sc">&lt;</span> gap</span>
+<span id="cb1-179"><a href="#cb1-179" aria-hidden="true" tabindex="-1"></a>    v[close <span class="sc">&amp;</span> v <span class="sc">&lt;</span> b] <span class="ot">&lt;-</span> b <span class="sc">-</span> gap</span>
+<span id="cb1-180"><a href="#cb1-180" aria-hidden="true" tabindex="-1"></a>    v[close <span class="sc">&amp;</span> v <span class="sc">&gt;=</span> b] <span class="ot">&lt;-</span> b <span class="sc">+</span> gap</span>
+<span id="cb1-181"><a href="#cb1-181" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-182"><a href="#cb1-182" aria-hidden="true" tabindex="-1"></a>  v</span>
+<span id="cb1-183"><a href="#cb1-183" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-184"><a href="#cb1-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-185"><a href="#cb1-185" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-186"><a href="#cb1-186" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">runif</span>(<span class="dv">40</span>, <span class="at">min =</span> <span class="fl">0.06</span>, <span class="at">max =</span> <span class="fl">0.94</span>),</span>
+<span id="cb1-187"><a href="#cb1-187" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">runif</span>(<span class="dv">40</span>, <span class="at">min =</span> <span class="fl">0.06</span>, <span class="at">max =</span> <span class="fl">0.94</span>)</span>
+<span id="cb1-188"><a href="#cb1-188" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-189"><a href="#cb1-189" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>x <span class="ot">&lt;-</span> <span class="fu">push_from_breaks</span>(pts<span class="sc">$</span>x, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>))</span>
+<span id="cb1-190"><a href="#cb1-190" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>y <span class="ot">&lt;-</span> <span class="fu">push_from_breaks</span>(pts<span class="sc">$</span>y, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="fl">0.5</span>))</span>
+<span id="cb1-191"><a href="#cb1-191" aria-hidden="true" tabindex="-1"></a>score <span class="ot">&lt;-</span> <span class="fl">0.9</span> <span class="sc">*</span> pts<span class="sc">$</span>x <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> pts<span class="sc">$</span>y</span>
+<span id="cb1-192"><a href="#cb1-192" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="dv">0</span>L</span>
+<span id="cb1-193"><a href="#cb1-193" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>value[<span class="fu">order</span>(score, <span class="at">decreasing =</span> <span class="cn">TRUE</span>)[<span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>]] <span class="ot">&lt;-</span> <span class="dv">1</span>L</span>
+<span id="cb1-194"><a href="#cb1-194" aria-hidden="true" tabindex="-1"></a>pts<span class="sc">$</span>group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(pts<span class="sc">$</span>value <span class="sc">==</span> <span class="dv">1</span>L, <span class="st">"Blue"</span>, <span class="st">"Red"</span>)</span>
+<span id="cb1-195"><a href="#cb1-195" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-196"><a href="#cb1-196" aria-hidden="true" tabindex="-1"></a>panel_boxes <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-197"><a href="#cb1-197" aria-hidden="true" tabindex="-1"></a>  <span class="at">panel =</span> <span class="fu">c</span>(<span class="st">"Source"</span>, <span class="st">"Scale coarse"</span>, <span class="st">"Scale fine"</span>, <span class="st">"Zone horizontal"</span>, <span class="st">"Zone vertical"</span>),</span>
+<span id="cb1-198"><a href="#cb1-198" aria-hidden="true" tabindex="-1"></a>  <span class="at">x0 =</span> <span class="fu">c</span>(<span class="fl">1.8</span>, <span class="fl">7.2</span>, <span class="fl">12.1</span>, <span class="fl">7.2</span>, <span class="fl">12.1</span>),</span>
+<span id="cb1-199"><a href="#cb1-199" aria-hidden="true" tabindex="-1"></a>  <span class="at">y0 =</span> <span class="fu">c</span>(<span class="fl">2.25</span>, <span class="fl">5.05</span>, <span class="fl">5.05</span>, <span class="fl">0.10</span>, <span class="fl">0.10</span>),</span>
+<span id="cb1-200"><a href="#cb1-200" aria-hidden="true" tabindex="-1"></a>  <span class="at">w =</span> <span class="fu">c</span>(<span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>),</span>
+<span id="cb1-201"><a href="#cb1-201" aria-hidden="true" tabindex="-1"></a>  <span class="at">h =</span> <span class="fu">c</span>(<span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>, <span class="fl">4.4</span>)</span>
+<span id="cb1-202"><a href="#cb1-202" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-203"><a href="#cb1-203" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-204"><a href="#cb1-204" aria-hidden="true" tabindex="-1"></a>make_pts_panel <span class="ot">&lt;-</span> <span class="cf">function</span>(panel_name) {</span>
+<span id="cb1-205"><a href="#cb1-205" aria-hidden="true" tabindex="-1"></a>  box <span class="ot">&lt;-</span> panel_boxes[panel_boxes<span class="sc">$</span>panel <span class="sc">==</span> panel_name, ]</span>
+<span id="cb1-206"><a href="#cb1-206" aria-hidden="true" tabindex="-1"></a>  <span class="fu">transform</span>(</span>
+<span id="cb1-207"><a href="#cb1-207" aria-hidden="true" tabindex="-1"></a>    pts,</span>
+<span id="cb1-208"><a href="#cb1-208" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel =</span> panel_name,</span>
+<span id="cb1-209"><a href="#cb1-209" aria-hidden="true" tabindex="-1"></a>    <span class="at">xp =</span> box<span class="sc">$</span>x0 <span class="sc">+</span> x <span class="sc">*</span> box<span class="sc">$</span>w,</span>
+<span id="cb1-210"><a href="#cb1-210" aria-hidden="true" tabindex="-1"></a>    <span class="at">yp =</span> box<span class="sc">$</span>y0 <span class="sc">+</span> y <span class="sc">*</span> box<span class="sc">$</span>h</span>
+<span id="cb1-211"><a href="#cb1-211" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-212"><a href="#cb1-212" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-213"><a href="#cb1-213" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-214"><a href="#cb1-214" aria-hidden="true" tabindex="-1"></a>make_zone_panel <span class="ot">&lt;-</span> <span class="cf">function</span>(panel_name, zones) {</span>
+<span id="cb1-215"><a href="#cb1-215" aria-hidden="true" tabindex="-1"></a>  box <span class="ot">&lt;-</span> panel_boxes[panel_boxes<span class="sc">$</span>panel <span class="sc">==</span> panel_name, ]</span>
+<span id="cb1-216"><a href="#cb1-216" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>panel <span class="ot">&lt;-</span> panel_name</span>
+<span id="cb1-217"><a href="#cb1-217" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>xmin_p <span class="ot">&lt;-</span> box<span class="sc">$</span>x0 <span class="sc">+</span> zones<span class="sc">$</span>xmin <span class="sc">*</span> box<span class="sc">$</span>w</span>
+<span id="cb1-218"><a href="#cb1-218" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>xmax_p <span class="ot">&lt;-</span> box<span class="sc">$</span>x0 <span class="sc">+</span> zones<span class="sc">$</span>xmax <span class="sc">*</span> box<span class="sc">$</span>w</span>
+<span id="cb1-219"><a href="#cb1-219" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>ymin_p <span class="ot">&lt;-</span> box<span class="sc">$</span>y0 <span class="sc">+</span> zones<span class="sc">$</span>ymin <span class="sc">*</span> box<span class="sc">$</span>h</span>
+<span id="cb1-220"><a href="#cb1-220" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>ymax_p <span class="ot">&lt;-</span> box<span class="sc">$</span>y0 <span class="sc">+</span> zones<span class="sc">$</span>ymax <span class="sc">*</span> box<span class="sc">$</span>h</span>
+<span id="cb1-221"><a href="#cb1-221" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-222"><a href="#cb1-222" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>share_blue <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(xmin, xmax, ymin, ymax) {</span>
+<span id="cb1-223"><a href="#cb1-223" aria-hidden="true" tabindex="-1"></a>    inside <span class="ot">&lt;-</span> pts<span class="sc">$</span>x <span class="sc">&gt;=</span> xmin <span class="sc">&amp;</span> pts<span class="sc">$</span>x <span class="sc">&lt;</span> xmax <span class="sc">&amp;</span> pts<span class="sc">$</span>y <span class="sc">&gt;=</span> ymin <span class="sc">&amp;</span> pts<span class="sc">$</span>y <span class="sc">&lt;</span> ymax</span>
+<span id="cb1-224"><a href="#cb1-224" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(inside)) <span class="fu">mean</span>(pts<span class="sc">$</span>value[inside]) <span class="cf">else</span> <span class="cn">NA_real_</span></span>
+<span id="cb1-225"><a href="#cb1-225" aria-hidden="true" tabindex="-1"></a>  }, zones<span class="sc">$</span>xmin, zones<span class="sc">$</span>xmax, zones<span class="sc">$</span>ymin, zones<span class="sc">$</span>ymax)</span>
+<span id="cb1-226"><a href="#cb1-226" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-227"><a href="#cb1-227" aria-hidden="true" tabindex="-1"></a>  zones<span class="sc">$</span>fill_group <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(zones<span class="sc">$</span>share_blue), <span class="cn">NA_character_</span>,</span>
+<span id="cb1-228"><a href="#cb1-228" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(zones<span class="sc">$</span>share_blue <span class="sc">&gt;=</span> <span class="fl">0.5</span>, <span class="st">"Blue zone"</span>, <span class="st">"Red zone"</span>)</span>
+<span id="cb1-229"><a href="#cb1-229" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-230"><a href="#cb1-230" aria-hidden="true" tabindex="-1"></a>  zones</span>
+<span id="cb1-231"><a href="#cb1-231" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-232"><a href="#cb1-232" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-233"><a href="#cb1-233" aria-hidden="true" tabindex="-1"></a>zones_scale_coarse <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-234"><a href="#cb1-234" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb1-235"><a href="#cb1-235" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmax =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb1-236"><a href="#cb1-236" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.5</span>, <span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb1-237"><a href="#cb1-237" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymax =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>, <span class="fl">0.5</span>, <span class="fl">0.5</span>)</span>
+<span id="cb1-238"><a href="#cb1-238" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-239"><a href="#cb1-239" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-240"><a href="#cb1-240" aria-hidden="true" tabindex="-1"></a>zones_scale_fine <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb1-241"><a href="#cb1-241" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.25</span>, <span class="fl">0.5</span>, <span class="fl">0.75</span>),</span>
+<span id="cb1-242"><a href="#cb1-242" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>)</span>
+<span id="cb1-243"><a href="#cb1-243" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-244"><a href="#cb1-244" aria-hidden="true" tabindex="-1"></a>zones_scale_fine<span class="sc">$</span>xmax <span class="ot">&lt;-</span> zones_scale_fine<span class="sc">$</span>xmin <span class="sc">+</span> <span class="fl">0.25</span></span>
+<span id="cb1-245"><a href="#cb1-245" aria-hidden="true" tabindex="-1"></a>zones_scale_fine<span class="sc">$</span>ymax <span class="ot">&lt;-</span> zones_scale_fine<span class="sc">$</span>ymin <span class="sc">+</span> <span class="fl">0.5</span></span>
+<span id="cb1-246"><a href="#cb1-246" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-247"><a href="#cb1-247" aria-hidden="true" tabindex="-1"></a>zones_horizontal <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-248"><a href="#cb1-248" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb1-249"><a href="#cb1-249" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmax =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb1-250"><a href="#cb1-250" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">0</span>),</span>
+<span id="cb1-251"><a href="#cb1-251" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymax =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">0.5</span>)</span>
+<span id="cb1-252"><a href="#cb1-252" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-253"><a href="#cb1-253" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-254"><a href="#cb1-254" aria-hidden="true" tabindex="-1"></a>zones_vertical <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-255"><a href="#cb1-255" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">0.5</span>),</span>
+<span id="cb1-256"><a href="#cb1-256" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmax =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>),</span>
+<span id="cb1-257"><a href="#cb1-257" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymin =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">0</span>),</span>
+<span id="cb1-258"><a href="#cb1-258" aria-hidden="true" tabindex="-1"></a>  <span class="at">ymax =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb1-259"><a href="#cb1-259" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-260"><a href="#cb1-260" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-261"><a href="#cb1-261" aria-hidden="true" tabindex="-1"></a>zones_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb1-262"><a href="#cb1-262" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_zone_panel</span>(<span class="st">"Scale coarse"</span>, zones_scale_coarse),</span>
+<span id="cb1-263"><a href="#cb1-263" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_zone_panel</span>(<span class="st">"Scale fine"</span>, zones_scale_fine),</span>
+<span id="cb1-264"><a href="#cb1-264" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_zone_panel</span>(<span class="st">"Zone horizontal"</span>, zones_horizontal),</span>
+<span id="cb1-265"><a href="#cb1-265" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_zone_panel</span>(<span class="st">"Zone vertical"</span>, zones_vertical)</span>
+<span id="cb1-266"><a href="#cb1-266" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-267"><a href="#cb1-267" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-268"><a href="#cb1-268" aria-hidden="true" tabindex="-1"></a>pts_all <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb1-269"><a href="#cb1-269" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_pts_panel</span>(<span class="st">"Source"</span>),</span>
+<span id="cb1-270"><a href="#cb1-270" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_pts_panel</span>(<span class="st">"Scale coarse"</span>),</span>
+<span id="cb1-271"><a href="#cb1-271" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_pts_panel</span>(<span class="st">"Scale fine"</span>),</span>
+<span id="cb1-272"><a href="#cb1-272" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_pts_panel</span>(<span class="st">"Zone horizontal"</span>),</span>
+<span id="cb1-273"><a href="#cb1-273" aria-hidden="true" tabindex="-1"></a>  <span class="fu">make_pts_panel</span>(<span class="st">"Zone vertical"</span>)</span>
+<span id="cb1-274"><a href="#cb1-274" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-275"><a href="#cb1-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-276"><a href="#cb1-276" aria-hidden="true" tabindex="-1"></a>box_outline <span class="ot">&lt;-</span> <span class="fu">transform</span>(</span>
+<span id="cb1-277"><a href="#cb1-277" aria-hidden="true" tabindex="-1"></a>  panel_boxes,</span>
+<span id="cb1-278"><a href="#cb1-278" aria-hidden="true" tabindex="-1"></a>  <span class="at">xmin =</span> x0, <span class="at">xmax =</span> x0 <span class="sc">+</span> w, <span class="at">ymin =</span> y0, <span class="at">ymax =</span> y0 <span class="sc">+</span> h</span>
+<span id="cb1-279"><a href="#cb1-279" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-280"><a href="#cb1-280" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-281"><a href="#cb1-281" aria-hidden="true" tabindex="-1"></a>arrow_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-282"><a href="#cb1-282" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">c</span>(<span class="fl">6.45</span>, <span class="fl">6.45</span>),</span>
+<span id="cb1-283"><a href="#cb1-283" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="fl">6.95</span>, <span class="fl">3.15</span>),</span>
+<span id="cb1-284"><a href="#cb1-284" aria-hidden="true" tabindex="-1"></a>  <span class="at">xend =</span> <span class="fu">c</span>(<span class="fl">7.02</span>, <span class="fl">7.02</span>),</span>
+<span id="cb1-285"><a href="#cb1-285" aria-hidden="true" tabindex="-1"></a>  <span class="at">yend =</span> <span class="fu">c</span>(<span class="fl">6.95</span>, <span class="fl">3.15</span>),</span>
+<span id="cb1-286"><a href="#cb1-286" aria-hidden="true" tabindex="-1"></a>  <span class="at">label =</span> <span class="fu">c</span>(<span class="st">"Scale effect (aggregate)"</span>, <span class="st">"Zoning effect (aggregate)"</span>),</span>
+<span id="cb1-287"><a href="#cb1-287" aria-hidden="true" tabindex="-1"></a>  <span class="at">lx =</span> <span class="fu">c</span>(<span class="fl">4.0</span>, <span class="fl">4.0</span>),</span>
+<span id="cb1-288"><a href="#cb1-288" aria-hidden="true" tabindex="-1"></a>  <span class="at">ly =</span> <span class="fu">c</span>(<span class="fl">7.75</span>, <span class="fl">1.55</span>)</span>
+<span id="cb1-289"><a href="#cb1-289" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-290"><a href="#cb1-290" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-291"><a href="#cb1-291" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-292"><a href="#cb1-292" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb1-293"><a href="#cb1-293" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> zones_all,</span>
+<span id="cb1-294"><a href="#cb1-294" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(</span>
+<span id="cb1-295"><a href="#cb1-295" aria-hidden="true" tabindex="-1"></a>      <span class="at">xmin =</span> xmin_p, <span class="at">xmax =</span> xmax_p,</span>
+<span id="cb1-296"><a href="#cb1-296" aria-hidden="true" tabindex="-1"></a>      <span class="at">ymin =</span> ymin_p, <span class="at">ymax =</span> ymax_p,</span>
+<span id="cb1-297"><a href="#cb1-297" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> fill_group</span>
+<span id="cb1-298"><a href="#cb1-298" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-299"><a href="#cb1-299" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"black"</span>,</span>
+<span id="cb1-300"><a href="#cb1-300" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">1.1</span>,</span>
+<span id="cb1-301"><a href="#cb1-301" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.72</span></span>
+<span id="cb1-302"><a href="#cb1-302" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-303"><a href="#cb1-303" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_rect</span>(</span>
+<span id="cb1-304"><a href="#cb1-304" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> box_outline,</span>
+<span id="cb1-305"><a href="#cb1-305" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">xmin =</span> xmin, <span class="at">xmax =</span> xmax, <span class="at">ymin =</span> ymin, <span class="at">ymax =</span> ymax),</span>
+<span id="cb1-306"><a href="#cb1-306" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="cn">NA</span>,</span>
+<span id="cb1-307"><a href="#cb1-307" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#666666"</span>,</span>
+<span id="cb1-308"><a href="#cb1-308" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span></span>
+<span id="cb1-309"><a href="#cb1-309" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-310"><a href="#cb1-310" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb1-311"><a href="#cb1-311" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> pts_all,</span>
+<span id="cb1-312"><a href="#cb1-312" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> xp, <span class="at">y =</span> yp, <span class="at">fill =</span> group),</span>
+<span id="cb1-313"><a href="#cb1-313" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>,</span>
+<span id="cb1-314"><a href="#cb1-314" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.3</span>,</span>
+<span id="cb1-315"><a href="#cb1-315" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="fl">0.45</span>,</span>
+<span id="cb1-316"><a href="#cb1-316" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#1f1f1f"</span></span>
+<span id="cb1-317"><a href="#cb1-317" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-318"><a href="#cb1-318" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(</span>
+<span id="cb1-319"><a href="#cb1-319" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> arrow_df,</span>
+<span id="cb1-320"><a href="#cb1-320" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">xend =</span> xend, <span class="at">yend =</span> yend),</span>
+<span id="cb1-321"><a href="#cb1-321" aria-hidden="true" tabindex="-1"></a>    <span class="at">arrow =</span> <span class="fu">arrow</span>(<span class="at">length =</span> grid<span class="sc">::</span><span class="fu">unit</span>(<span class="fl">0.18</span>, <span class="st">"inches"</span>)),</span>
+<span id="cb1-322"><a href="#cb1-322" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.9</span>,</span>
+<span id="cb1-323"><a href="#cb1-323" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#666666"</span></span>
+<span id="cb1-324"><a href="#cb1-324" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-325"><a href="#cb1-325" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(</span>
+<span id="cb1-326"><a href="#cb1-326" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> arrow_df,</span>
+<span id="cb1-327"><a href="#cb1-327" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> lx, <span class="at">y =</span> ly, <span class="at">label =</span> label),</span>
+<span id="cb1-328"><a href="#cb1-328" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-329"><a href="#cb1-329" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.6</span>,</span>
+<span id="cb1-330"><a href="#cb1-330" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#555555"</span>,</span>
+<span id="cb1-331"><a href="#cb1-331" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb1-332"><a href="#cb1-332" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-333"><a href="#cb1-333" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-334"><a href="#cb1-334" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb1-335"><a href="#cb1-335" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">y =</span> <span class="fl">5.45</span>,</span>
+<span id="cb1-336"><a href="#cb1-336" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-337"><a href="#cb1-337" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"40 individuals:"</span>,</span>
+<span id="cb1-338"><a href="#cb1-338" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">4.3</span>,</span>
+<span id="cb1-339"><a href="#cb1-339" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#375a7f"</span>,</span>
+<span id="cb1-340"><a href="#cb1-340" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb1-341"><a href="#cb1-341" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-342"><a href="#cb1-342" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-343"><a href="#cb1-343" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb1-344"><a href="#cb1-344" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">y =</span> <span class="fl">4.6</span>,</span>
+<span id="cb1-345"><a href="#cb1-345" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-346"><a href="#cb1-346" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"24 blues (60%)"</span>,</span>
+<span id="cb1-347"><a href="#cb1-347" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.6</span>,</span>
+<span id="cb1-348"><a href="#cb1-348" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#375a7f"</span>,</span>
+<span id="cb1-349"><a href="#cb1-349" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb1-350"><a href="#cb1-350" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-351"><a href="#cb1-351" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-352"><a href="#cb1-352" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb1-353"><a href="#cb1-353" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="sc">-</span><span class="fl">0.2</span>, <span class="at">y =</span> <span class="fl">3.75</span>,</span>
+<span id="cb1-354"><a href="#cb1-354" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>,</span>
+<span id="cb1-355"><a href="#cb1-355" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"16 red (40%)"</span>,</span>
+<span id="cb1-356"><a href="#cb1-356" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.6</span>,</span>
+<span id="cb1-357"><a href="#cb1-357" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#d95f02"</span>,</span>
+<span id="cb1-358"><a href="#cb1-358" aria-hidden="true" tabindex="-1"></a>    <span class="at">fontface =</span> <span class="st">"bold"</span></span>
+<span id="cb1-359"><a href="#cb1-359" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-360"><a href="#cb1-360" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb1-361"><a href="#cb1-361" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb1-362"><a href="#cb1-362" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Blue"</span> <span class="ot">=</span> <span class="st">"#4c6f7a"</span>,</span>
+<span id="cb1-363"><a href="#cb1-363" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Red"</span> <span class="ot">=</span> <span class="st">"#e76f51"</span>,</span>
+<span id="cb1-364"><a href="#cb1-364" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Blue zone"</span> <span class="ot">=</span> <span class="st">"#b8c8cf"</span>,</span>
+<span id="cb1-365"><a href="#cb1-365" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Red zone"</span> <span class="ot">=</span> <span class="st">"#f2b8aa"</span></span>
+<span id="cb1-366"><a href="#cb1-366" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-367"><a href="#cb1-367" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="st">"none"</span></span>
+<span id="cb1-368"><a href="#cb1-368" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-369"><a href="#cb1-369" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_equal</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">4.2</span>, <span class="fl">17.1</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="sc">-</span><span class="fl">0.3</span>, <span class="fl">10.0</span>), <span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb1-370"><a href="#cb1-370" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="cn">NULL</span>, <span class="at">y =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb1-371"><a href="#cb1-371" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_void</span>() <span class="sc">+</span></span>
+<span id="cb1-372"><a href="#cb1-372" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">plot.margin =</span> <span class="fu">margin</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">40</span>))</span>
+<span id="cb1-373"><a href="#cb1-373" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-374"><a href="#cb1-374" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-375"><a href="#cb1-375" aria-hidden="true" tabindex="-1"></a>Figure @fig-maup now mirrors the usual textbook logic of the MAUP more directly. The left panel shows the unchanged individual observations, the top row shows the **scale effect** by comparing coarser and finer aggregations of the same points, and the bottom row shows the **zonation effect** by comparing two alternative boundary systems applied to the same observations. The message is simple but important: the underlying people or events do not change, yet the area-level pattern does.</span>
+<span id="cb1-376"><a href="#cb1-376" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-377"><a href="#cb1-377" aria-hidden="true" tabindex="-1"></a>This has direct implications for applied work in Uruguay and elsewhere. Accessibility, deprivation, educational outcomes or public-health indicators may tell a different story when analysed for broad administrative units than when analysed for smaller local areas. Practical responses include checking sensitivity across scales, using the smallest defensible geography available, and considering functional geographies that better reflect the process under study <span class="co">[</span><span class="ot">@casado-díaz2017; @arribas-bel2021; @singleton2013; @patias2019</span><span class="co">]</span>. None of these strategies eliminates MAUP, but they make its consequences visible and easier to discuss.</span>
+<span id="cb1-378"><a href="#cb1-378" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-379"><a href="#cb1-379" aria-hidden="true" tabindex="-1"></a><span class="fu">### Ecological fallacy</span></span>
+<span id="cb1-380"><a href="#cb1-380" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-381"><a href="#cb1-381" aria-hidden="true" tabindex="-1"></a>Ecological fallacy occurs when we infer something about individuals from patterns that have only been observed for groups or areas. An area-level relationship can be informative and substantively important, but it does not automatically describe the behaviour or characteristics of the individuals living in those areas. The problem arises when we move from statements about places to statements about people without changing the evidence base.</span>
+<span id="cb1-382"><a href="#cb1-382" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-385"><a href="#cb1-385" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb1-386"><a href="#cb1-386" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-ecological-fallacy</span></span>
+<span id="cb1-387"><a href="#cb1-387" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "A self-generated illustration of ecological fallacy. The left panel shows individual observations with a negative within-area relationship. The right panel shows the same data aggregated to area means, which now suggest a positive area-level relationship."</span></span>
+<span id="cb1-388"><a href="#cb1-388" aria-hidden="true" tabindex="-1"></a><span class="co">#| echo: false</span></span>
+<span id="cb1-389"><a href="#cb1-389" aria-hidden="true" tabindex="-1"></a><span class="co">#| warning: false</span></span>
+<span id="cb1-390"><a href="#cb1-390" aria-hidden="true" tabindex="-1"></a><span class="co">#| message: false</span></span>
+<span id="cb1-391"><a href="#cb1-391" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-392"><a href="#cb1-392" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">7</span>)</span>
+<span id="cb1-393"><a href="#cb1-393" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-394"><a href="#cb1-394" aria-hidden="true" tabindex="-1"></a>areas <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb1-395"><a href="#cb1-395" aria-hidden="true" tabindex="-1"></a>  <span class="at">area =</span> <span class="fu">c</span>(<span class="st">"Area A"</span>, <span class="st">"Area B"</span>, <span class="st">"Area C"</span>),</span>
+<span id="cb1-396"><a href="#cb1-396" aria-hidden="true" tabindex="-1"></a>  <span class="at">x_center =</span> <span class="fu">c</span>(<span class="fl">2.5</span>, <span class="fl">5.5</span>, <span class="fl">8.5</span>),</span>
+<span id="cb1-397"><a href="#cb1-397" aria-hidden="true" tabindex="-1"></a>  <span class="at">y_center =</span> <span class="fu">c</span>(<span class="fl">2.4</span>, <span class="fl">5.1</span>, <span class="fl">7.8</span>)</span>
+<span id="cb1-398"><a href="#cb1-398" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-399"><a href="#cb1-399" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-400"><a href="#cb1-400" aria-hidden="true" tabindex="-1"></a>make_area_points <span class="ot">&lt;-</span> <span class="cf">function</span>(area, x_center, y_center, <span class="at">n =</span> <span class="dv">18</span>) {</span>
+<span id="cb1-401"><a href="#cb1-401" aria-hidden="true" tabindex="-1"></a>  x <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> x_center, <span class="at">sd =</span> <span class="fl">0.55</span>)</span>
+<span id="cb1-402"><a href="#cb1-402" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> y_center <span class="sc">-</span> <span class="fl">0.55</span> <span class="sc">*</span> (x <span class="sc">-</span> x_center) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">sd =</span> <span class="fl">0.28</span>)</span>
+<span id="cb1-403"><a href="#cb1-403" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">area =</span> area, <span class="at">x =</span> x, <span class="at">y =</span> y)</span>
+<span id="cb1-404"><a href="#cb1-404" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-405"><a href="#cb1-405" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-406"><a href="#cb1-406" aria-hidden="true" tabindex="-1"></a>individuals <span class="ot">&lt;-</span> <span class="fu">do.call</span>(</span>
+<span id="cb1-407"><a href="#cb1-407" aria-hidden="true" tabindex="-1"></a>  rbind,</span>
+<span id="cb1-408"><a href="#cb1-408" aria-hidden="true" tabindex="-1"></a>  <span class="fu">Map</span>(make_area_points, areas<span class="sc">$</span>area, areas<span class="sc">$</span>x_center, areas<span class="sc">$</span>y_center)</span>
+<span id="cb1-409"><a href="#cb1-409" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-410"><a href="#cb1-410" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-411"><a href="#cb1-411" aria-hidden="true" tabindex="-1"></a>area_means <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(<span class="fu">cbind</span>(x, y) <span class="sc">~</span> area, <span class="at">data =</span> individuals, <span class="at">FUN =</span> mean)</span>
+<span id="cb1-412"><a href="#cb1-412" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-413"><a href="#cb1-413" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb1-414"><a href="#cb1-414" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb1-415"><a href="#cb1-415" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> individuals,</span>
+<span id="cb1-416"><a href="#cb1-416" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y),</span>
+<span id="cb1-417"><a href="#cb1-417" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb1-418"><a href="#cb1-418" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-419"><a href="#cb1-419" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="fl">0.9</span>,</span>
+<span id="cb1-420"><a href="#cb1-420" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#6b7280"</span>,</span>
+<span id="cb1-421"><a href="#cb1-421" aria-hidden="true" tabindex="-1"></a>    <span class="at">linetype =</span> <span class="st">"dashed"</span></span>
+<span id="cb1-422"><a href="#cb1-422" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-423"><a href="#cb1-423" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb1-424"><a href="#cb1-424" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> individuals,</span>
+<span id="cb1-425"><a href="#cb1-425" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> area),</span>
+<span id="cb1-426"><a href="#cb1-426" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">21</span>,</span>
+<span id="cb1-427"><a href="#cb1-427" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">2.4</span>,</span>
+<span id="cb1-428"><a href="#cb1-428" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="fl">0.35</span>,</span>
+<span id="cb1-429"><a href="#cb1-429" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.9</span>,</span>
+<span id="cb1-430"><a href="#cb1-430" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#1f1f1f"</span></span>
+<span id="cb1-431"><a href="#cb1-431" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-432"><a href="#cb1-432" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(</span>
+<span id="cb1-433"><a href="#cb1-433" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> area_means,</span>
+<span id="cb1-434"><a href="#cb1-434" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y),</span>
+<span id="cb1-435"><a href="#cb1-435" aria-hidden="true" tabindex="-1"></a>    <span class="at">method =</span> <span class="st">"lm"</span>,</span>
+<span id="cb1-436"><a href="#cb1-436" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb1-437"><a href="#cb1-437" aria-hidden="true" tabindex="-1"></a>    <span class="at">linewidth =</span> <span class="dv">1</span>,</span>
+<span id="cb1-438"><a href="#cb1-438" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#b45309"</span></span>
+<span id="cb1-439"><a href="#cb1-439" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-440"><a href="#cb1-440" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb1-441"><a href="#cb1-441" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> area_means,</span>
+<span id="cb1-442"><a href="#cb1-442" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> area),</span>
+<span id="cb1-443"><a href="#cb1-443" aria-hidden="true" tabindex="-1"></a>    <span class="at">shape =</span> <span class="dv">23</span>,</span>
+<span id="cb1-444"><a href="#cb1-444" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="dv">4</span>,</span>
+<span id="cb1-445"><a href="#cb1-445" aria-hidden="true" tabindex="-1"></a>    <span class="at">stroke =</span> <span class="fl">0.6</span>,</span>
+<span id="cb1-446"><a href="#cb1-446" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#1f1f1f"</span></span>
+<span id="cb1-447"><a href="#cb1-447" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-448"><a href="#cb1-448" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-449"><a href="#cb1-449" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb1-450"><a href="#cb1-450" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">3.1</span>, <span class="at">y =</span> <span class="fl">8.85</span>,</span>
+<span id="cb1-451"><a href="#cb1-451" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Individual-level pattern:</span><span class="sc">\n</span><span class="st">negative relationship within areas"</span>,</span>
+<span id="cb1-452"><a href="#cb1-452" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb1-453"><a href="#cb1-453" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#4b5563"</span>,</span>
+<span id="cb1-454"><a href="#cb1-454" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span></span>
+<span id="cb1-455"><a href="#cb1-455" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-456"><a href="#cb1-456" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(</span>
+<span id="cb1-457"><a href="#cb1-457" aria-hidden="true" tabindex="-1"></a>    <span class="st">"text"</span>,</span>
+<span id="cb1-458"><a href="#cb1-458" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="fl">6.2</span>, <span class="at">y =</span> <span class="fl">3.0</span>,</span>
+<span id="cb1-459"><a href="#cb1-459" aria-hidden="true" tabindex="-1"></a>    <span class="at">label =</span> <span class="st">"Area means:</span><span class="sc">\n</span><span class="st">apparently positive relationship"</span>,</span>
+<span id="cb1-460"><a href="#cb1-460" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">3.5</span>,</span>
+<span id="cb1-461"><a href="#cb1-461" aria-hidden="true" tabindex="-1"></a>    <span class="at">colour =</span> <span class="st">"#92400e"</span>,</span>
+<span id="cb1-462"><a href="#cb1-462" aria-hidden="true" tabindex="-1"></a>    <span class="at">hjust =</span> <span class="dv">0</span></span>
+<span id="cb1-463"><a href="#cb1-463" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-464"><a href="#cb1-464" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(</span>
+<span id="cb1-465"><a href="#cb1-465" aria-hidden="true" tabindex="-1"></a>    <span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb1-466"><a href="#cb1-466" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Area A"</span> <span class="ot">=</span> <span class="st">"#9ecae1"</span>,</span>
+<span id="cb1-467"><a href="#cb1-467" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Area B"</span> <span class="ot">=</span> <span class="st">"#fdd0a2"</span>,</span>
+<span id="cb1-468"><a href="#cb1-468" aria-hidden="true" tabindex="-1"></a>      <span class="st">"Area C"</span> <span class="ot">=</span> <span class="st">"#c7e9c0"</span></span>
+<span id="cb1-469"><a href="#cb1-469" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb1-470"><a href="#cb1-470" aria-hidden="true" tabindex="-1"></a>    <span class="at">guide =</span> <span class="st">"none"</span></span>
+<span id="cb1-471"><a href="#cb1-471" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-472"><a href="#cb1-472" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">10</span>), <span class="at">ylim =</span> <span class="fu">c</span>(<span class="fl">1.5</span>, <span class="fl">9.2</span>)) <span class="sc">+</span></span>
+<span id="cb1-473"><a href="#cb1-473" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-474"><a href="#cb1-474" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Predictor"</span>,</span>
+<span id="cb1-475"><a href="#cb1-475" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Outcome"</span></span>
+<span id="cb1-476"><a href="#cb1-476" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-477"><a href="#cb1-477" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">11</span>) <span class="sc">+</span></span>
+<span id="cb1-478"><a href="#cb1-478" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb1-479"><a href="#cb1-479" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb1-480"><a href="#cb1-480" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb1-481"><a href="#cb1-481" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb1-482"><a href="#cb1-482" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-483"><a href="#cb1-483" aria-hidden="true" tabindex="-1"></a>Figure @fig-ecological-fallacy illustrates the logic visually. In the left panel, the individual observations within each area follow a negative relationship: as the predictor increases, the outcome tends to fall. But once those same observations are aggregated to area means, the grouped pattern suggests the opposite, a positive area-level relationship. Nothing about the underlying individuals has changed; only the scale of observation has changed. That is exactly why ecological fallacy is so important in spatial analysis.</span>
+<span id="cb1-484"><a href="#cb1-484" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-485"><a href="#cb1-485" aria-hidden="true" tabindex="-1"></a>This issue is especially relevant in policy-oriented work because many spatial datasets are aggregated by design. A department with low average accessibility or high deprivation may still contain very different neighbourhoods, households and individual experiences within it. The same problem appears in public health: an area with high average deprivation may also show poor average health outcomes, but that does not mean every deprived individual in that area experiences the same level of health risk, nor that every healthier individual lives in a less deprived context. Robinson's classic example showed that an aggregate correlation can even point in the opposite direction from the individual-level relationship <span class="co">[</span><span class="ot">@robinson1950ecological</span><span class="co">]</span>. The practical lesson is straightforward: keep interpretations at the scale of the evidence unless individual-level data are also available.</span>
+<span id="cb1-486"><a href="#cb1-486" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-487"><a href="#cb1-487" aria-hidden="true" tabindex="-1"></a><span class="fu">### Spatial dependence</span></span>
+<span id="cb1-488"><a href="#cb1-488" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-489"><a href="#cb1-489" aria-hidden="true" tabindex="-1"></a>Spatial dependence means that values observed in one location are related to values observed in other locations, often nearby ones <span class="co">[</span><span class="ot">@anselin1988spatial</span><span class="co">]</span>. This can arise because of spillovers, diffusion, shared context, common infrastructure, environmental exposure or market linkages. In social-science terms, places are often not isolated cases but interdependent settings.</span>
+<span id="cb1-490"><a href="#cb1-490" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-491"><a href="#cb1-491" aria-hidden="true" tabindex="-1"></a>This matters because many standard statistical tools assume independence across observations. If neighbouring values are related, model residuals can cluster, standard errors can be misleading, and coefficient interpretation can become less reliable. Later in the course we return to this idea with Uruguay polygon data and show how to diagnose dependence and think about neighbour structures more explicitly.</span>
+<span id="cb1-492"><a href="#cb1-492" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-493"><a href="#cb1-493" aria-hidden="true" tabindex="-1"></a><span class="fu">### Spatial heterogeneity and nonstationarity</span></span>
+<span id="cb1-494"><a href="#cb1-494" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-495"><a href="#cb1-495" aria-hidden="true" tabindex="-1"></a>Spatial heterogeneity refers to unevenness across space. Some places systematically display higher values, lower values or different combinations of characteristics than others, and these contrasts are often visible long before any formal model is fitted. In many applied settings, this is the first substantive reason to map data: not to decorate a result, but to see whether the process of interest is distributed evenly or unevenly across territory.</span>
+<span id="cb1-496"><a href="#cb1-496" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-497"><a href="#cb1-497" aria-hidden="true" tabindex="-1"></a>Nonstationarity takes the idea a step further. It suggests that the relationship between an outcome and its predictors may itself vary across space rather than remaining constant everywhere. A factor associated with hospital accessibility or population ageing in one part of Uruguay may be weakly related, or differently related, in another. This is why later chapters distinguish between detecting spatial structure and asking whether a single global coefficient hides meaningful local variation.</span>
+<span id="cb1-498"><a href="#cb1-498" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-499"><a href="#cb1-499" aria-hidden="true" tabindex="-1"></a><span class="fu">### Coverage, quality and confidentiality</span></span>
+<span id="cb1-500"><a href="#cb1-500" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-501"><a href="#cb1-501" aria-hidden="true" tabindex="-1"></a>A final challenge is that spatial data are not automatically better just because they are spatially detailed. Coordinates may be missing or imprecise, area codes may change over time, platform data may overrepresent certain groups, and administrative systems may record the place of reporting rather than the place where an event actually occurred. In addition, the more spatially precise the data become, the more confidentiality concerns can restrict access, aggregation choices and reproducibility.</span>
+<span id="cb1-502"><a href="#cb1-502" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-503"><a href="#cb1-503" aria-hidden="true" tabindex="-1"></a>This is particularly important in course settings because students often encounter datasets that look ready to map but still require substantial judgement before analysis. Making sense of spatial data means asking how the location information was generated, what geography it represents, who or what may be excluded, and how those limitations should affect interpretation.</span>
+<span id="cb1-504"><a href="#cb1-504" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-505"><a href="#cb1-505" aria-hidden="true" tabindex="-1"></a>::: callout-note</span>
+<span id="cb1-506"><a href="#cb1-506" aria-hidden="true" tabindex="-1"></a><span class="fu">## Course prompt</span></span>
+<span id="cb1-507"><a href="#cb1-507" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-508"><a href="#cb1-508" aria-hidden="true" tabindex="-1"></a>Before moving to the next chapter, try to identify the spatial structure of a dataset you already know. Ask yourself four questions: what is the observational unit, what geometry is attached to it, at what scale is it reported, and what might change if the geography were redrawn or aggregated differently? These questions are often enough to reveal whether a problem is mainly about points, areas, networks, flows, or a combination of several data structures.</span>
+<span id="cb1-509"><a href="#cb1-509" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb1-510"><a href="#cb1-510" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-511"><a href="#cb1-511" aria-hidden="true" tabindex="-1"></a><span class="fu">## What to carry forward</span></span>
+<span id="cb1-512"><a href="#cb1-512" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-513"><a href="#cb1-513" aria-hidden="true" tabindex="-1"></a>Three ideas from this chapter should stay with us through the rest of the course.</span>
+<span id="cb1-514"><a href="#cb1-514" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-515"><a href="#cb1-515" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Spatial data are different because geometry, distance, adjacency, hierarchy and scale are part of the information, not just contextual detail.</span>
+<span id="cb1-516"><a href="#cb1-516" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Different spatial data types invite different descriptive and modelling strategies, so methods should be matched to the structure of the data rather than applied mechanically.</span>
+<span id="cb1-517"><a href="#cb1-517" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Good spatial analysis is not only about producing maps. It is about choosing appropriate geographies, recognising common pitfalls such as MAUP and ecological fallacy, and building models that respect spatial structure.</span>
+<span id="cb1-518"><a href="#cb1-518" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-519"><a href="#cb1-519" aria-hidden="true" tabindex="-1"></a>The next chapter turns to the practical toolkit required to do that work in <span class="in">`R`</span>: reading spatial data, inspecting geometry, transforming coordinate systems, joining attributes, validating objects and producing clear maps.</span>
+</code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
+</div></div></div></div></div>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+<p>All content licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> <br> © <a href="https://www.franciscorowe.com">Francisco Rowe</a>.</p>
+</div>   
+    <div class="nav-footer-center">
+<p><a href="https://github.com/fcorowe/smds_uruguay">GitHub</a></p>
+<div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/fcorowe/smds_uruguay/edit/main/01-embedding-space.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/fcorowe/smds_uruguay/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li><li><a href="https://github.com/fcorowe/smds_uruguay/blob/main/01-embedding-space.qmd" class="toc-action"><i class="bi empty"></i>View source</a></li></ul></div></div>
+    <div class="nav-footer-right">
+<p>Built with <a href="https://quarto.org/">Quarto</a>.</p>
+</div>
+  </div>
+</footer>
+
+
+<script src="site_libs/quarto-html/zenscroll-min.js"></script>
+</body></html>

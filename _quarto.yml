@@ -9,7 +9,7 @@ book:
   search: true
   repo-url: https://github.com/fcorowe/smds_uruguay
   repo-actions:  [edit, issue, source]
-  favicon: figs/cover/cover.ico
+  favicon: figs/cover/uruguay-course-logo.ico
   cover-image: figs/cover/uruguay-course-logo.svg
  # downloads: [pdf]
 
@@ -29,6 +29,19 @@ book:
   chapters:
     - index.qmd
     - course-overview.qmd
+    - part: "Part I"
+      chapters:
+      - 01-embedding-space.qmd
+      - 02-spatial-data-wrangling.qmd
+    - part: "Part II"
+      chapters:
+      - 03-points.qmd
+      - 04-spatial-interaction-model.qmd
+    - part: "Part III"
+      chapters:
+      - 05-spatial-dependence.qmd
+      - 06-spatial-heterogeneity.qmd
+    - data.qmd
     - references.qmd
 
   sharing: [twitter, facebook]

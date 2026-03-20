@@ -1,0 +1,141 @@
+# Datasets {.unnumbered}
+
+This chapter provides a short guide to the main datasets used in the course. Its purpose is practical rather than exhaustive: students should be able to see what data each chapter uses, why that dataset was chosen, and what kind of spatial structure it represents. The chapter should also make it easier for students to return to the material later and remember where each empirical example comes from.
+
+The course uses a mix of point, flow, and area-based datasets. They do not all share the same geography, and that is intentional. Each dataset has been selected because it fits the method being taught in that chapter.
+
+## Chapter `03`: Montevideo traffic injuries
+
+Main dataset:
+
+- `data/montevideo-traffic-injuries-2022.csv`
+
+This chapter uses georeferenced road traffic injury records from Montevideo. For the course, the analytical unit is not the injured person but the **crash event**, so person-level records are collapsed to unique events using `Novedad`, `X`, and `Y`. The coordinate reference system is **EPSG:32721**.
+
+This dataset is used to introduce point-pattern thinking through a case that is intuitive and policy-relevant. It works well for point maps, binning, kernel density estimation, and interpolation because the locations correspond to discrete events in urban space.
+
+Main columns:
+
+- `Fecha`: date of the recorded incident.
+- `Edad`: age of the injured person in the original person-level file.
+- `Rol`: role of the injured person, such as driver or passenger.
+- `Calle`: street or road reference for the incident.
+- `Zona`: broad urban context or zone.
+- `Tipo de resultado`: severity or outcome category of the injury record.
+- `Tipo de siniestro`: type of road crash.
+- `Usa cinturón`: seatbelt use.
+- `Usa casco`: helmet use.
+- `Día de la semana`: day of the week.
+- `Sexo`: sex of the recorded person.
+- `Hora`: time of day.
+- `Departamento`: department name.
+- `Localidad`: locality name.
+- `Novedad`: incident identifier used to collapse person-level records to unique crash events.
+- `Tipo de Vehiculo`: vehicle type linked to the record.
+- `fixed`: auxiliary field in the source file.
+- `X`: projected east-west coordinate.
+- `Y`: projected north-south coordinate.
+
+In practice, the chapter will clean the names on import and then derive an event-level dataset from `Novedad`, `X`, and `Y`.
+
+## Chapter `04`: Facebook Activity Spaces
+
+Main dataset:
+
+- `data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv` (Uruguay subset prepared for the course repository)
+
+This chapter uses the Meta activity spaces data to study origin-destination relationships. The repository copy is a Uruguay-focused subset extracted from a larger export, which keeps the course materials lighter while preserving the full flow structure needed for teaching. The dataset links home areas to visited areas and includes information that can be aggregated into flows, which makes it well suited to visualising movement, computing distances, and introducing spatial interaction logic.
+
+Internal migration remains an important conceptual reference for the chapter, but it is not the main empirical dataset. The activity spaces data were chosen because they are richer for teaching flow structure and practical modelling.
+
+Main columns:
+
+- first unnamed column: row identifier from the exported file.
+- `home_latitude`: latitude of the home-area reference point.
+- `home_longitude`: longitude of the home-area reference point.
+- `home_gadm_name`: name of the home administrative unit.
+- `home_gadm_id`: identifier of the home administrative unit.
+- `home_polygon_level`: polygon level for the home geography.
+- `visit_latitude`: latitude of the visited-area reference point.
+- `visit_longitude`: longitude of the visited-area reference point.
+- `visit_gadm_name`: name of the visited administrative unit.
+- `visit_gadm_id`: identifier of the visited administrative unit.
+- `visit_polygon_level`: polygon level for the visited geography.
+- `country`: country code.
+- `visit_fraction`: share of observed movement associated with that origin-destination pair.
+- `day_or_night`: whether the movement pattern refers to daytime or nighttime activity space.
+- `ds`: date stamp for the observation.
+
+## Chapter `05`: Uruguay risk indicators
+
+Main dataset family:
+
+- `data/risk-assessment-indicators/URY_ADM2_access.csv`
+- `data/risk-assessment-indicators/URY_ADM2_demographics.csv`
+- `data/risk-assessment-indicators/URY_ADM2_facilities.csv`
+- `data/risk-assessment-indicators/URY_ADM2_rural_population.csv`
+
+This chapter focuses on area-based modelling using Uruguay risk indicators at administrative level 2. The main outcome is **`access_pop_hospitals_30min`**, supported by a compact covariate set: **`rural_pop_perc`**, **`elderly_share`**, and **`hospitals_count`**.
+
+These data are used to introduce baseline regression, spatial autocorrelation, spatial weights, and spatial regression in a policy-relevant setting. The topic is easy to interpret substantively because it connects accessibility, infrastructure, and territorial inequality.
+
+Main columns:
+
+`URY_ADM2_access.csv`
+
+- `ADM2_PCODE`: ADM2 identifier for the area.
+- `ADM_PCODE`: general administrative identifier used across files.
+- `access_pop_education_5km`: population with access to education within 5 km.
+- `access_pop_education_10km`: population with access to education within 10 km.
+- `access_pop_education_20km`: population with access to education within 20 km.
+- `access_pop_hospitals_30min`: population with access to hospitals within 30 minutes.
+- `access_pop_hospitals_1h`: population with access to hospitals within 1 hour.
+- `access_pop_hospitals_2h`: population with access to hospitals within 2 hours.
+- `access_pop_primary_healthcare_30min`: population with access to primary healthcare within 30 minutes.
+- `access_pop_primary_healthcare_1h`: population with access to primary healthcare within 1 hour.
+
+`URY_ADM2_demographics.csv`
+
+- `ADM2_PCODE`: ADM2 identifier for the area.
+- `ADM_PCODE`: general administrative identifier used across files.
+- `female_pop`: female population count.
+- `children_u5`: count of children under age 5.
+- `female_u5`: female population under age 5.
+- `elderly`: elderly population count.
+- `pop_u15`: population under age 15.
+- `female_u15`: female population under age 15.
+
+`URY_ADM2_facilities.csv`
+
+- `ADM2_PCODE`: ADM2 identifier for the area.
+- `ADM_PCODE`: general administrative identifier used across files.
+- `education_count`: count of education facilities.
+- `hospitals_count`: count of hospitals.
+- `primary_healthcare_count`: count of primary healthcare facilities.
+
+`URY_ADM2_rural_population.csv`
+
+- `ADM2_PCODE`: ADM2 identifier for the area.
+- `ADM_PCODE`: general administrative identifier used across files.
+- `female_pop_rural`: female rural population count.
+- `children_u5_rural`: rural count of children under age 5.
+- `female_u5_rural`: rural female population under age 5.
+- `elderly_rural`: rural elderly population count.
+- `pop_u15_rural`: rural population under age 15.
+- `female_u15_rural`: rural female population under age 15.
+- `rural_pop_perc`: percentage of the population living in rural areas.
+
+## Chapter `06`: Uruguay risk indicators
+
+Main dataset family:
+
+- `data/risk-assessment-indicators/URY_ADM2_access.csv`
+- `data/risk-assessment-indicators/URY_ADM2_demographics.csv`
+- `data/risk-assessment-indicators/URY_ADM2_facilities.csv`
+- `data/risk-assessment-indicators/URY_ADM2_rural_population.csv`
+
+This chapter continues directly from Chapter `05` and keeps the same outcome and covariates. Reusing the same data helps students focus on the idea of **spatial heterogeneity** rather than learning a new dataset at the same time.
+
+The emphasis here is on showing that relationships can vary across space. The chapter will therefore use the same empirical base to introduce **spatial fixed effects** and **spatial regimes**.
+
+The variables used in Chapter `06` are the same as in Chapter `05`. This continuity is deliberate: students can carry forward the meaning of the outcome and covariates, then focus their attention on how model relationships vary across space rather than on learning a new data structure.
