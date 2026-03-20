@@ -50,6 +50,9 @@ book:
 
 bibliography: references.bib
 
+execute:
+  warning: false
+
 format:
   html:
     theme:
