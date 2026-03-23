@@ -29,6 +29,7 @@ book:
   chapters:
     - index.qmd
     - course-overview.qmd
+    - assessment.qmd
     - part: "Part I"
       chapters:
       - 01-embedding-space.qmd

@@ -50,16 +50,6 @@
     ]
   },
   {
-    "objectID": "course-overview.html#assessment",
-    "href": "course-overview.html#assessment",
-    "title": "Course Overview",
-    "section": "Assessment",
-    "text": "Assessment\nAssessment for the course consists of two activities designed to develop both practical skills and analytical interpretation.\n\nAssignment 1: Programmed Map\n\nType: Coursework\nWeight: 40% of the final mark\nSubmission: Electronic submission only\n\nIn this assignment, students will produce a map using programming. The task is intended to assess the ability to work with data, develop a clear map design and communicate a spatial pattern or issue through a well-structured visual output. The map should demonstrate both technical competence and an effective overall narrative.\n\n\nAssignment 2: Computational Essay\n\nType: Coursework\nWeight: 60% of the final mark\nSubmission: Electronic submission only\n\nA computational essay is an essay whose narrative is supported by code and computational results included within the essay itself. This piece of assessment is equivalent to 4,000 words in total weight. However, this total includes not only ordinary text, but also code, maps, figures and tables. For this reason, the format requirements are more specific than for a conventional essay.\n\nFormat requirements\n\nMaximum of 1,000 words of ordinary text\nReferences and code do not count towards the word count\nStudents must answer the specified questions within the narrative\nThe questions should be incorporated into a broader analysis\nUp to five maps or figures\nUp to one table\n\n\n\nWhat a computational essay includes\nA computational essay combines three elements:\n\nOrdinary text\nComputer code\nComputer output such as maps, tables and figures\n\nThese elements should work together as part of one coherent analysis. The aim is not only to run techniques, but also to explain what is being done, justify key choices and interpret the substantive meaning of the results.",
-    "crumbs": [
-      "Course Overview"
-    ]
-  },
-  {
     "objectID": "course-overview.html#what-you-need-before-the-course-starts",
     "href": "course-overview.html#what-you-need-before-the-course-starts",
     "title": "Course Overview",
@@ -117,6 +107,36 @@
     "text": "Preparation checklist\nBefore the course starts, please make sure that you have:\n\ninstalled R\ninstalled RStudio Desktop\ninstalled Quarto\ninstalled the core R packages used in the course\ndownloaded or cloned the repository\nopened the project successfully on your laptop",
     "crumbs": [
       "Course Overview"
+    ]
+  },
+  {
+    "objectID": "assessment.html",
+    "href": "assessment.html",
+    "title": "Assessment",
+    "section": "",
+    "text": "Assignment 1: Programmed Map\nAssessment for the course consists of two activities designed to develop both practical skills and analytical interpretation.\nIn this assignment, students will produce a map using programming. The task is intended to assess the ability to work with data, develop a clear map design and communicate a spatial pattern or issue through a well-structured visual output. The map should demonstrate both technical competence and an effective overall narrative.",
+    "crumbs": [
+      "Assessment"
+    ]
+  },
+  {
+    "objectID": "assessment.html#assignment-1-programmed-map",
+    "href": "assessment.html#assignment-1-programmed-map",
+    "title": "Assessment",
+    "section": "",
+    "text": "Type: Coursework\nWeight: 40% of the final mark\nSubmission: Electronic submission only",
+    "crumbs": [
+      "Assessment"
+    ]
+  },
+  {
+    "objectID": "assessment.html#assignment-2-computational-essay",
+    "href": "assessment.html#assignment-2-computational-essay",
+    "title": "Assessment",
+    "section": "Assignment 2: Computational Essay",
+    "text": "Assignment 2: Computational Essay\n\nType: Coursework\nWeight: 60% of the final mark\nSubmission: Electronic submission only\n\nA computational essay is an essay whose narrative is supported by code and computational results included within the essay itself. This piece of assessment is equivalent to 4,000 words in total weight. However, this total includes not only ordinary text, but also code, maps, figures and tables. For this reason, the format requirements are more specific than for a conventional essay.\n\nFormat requirements\n\nMaximum of 1,000 words of ordinary text\nReferences and code do not count towards the word count\nStudents must answer the specified questions within the narrative\nThe questions should be incorporated into a broader analysis\nUp to five maps or figures\nUp to one table\n\n\n\nWhat a computational essay includes\nA computational essay combines three elements:\n\nOrdinary text\nComputer code\nComputer output such as maps, tables and figures\n\nThese elements should work together as part of one coherent analysis. The aim is not only to run techniques, but also to explain what is being done, justify key choices and interpret the substantive meaning of the results.",
+    "crumbs": [
+      "Assessment"
     ]
   },
   {
