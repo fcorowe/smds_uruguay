@@ -4,7 +4,7 @@
 
 This chapter introduces point-pattern thinking through a Montevideo case: traffic injury records from 2022. The aim is not to treat each point as an isolated dot, but to ask what the overall spatial pattern suggests about concentration, clustering, and the way incidents accumulate across the city. This is often the first analytical step with point data in applied spatial work. Before we build formal models, we usually want to know where events are concentrated, whether that concentration is local or widespread, and how different mapping choices change what we see.
 
-The course brief sets an important rule for this dataset: we should treat it as a dataset of **crash events**, not of injured persons. The original records are person-level observations, so several rows can refer to the same crash. For point-pattern analysis, that matters because repeated person records at the same coordinates would exaggerate density in places where a single crash involved several people. We therefore collapse the data to unique events using `Novedad`, `X`, and `Y`, and we declare the CRS explicitly as **EPSG:32721** throughout.
+The course workflow sets an important rule for this dataset: we should treat it as a dataset of **crash events**, not of injured persons. The original records are person-level observations, so several rows can refer to the same crash. For point-pattern analysis, that matters because repeated person records at the same coordinates would exaggerate density in places where a single crash involved several people. We therefore collapse the data to unique events using `Novedad`, `X`, and `Y`, and we declare the CRS explicitly as **EPSG:32721** throughout.
 
 ## Dependencies
 
@@ -32,7 +32,7 @@ source("style/data-visualisation_theme.R")
 
 The chapter uses the Montevideo traffic injuries file for 2022, stored locally as `data/montevideo-traffic-injuries-2022.csv`. The source data are recorded at the person level, which means a single crash can appear in more than one row if several people were injured. For point-pattern analysis, the more appropriate observational unit is the **crash event** rather than the injured person. That is why this chapter collapses the source records to unique events before mapping or smoothing them.
 
-The dataset is also a good teaching case because it combines several things students need to notice early in spatial work:
+The dataset is also a good teaching case because it combines several things that matter early in spatial work:
 
 -   the geometry is stored as coordinates in a regular table rather than as a ready-made spatial file
 -   the coordinate system is projected, not longitude/latitude
@@ -90,7 +90,7 @@ crash_events_tbl <- injuries_raw |>
 
 crash_events <- st_as_sf(
   crash_events_tbl,
-  # The course brief specifies WGS 84 / UTM zone 21S
+  # The course workflow uses WGS 84 / UTM zone 21S
   coords = c("x", "y"),
   crs = 32721,
   remove = FALSE
@@ -160,7 +160,7 @@ event_summary
 
 ## Data exploration
 
-A useful way to introduce point analysis is to begin with a simple univariate question before returning to full geography. Here we ask: how often do different daily crash totals occur? In other words, how many days had relatively few crash events, and how many had many? A histogram gives us the first answer and keeps the focus on frequency rather than on location. This is a helpful starting point because most students already know how to read a histogram. We can therefore begin with a familiar summary of variation and then extend the same logic into space.
+A useful way to introduce point analysis is to begin with a simple univariate question before returning to full geography. Here we ask: how often do different daily crash totals occur? In other words, how many days had relatively few crash events, and how many had many? A histogram gives us the first answer and keeps the focus on frequency rather than on location. This is a helpful starting point because histograms are already a familiar way to read variation. We can therefore begin with a familiar summary and then extend the same logic into space.
 
 ```{r}
 hist_daily_crashes <- ggplot(daily_crashes, aes(x = daily_crashes)) +
@@ -204,7 +204,7 @@ dens_daily_crashes <- ggplot(daily_crashes, aes(x = daily_crashes)) +
 print(dens_daily_crashes)
 ```
 
-That transition is the key intuition for the rest of the chapter. In one dimension, the kernel smooths a univariate distribution. In two dimensions, the same logic is applied across both `X` and `Y`, so we move from a cloud of event locations to a smoothed spatial surface. This is why the histogram-first route can be useful pedagogically: students see that spatial smoothing is not a completely new idea, but an extension of a familiar one. Before doing that, however, it helps to see the raw event geography directly.
+That transition is the key intuition for the rest of the chapter. In one dimension, the kernel smooths a univariate distribution. In two dimensions, the same logic is applied across both `X` and `Y`, so we move from a cloud of event locations to a smoothed spatial surface. This is why the histogram-first route can be useful pedagogically: spatial smoothing is easier to understand when treated as an extension of a familiar idea rather than as a completely separate method. Before doing that, however, it helps to see the raw event geography directly.
 
 ## A first point map
 
@@ -348,7 +348,7 @@ square_grid_ll <- st_transform(square_grid, 4326)
 square_grid_ll$predicted_events <- predict(baseline_lm, newdata = baseline_cells)
 
 baseline_prediction_map <- ggplot(square_grid_ll) +
-  # Map the fitted baseline counts so students can compare them with later methods
+  # Map the fitted baseline counts so they can be compared with later methods
   geom_sf(aes(fill = predicted_events), colour = NA) +
   scale_fill_course_seq_c(name = "Predicted count") +
   labs(
@@ -448,7 +448,7 @@ kde_df <- expand.grid(
 kde_map <- ggplot() +
   # Draw the smooth density surface first
   geom_raster(data = kde_df, aes(x = x, y = y, fill = density)) +
-  # Overlay the observed crash events so students can compare points with the smoothed surface
+  # Overlay the observed crash events so the points can be compared with the smoothed surface
   geom_point(
     data = st_drop_geometry(crash_events),
     aes(x = x, y = y),
@@ -477,7 +477,7 @@ kde_map <- ggplot() +
 print(kde_map)
 ```
 
-Compared with the binned maps, KDE produces a more continuous picture of concentration. This is often helpful for communication because students and policy audiences can quickly identify broad zones of higher intensity. But the smoother look should not be confused with greater certainty. KDE is still a modelling choice, and different bandwidths can make hotspots appear sharper or more diffuse.
+Compared with the binned maps, KDE produces a more continuous picture of concentration. This is often helpful for communication because broad zones of higher intensity become easier to identify quickly. But the smoother look should not be confused with greater certainty. KDE is still a modelling choice, and different bandwidths can make hotspots appear sharper or more diffuse.
 
 ## Interpolating a continuous surface from local counts
 

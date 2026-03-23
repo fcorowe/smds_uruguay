@@ -38,6 +38,45 @@ This course does not try to replace a full GIS, econometrics or statistics cours
 
 Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.
 
+## Assessment
+
+Assessment for the course consists of two activities designed to develop both practical skills and analytical interpretation.
+
+### Assignment 1: Programmed Map
+
+- Type: Coursework
+- Weight: 40% of the final mark
+- Submission: Electronic submission only
+
+In this assignment, students will produce a map using programming. The task is intended to assess the ability to work with data, develop a clear map design and communicate a spatial pattern or issue through a well-structured visual output. The map should demonstrate both technical competence and an effective overall narrative.
+
+### Assignment 2: Computational Essay
+
+- Type: Coursework
+- Weight: 60% of the final mark
+- Submission: Electronic submission only
+
+A computational essay is an essay whose narrative is supported by code and computational results included within the essay itself. This piece of assessment is equivalent to 4,000 words in total weight. However, this total includes not only ordinary text, but also code, maps, figures and tables. For this reason, the format requirements are more specific than for a conventional essay.
+
+#### Format requirements
+
+- Maximum of 1,000 words of ordinary text
+- References and code do not count towards the word count
+- Students must answer the specified questions within the narrative
+- The questions should be incorporated into a broader analysis
+- Up to five maps or figures
+- Up to one table
+
+#### What a computational essay includes
+
+A computational essay combines three elements:
+
+1. Ordinary text
+2. Computer code
+3. Computer output such as maps, tables and figures
+
+These elements should work together as part of one coherent analysis. The aim is not only to run techniques, but also to explain what is being done, justify key choices and interpret the substantive meaning of the results.
+
 ## What you need before the course starts
 
 ::: {.callout-important}

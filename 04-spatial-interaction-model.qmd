@@ -26,7 +26,7 @@ source("style/data-visualisation_theme.R")
 
 ## Data
 
-The chapter dataset is stored in `data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv`. For the course repository, this file has been reduced to a **Uruguay-only subset** extracted from a larger multi-country export. We still filter explicitly to **Uruguay** in the code so students can see the intended analytical subset clearly and so the workflow remains easy to adapt if a broader source extract is used later.
+The chapter dataset is stored in `data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv`. For the course repository, this file has been reduced to a **Uruguay-only subset** extracted from a larger multi-country export. We still filter explicitly to **Uruguay** in the code so the intended analytical subset remains clear and the workflow stays easy to adapt if a broader source extract is used later.
 
 Each record links a **home area** to a **visited area** and reports a `visit_fraction`. For teaching purposes, we will treat that value as the observed strength of a directed flow from origin to destination in the released file. We therefore keep the OD logic front and centre: one row describes a relationship between two places, not an attribute of only one place.
 
@@ -56,7 +56,7 @@ activity_raw <- read_csv(
   mutate(ds = as.Date(ds))
 
 activity_uy <- activity_raw |>
-  # Keep only the Uruguay rows required by the course brief
+  # Keep only the Uruguay rows required by the course workflow
   filter(country == "UY") |>
   mutate(
     home_gadm_name = str_squish(home_gadm_name),
@@ -108,7 +108,7 @@ adm2_polygons <- st_read(
   ) |>
   left_join(label_lookup, by = "gadm_id") |>
   mutate(
-    # Prefer the cleaned label file for student-facing maps and tables
+    # Prefer the cleaned label file for clearer maps and tables
     gadm_name = coalesce(label_short, gadm_name_raw)
   )
 
@@ -153,7 +153,7 @@ od_snapshot
 
 ## Data Wrangling
 
-To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum `visit_fraction` for each origin-destination pair, keeping `day_or_night` so students can still compare daytime and nighttime structures later if they want to.
+To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum `visit_fraction` for each origin-destination pair, keeping `day_or_night` so daytime and nighttime structures can still be compared later if needed.
 
 ```{r}
 od_day_night <- activity_uy |>
@@ -186,7 +186,7 @@ od_total <- od_day_night |>
 
 This is the key OD representation for the rest of the chapter. Each row now represents one directed link from a home area to a visited area, with a single flow strength attached to that link. Once that structure is in place, we can start asking familiar spatial interaction questions: which origins send activity to many destinations, which destinations attract many origins, how much movement stays local, and how quickly do flows thin out with distance?
 
-We can summarise some of those questions at the origin level straight away. The distinction between **local retention** and **non-local visits** is especially useful pedagogically because it helps students see that self-links are also part of the OD system rather than an awkward exception to remove without thought.
+We can summarise some of those questions at the origin level straight away. The distinction between **local retention** and **non-local visits** is especially useful because it shows that self-links are also part of the OD system rather than an awkward exception to remove without thought.
 
 ```{r}
 origin_summary <- od_total |>
@@ -377,7 +377,7 @@ The classic intuition is simple: flows between places often depend on three broa
 -   some measure of how attractive or important a destination is
 -   some measure of separation or impedance between them, often distance
 
-In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility [@fotheringham1989spatial]. For this course, we use a lighter version that students can read and adapt easily later. The goal is to see the modelling logic rather than to cover every variant.
+In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility [@fotheringham1989spatial]. For this course, we use a lighter version that remains easy to read and adapt later. The goal is to see the modelling logic rather than to cover every variant.
 
 One of the standard ways to express that logic is with a simple **gravity model**:
 
@@ -589,7 +589,7 @@ map_top_flows <- ggplot() +
 print(map_top_flows)
 ```
 
-This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way students can still read. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.
+This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way that remains legible. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.
 
 ### Statistical inference and interpretation
 
@@ -604,7 +604,7 @@ model_results
 
 ### Model assessment
 
-For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. `R^2` tells us how much variation in logged flow strength is captured by the model, adjusted `R^2` penalises unnecessary complexity, and `AIC` gives a comparative measure of fit that becomes especially useful when students later compare alternative model specifications.
+For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. `R^2` tells us how much variation in logged flow strength is captured by the model, adjusted `R^2` penalises unnecessary complexity, and `AIC` gives a comparative measure of fit that becomes especially useful when comparing alternative model specifications.
 
 ```{r}
 model_fit_summary <- glance(interaction_model) |>

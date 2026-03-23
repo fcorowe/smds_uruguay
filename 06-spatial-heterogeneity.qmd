@@ -2,7 +2,7 @@
 
 ## Introduction / context and aims
 
-This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area's wider hospital catchment that is reachable within 30 minutes. That continuity matters because students can now focus on a new modelling idea rather than learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the *relationships themselves* stay constant across space, or do they look different in different parts of the country?
+This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area's wider hospital catchment that is reachable within 30 minutes. That continuity keeps the focus on a new modelling idea rather than on learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the *relationships themselves* stay constant across space, or do they look different in different parts of the country?
 
 This is the core intuition behind spatial heterogeneity. A single coefficient can be a useful summary, but it can also hide meaningful regional differences. The aim in this chapter is to keep the same descriptive and baseline workflow as before, then extend the analysis in two practical directions: **spatial fixed effects**, which let intercepts vary across departments, and **spatial regimes**, which let the covariate relationships vary across broader regional groupings.
 
@@ -27,7 +27,7 @@ source("style/data-visualisation_theme.R")
 
 ## Data description
 
-The data source is the same as in Chapter 05 so that students can focus on the new modelling idea rather than learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:
+The data source is the same as in Chapter 05 so the focus can remain on the new modelling idea rather than on learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:
 
 - `URY_ADM2_access.csv` for the ingredients used to construct `hospital_access_30min_share`
 - `URY_ADM2_rural_population.csv` for `rural_pop_perc`
@@ -268,7 +268,7 @@ map_regimes <- ggplot(adm2_risk) +
   scale_fill_viridis_d(name = "Spatial regime", option = "D", end = 0.9) +
   labs(
     title = "Spatial regimes group adjacent departments into a few broad regional contexts",
-    subtitle = "The partition is simplified on purpose so students can compare regional relationships without an overwhelming number of coefficients"
+    subtitle = "The partition is simplified on purpose so regional relationships can be compared without an overwhelming number of coefficients"
   ) +
   theme_map_course()
 
@@ -590,7 +590,7 @@ The comparison is informative rather than mechanical. Adjusted `R2` summarises e
 
 ### Model prediction
 
-Prediction is a useful final step because it turns the fitted model into something students can use. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.
+Prediction is a useful final step because it turns the fitted model into something that can be used directly. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.
 
 ```{r}
 # Build a simple prediction scenario using typical covariate values

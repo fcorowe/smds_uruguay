@@ -408,7 +408,7 @@ moran_summary
 ```
 
 ```{r}
-# Add a local Moran classification so students can see where clustering happens
+# Add a local Moran classification to show where clustering happens
 local_moran <- localmoran(
   adm2_risk$hospital_access_30min_share,
   lw_queen,

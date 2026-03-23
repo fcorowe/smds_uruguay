@@ -365,7 +365,7 @@ window.Quarto = {
 </div>
 </section><section id="data" class="level2" data-number="4.2"><h2 data-number="4.2" class="anchored" data-anchor-id="data">
 <span class="header-section-number">4.2</span> Data</h2>
-<p>The chapter dataset is stored in <code>data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv</code>. For the course repository, this file has been reduced to a <strong>Uruguay-only subset</strong> extracted from a larger multi-country export. We still filter explicitly to <strong>Uruguay</strong> in the code so students can see the intended analytical subset clearly and so the workflow remains easy to adapt if a broader source extract is used later.</p>
+<p>The chapter dataset is stored in <code>data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv</code>. For the course repository, this file has been reduced to a <strong>Uruguay-only subset</strong> extracted from a larger multi-country export. We still filter explicitly to <strong>Uruguay</strong> in the code so the intended analytical subset remains clear and the workflow stays easy to adapt if a broader source extract is used later.</p>
 <p>Each record links a <strong>home area</strong> to a <strong>visited area</strong> and reports a <code>visit_fraction</code>. For teaching purposes, we will treat that value as the observed strength of a directed flow from origin to destination in the released file. We therefore keep the OD logic front and centre: one row describes a relationship between two places, not an attribute of only one place.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">activity_path</span> <span class="op">&lt;-</span> <span class="st">"data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv"</span></span>
@@ -393,7 +393,7 @@ window.Quarto = {
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span>ds <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.Date.html">as.Date</a></span><span class="op">(</span><span class="va">ds</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">activity_uy</span> <span class="op">&lt;-</span> <span class="va">activity_raw</span> <span class="op">|&gt;</span></span>
-<span>  <span class="co"># Keep only the Uruguay rows required by the course brief</span></span>
+<span>  <span class="co"># Keep only the Uruguay rows required by the course workflow</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">country</span> <span class="op">==</span> <span class="st">"UY"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
 <span>    home_gadm_name <span class="op">=</span> <span class="fu"><a href="https://stringr.tidyverse.org/reference/str_trim.html">str_squish</a></span><span class="op">(</span><span class="va">home_gadm_name</span><span class="op">)</span>,</span>
@@ -445,7 +445,7 @@ window.Quarto = {
 <span>  <span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html">left_join</a></span><span class="op">(</span><span class="va">label_lookup</span>, by <span class="op">=</span> <span class="st">"gadm_id"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span><span class="op">(</span></span>
-<span>    <span class="co"># Prefer the cleaned label file for student-facing maps and tables</span></span>
+<span>    <span class="co"># Prefer the cleaned label file for clearer maps and tables</span></span>
 <span>    gadm_name <span class="op">=</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/coalesce.html">coalesce</a></span><span class="op">(</span><span class="va">label_short</span>, <span class="va">gadm_name_raw</span><span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span></span>
@@ -497,7 +497,7 @@ window.Quarto = {
 </div>
 </section><section id="data-wrangling" class="level2" data-number="4.3"><h2 data-number="4.3" class="anchored" data-anchor-id="data-wrangling">
 <span class="header-section-number">4.3</span> Data Wrangling</h2>
-<p>To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum <code>visit_fraction</code> for each origin-destination pair, keeping <code>day_or_night</code> so students can still compare daytime and nighttime structures later if they want to.</p>
+<p>To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum <code>visit_fraction</code> for each origin-destination pair, keeping <code>day_or_night</code> so daytime and nighttime structures can still be compared later if needed.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">od_day_night</span> <span class="op">&lt;-</span> <span class="va">activity_uy</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Aggregate repeated records to a clean OD table by time of day</span></span>
@@ -527,7 +527,7 @@ window.Quarto = {
 <span>  <span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This is the key OD representation for the rest of the chapter. Each row now represents one directed link from a home area to a visited area, with a single flow strength attached to that link. Once that structure is in place, we can start asking familiar spatial interaction questions: which origins send activity to many destinations, which destinations attract many origins, how much movement stays local, and how quickly do flows thin out with distance?</p>
-<p>We can summarise some of those questions at the origin level straight away. The distinction between <strong>local retention</strong> and <strong>non-local visits</strong> is especially useful pedagogically because it helps students see that self-links are also part of the OD system rather than an awkward exception to remove without thought.</p>
+<p>We can summarise some of those questions at the origin level straight away. The distinction between <strong>local retention</strong> and <strong>non-local visits</strong> is especially useful because it shows that self-links are also part of the OD system rather than an awkward exception to remove without thought.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">origin_summary</span> <span class="op">&lt;-</span> <span class="va">od_total</span> <span class="op">|&gt;</span></span>
 <span>  <span class="co"># Summarise outbound structure for each home area</span></span>
@@ -734,7 +734,7 @@ window.Quarto = {
 <li>some measure of how attractive or important a destination is</li>
 <li>some measure of separation or impedance between them, often distance</li>
 </ul>
-<p>In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility <span class="citation" data-cites="fotheringham1989spatial">(<a href="references.html#ref-fotheringham1989spatial" role="doc-biblioref">Fotheringham and O’Kelly 1989</a>)</span>. For this course, we use a lighter version that students can read and adapt easily later. The goal is to see the modelling logic rather than to cover every variant.</p>
+<p>In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility <span class="citation" data-cites="fotheringham1989spatial">(<a href="references.html#ref-fotheringham1989spatial" role="doc-biblioref">Fotheringham and O’Kelly 1989</a>)</span>. For this course, we use a lighter version that remains easy to read and adapt later. The goal is to see the modelling logic rather than to cover every variant.</p>
 <p>One of the standard ways to express that logic is with a simple <strong>gravity model</strong>:</p>
 <p><span class="math display">\[
 T_{ij} = k \frac{O_i^{\alpha} D_j^{\gamma}}{d_{ij}^{\beta}}
@@ -946,7 +946,7 @@ T_{ij} = k \frac{O_i^{\alpha} D_j^{\gamma}}{d_{ij}^{\beta}}
 </div>
 </div>
 </div>
-<p>This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way students can still read. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.</p>
+<p>This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way that remains legible. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.</p>
 </section><section id="statistical-inference-and-interpretation" class="level3" data-number="4.6.2"><h3 data-number="4.6.2" class="anchored" data-anchor-id="statistical-inference-and-interpretation">
 <span class="header-section-number">4.6.2</span> Statistical inference and interpretation</h3>
 <p>This model is deliberately simple, but its structure matches the way spatial interaction thinking is usually introduced. Larger origins should tend to send more flow, more attractive destinations should tend to receive more flow, and greater distance should tend to reduce the observed connection between them. The signs of the estimated coefficients matter more here than the exact numerical values.</p>
@@ -967,7 +967,7 @@ T_{ij} = k \frac{O_i^{\alpha} D_j^{\gamma}}{d_{ij}^{\beta}}
 </div>
 </section><section id="model-assessment" class="level3" data-number="4.6.3"><h3 data-number="4.6.3" class="anchored" data-anchor-id="model-assessment">
 <span class="header-section-number">4.6.3</span> Model assessment</h3>
-<p>For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. <code>R^2</code> tells us how much variation in logged flow strength is captured by the model, adjusted <code>R^2</code> penalises unnecessary complexity, and <code>AIC</code> gives a comparative measure of fit that becomes especially useful when students later compare alternative model specifications.</p>
+<p>For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. <code>R^2</code> tells us how much variation in logged flow strength is captured by the model, adjusted <code>R^2</code> penalises unnecessary complexity, and <code>AIC</code> gives a comparative measure of fit that becomes especially useful when comparing alternative model specifications.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="va">model_fit_summary</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="va">interaction_model</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/transmute.html">transmute</a></span><span class="op">(</span></span>
@@ -1619,7 +1619,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-30"><a href="#cb23-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-31"><a href="#cb23-31" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
 <span id="cb23-32"><a href="#cb23-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>The chapter dataset is stored in <span class="in">`data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv`</span>. For the course repository, this file has been reduced to a **Uruguay-only subset** extracted from a larger multi-country export. We still filter explicitly to **Uruguay** in the code so students can see the intended analytical subset clearly and so the workflow remains easy to adapt if a broader source extract is used later.</span>
+<span id="cb23-33"><a href="#cb23-33" aria-hidden="true" tabindex="-1"></a>The chapter dataset is stored in <span class="in">`data/fb-activity-spaces/activity_space_distributions_20260209_t_to_z.csv`</span>. For the course repository, this file has been reduced to a **Uruguay-only subset** extracted from a larger multi-country export. We still filter explicitly to **Uruguay** in the code so the intended analytical subset remains clear and the workflow stays easy to adapt if a broader source extract is used later.</span>
 <span id="cb23-34"><a href="#cb23-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-35"><a href="#cb23-35" aria-hidden="true" tabindex="-1"></a>Each record links a **home area** to a **visited area** and reports a <span class="in">`visit_fraction`</span>. For teaching purposes, we will treat that value as the observed strength of a directed flow from origin to destination in the released file. We therefore keep the OD logic front and centre: one row describes a relationship between two places, not an attribute of only one place.</span>
 <span id="cb23-36"><a href="#cb23-36" aria-hidden="true" tabindex="-1"></a></span>
@@ -1649,7 +1649,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-62"><a href="#cb23-62" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ds =</span> <span class="fu">as.Date</span>(ds))</span>
 <span id="cb23-63"><a href="#cb23-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-64"><a href="#cb23-64" aria-hidden="true" tabindex="-1"></a>activity_uy <span class="ot">&lt;-</span> activity_raw <span class="sc">|&gt;</span></span>
-<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Keep only the Uruguay rows required by the course brief</span></span>
+<span id="cb23-65"><a href="#cb23-65" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Keep only the Uruguay rows required by the course workflow</span></span>
 <span id="cb23-66"><a href="#cb23-66" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(country <span class="sc">==</span> <span class="st">"UY"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb23-67"><a href="#cb23-67" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb23-68"><a href="#cb23-68" aria-hidden="true" tabindex="-1"></a>    <span class="at">home_gadm_name =</span> <span class="fu">str_squish</span>(home_gadm_name),</span>
@@ -1701,7 +1701,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-114"><a href="#cb23-114" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
 <span id="cb23-115"><a href="#cb23-115" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(label_lookup, <span class="at">by =</span> <span class="st">"gadm_id"</span>) <span class="sc">|&gt;</span></span>
 <span id="cb23-116"><a href="#cb23-116" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb23-117"><a href="#cb23-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prefer the cleaned label file for student-facing maps and tables</span></span>
+<span id="cb23-117"><a href="#cb23-117" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Prefer the cleaned label file for clearer maps and tables</span></span>
 <span id="cb23-118"><a href="#cb23-118" aria-hidden="true" tabindex="-1"></a>    <span class="at">gadm_name =</span> <span class="fu">coalesce</span>(label_short, gadm_name_raw)</span>
 <span id="cb23-119"><a href="#cb23-119" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb23-120"><a href="#cb23-120" aria-hidden="true" tabindex="-1"></a></span>
@@ -1746,7 +1746,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-161"><a href="#cb23-161" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-162"><a href="#cb23-162" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data Wrangling</span></span>
 <span id="cb23-163"><a href="#cb23-163" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-164"><a href="#cb23-164" aria-hidden="true" tabindex="-1"></a>To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum <span class="in">`visit_fraction`</span> for each origin-destination pair, keeping <span class="in">`day_or_night`</span> so students can still compare daytime and nighttime structures later if they want to.</span>
+<span id="cb23-164"><a href="#cb23-164" aria-hidden="true" tabindex="-1"></a>To analyse flows, we need to turn the released file into an OD table we can use consistently throughout the chapter. In a flow chapter, aggregation is usually the first real analytical step. We rarely model the raw file exactly as downloaded. Instead, we decide what one OD link should represent and then aggregate to that level. Here we sum <span class="in">`visit_fraction`</span> for each origin-destination pair, keeping <span class="in">`day_or_night`</span> so daytime and nighttime structures can still be compared later if needed.</span>
 <span id="cb23-165"><a href="#cb23-165" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-168"><a href="#cb23-168" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb23-169"><a href="#cb23-169" aria-hidden="true" tabindex="-1"></a>od_day_night <span class="ot">&lt;-</span> activity_uy <span class="sc">|&gt;</span></span>
@@ -1779,7 +1779,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-196"><a href="#cb23-196" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-197"><a href="#cb23-197" aria-hidden="true" tabindex="-1"></a>This is the key OD representation for the rest of the chapter. Each row now represents one directed link from a home area to a visited area, with a single flow strength attached to that link. Once that structure is in place, we can start asking familiar spatial interaction questions: which origins send activity to many destinations, which destinations attract many origins, how much movement stays local, and how quickly do flows thin out with distance?</span>
 <span id="cb23-198"><a href="#cb23-198" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-199"><a href="#cb23-199" aria-hidden="true" tabindex="-1"></a>We can summarise some of those questions at the origin level straight away. The distinction between **local retention** and **non-local visits** is especially useful pedagogically because it helps students see that self-links are also part of the OD system rather than an awkward exception to remove without thought.</span>
+<span id="cb23-199"><a href="#cb23-199" aria-hidden="true" tabindex="-1"></a>We can summarise some of those questions at the origin level straight away. The distinction between **local retention** and **non-local visits** is especially useful because it shows that self-links are also part of the OD system rather than an awkward exception to remove without thought.</span>
 <span id="cb23-200"><a href="#cb23-200" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-203"><a href="#cb23-203" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb23-204"><a href="#cb23-204" aria-hidden="true" tabindex="-1"></a>origin_summary <span class="ot">&lt;-</span> od_total <span class="sc">|&gt;</span></span>
@@ -1970,7 +1970,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-399"><a href="#cb23-399" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>some measure of how attractive or important a destination is</span>
 <span id="cb23-400"><a href="#cb23-400" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>some measure of separation or impedance between them, often distance</span>
 <span id="cb23-401"><a href="#cb23-401" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-402"><a href="#cb23-402" aria-hidden="true" tabindex="-1"></a>In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility <span class="co">[</span><span class="ot">@fotheringham1989spatial</span><span class="co">]</span>. For this course, we use a lighter version that students can read and adapt easily later. The goal is to see the modelling logic rather than to cover every variant.</span>
+<span id="cb23-402"><a href="#cb23-402" aria-hidden="true" tabindex="-1"></a>In formal research, spatial interaction models are often estimated with Poisson or related count models and may include balancing constraints, origin effects, destination effects, and richer measures of accessibility <span class="co">[</span><span class="ot">@fotheringham1989spatial</span><span class="co">]</span>. For this course, we use a lighter version that remains easy to read and adapt later. The goal is to see the modelling logic rather than to cover every variant.</span>
 <span id="cb23-403"><a href="#cb23-403" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-404"><a href="#cb23-404" aria-hidden="true" tabindex="-1"></a>One of the standard ways to express that logic is with a simple **gravity model**:</span>
 <span id="cb23-405"><a href="#cb23-405" aria-hidden="true" tabindex="-1"></a></span>
@@ -2182,7 +2182,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-617"><a href="#cb23-617" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(map_top_flows)</span>
 <span id="cb23-618"><a href="#cb23-618" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb23-619"><a href="#cb23-619" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-620"><a href="#cb23-620" aria-hidden="true" tabindex="-1"></a>This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way students can still read. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.</span>
+<span id="cb23-620"><a href="#cb23-620" aria-hidden="true" tabindex="-1"></a>This figure is intentionally selective. It is not designed to show every possible movement link. Instead, it reveals the strongest structure in a way that remains legible. That is often the right compromise in teaching and in exploratory analysis: simplify the visual output enough to make the geography legible, while keeping the OD logic intact.</span>
 <span id="cb23-621"><a href="#cb23-621" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-622"><a href="#cb23-622" aria-hidden="true" tabindex="-1"></a><span class="fu">### Statistical inference and interpretation</span></span>
 <span id="cb23-623"><a href="#cb23-623" aria-hidden="true" tabindex="-1"></a></span>
@@ -2197,7 +2197,7 @@ Rowe, Francisco, and Nikos Patias. 2020. <span>“Mapping the Spatial Patterns o
 <span id="cb23-634"><a href="#cb23-634" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-635"><a href="#cb23-635" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model assessment</span></span>
 <span id="cb23-636"><a href="#cb23-636" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-637"><a href="#cb23-637" aria-hidden="true" tabindex="-1"></a>For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. <span class="in">`R^2`</span> tells us how much variation in logged flow strength is captured by the model, adjusted <span class="in">`R^2`</span> penalises unnecessary complexity, and <span class="in">`AIC`</span> gives a comparative measure of fit that becomes especially useful when students later compare alternative model specifications.</span>
+<span id="cb23-637"><a href="#cb23-637" aria-hidden="true" tabindex="-1"></a>For regression models, assessment should include both an overall numerical summary and a visual check. Here we report a small set of familiar fit measures. <span class="in">`R^2`</span> tells us how much variation in logged flow strength is captured by the model, adjusted <span class="in">`R^2`</span> penalises unnecessary complexity, and <span class="in">`AIC`</span> gives a comparative measure of fit that becomes especially useful when comparing alternative model specifications.</span>
 <span id="cb23-638"><a href="#cb23-638" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-641"><a href="#cb23-641" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb23-642"><a href="#cb23-642" aria-hidden="true" tabindex="-1"></a>model_fit_summary <span class="ot">&lt;-</span> <span class="fu">glance</span>(interaction_model) <span class="sc">|&gt;</span></span>

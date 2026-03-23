@@ -298,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header><section id="introduction-context-and-aims" class="level2" data-number="6.1"><h2 data-number="6.1" class="anchored" data-anchor-id="introduction-context-and-aims">
 <span class="header-section-number">6.1</span> Introduction / context and aims</h2>
-<p>This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area’s wider hospital catchment that is reachable within 30 minutes. That continuity matters because students can now focus on a new modelling idea rather than learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the <em>relationships themselves</em> stay constant across space, or do they look different in different parts of the country?</p>
+<p>This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area’s wider hospital catchment that is reachable within 30 minutes. That continuity keeps the focus on a new modelling idea rather than on learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the <em>relationships themselves</em> stay constant across space, or do they look different in different parts of the country?</p>
 <p>This is the core intuition behind spatial heterogeneity. A single coefficient can be a useful summary, but it can also hide meaningful regional differences. The aim in this chapter is to keep the same descriptive and baseline workflow as before, then extend the analysis in two practical directions: <strong>spatial fixed effects</strong>, which let intercepts vary across departments, and <strong>spatial regimes</strong>, which let the covariate relationships vary across broader regional groupings.</p>
 </section><section id="dependencies" class="level2" data-number="6.2"><h2 data-number="6.2" class="anchored" data-anchor-id="dependencies">
 <span class="header-section-number">6.2</span> Dependencies</h2>
@@ -314,7 +314,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section><section id="data-description" class="level2" data-number="6.3"><h2 data-number="6.3" class="anchored" data-anchor-id="data-description">
 <span class="header-section-number">6.3</span> Data description</h2>
-<p>The data source is the same as in Chapter 05 so that students can focus on the new modelling idea rather than learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:</p>
+<p>The data source is the same as in Chapter 05 so the focus can remain on the new modelling idea rather than on learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:</p>
 <ul>
 <li>
 <code>URY_ADM2_access.csv</code> for the ingredients used to construct <code>hospital_access_30min_share</code>
@@ -589,7 +589,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_viridis.html">scale_fill_viridis_d</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Spatial regime"</span>, option <span class="op">=</span> <span class="st">"D"</span>, end <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
 <span>    title <span class="op">=</span> <span class="st">"Spatial regimes group adjacent departments into a few broad regional contexts"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"The partition is simplified on purpose so students can compare regional relationships without an overwhelming number of coefficients"</span></span>
+<span>    subtitle <span class="op">=</span> <span class="st">"The partition is simplified on purpose so regional relationships can be compared without an overwhelming number of coefficients"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_map_course</span><span class="op">(</span><span class="op">)</span></span>
 <span></span>
@@ -997,7 +997,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>The comparison is informative rather than mechanical. Adjusted <code>R2</code> summarises explained variation, <code>AIC</code> tells us whether that improvement is worth the added complexity, and RMSE and MAE keep the assessment in the outcome’s own units. The fixed-effects model often captures important baseline structure, while the regimes model adds a different kind of value: it shows where relationships vary rather than only where average levels differ.</p>
 </section><section id="model-prediction" class="level3" data-number="6.7.3"><h3 data-number="6.7.3" class="anchored" data-anchor-id="model-prediction">
 <span class="header-section-number">6.7.3</span> Model prediction</h3>
-<p>Prediction is a useful final step because it turns the fitted model into something students can use. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.</p>
+<p>Prediction is a useful final step because it turns the fitted model into something that can be used directly. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="co"># Build a simple prediction scenario using typical covariate values</span></span>
 <span><span class="va">prediction_scenarios</span> <span class="op">&lt;-</span> <span class="va">adm2_risk</span> <span class="op">|&gt;</span></span>
@@ -1543,7 +1543,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Introduction / context and aims</span></span>
 <span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area's wider hospital catchment that is reachable within 30 minutes. That continuity matters because students can now focus on a new modelling idea rather than learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the *relationships themselves* stay constant across space, or do they look different in different parts of the country?</span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>This chapter continues directly from Chapter 05 and keeps the same Uruguay risk-indicator example: the share of each ADM2 area's wider hospital catchment that is reachable within 30 minutes. That continuity keeps the focus on a new modelling idea rather than on learning a new dataset. In the previous chapter, the main question was whether nearby areas influenced one another. Here the question shifts slightly: do the *relationships themselves* stay constant across space, or do they look different in different parts of the country?</span>
 <span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>This is the core intuition behind spatial heterogeneity. A single coefficient can be a useful summary, but it can also hide meaningful regional differences. The aim in this chapter is to keep the same descriptive and baseline workflow as before, then extend the analysis in two practical directions: **spatial fixed effects**, which let intercepts vary across departments, and **spatial regimes**, which let the covariate relationships vary across broader regional groupings.</span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
@@ -1568,7 +1568,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-32"><a href="#cb37-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data description</span></span>
 <span id="cb37-33"><a href="#cb37-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>The data source is the same as in Chapter 05 so that students can focus on the new modelling idea rather than learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:</span>
+<span id="cb37-34"><a href="#cb37-34" aria-hidden="true" tabindex="-1"></a>The data source is the same as in Chapter 05 so the focus can remain on the new modelling idea rather than on learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:</span>
 <span id="cb37-35"><a href="#cb37-35" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-36"><a href="#cb37-36" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`URY_ADM2_access.csv`</span> for the ingredients used to construct <span class="in">`hospital_access_30min_share`</span></span>
 <span id="cb37-37"><a href="#cb37-37" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`URY_ADM2_rural_population.csv`</span> for <span class="in">`rural_pop_perc`</span></span>
@@ -1809,7 +1809,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb37-288"><a href="#cb37-288" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_d</span>(<span class="at">name =</span> <span class="st">"Spatial regime"</span>, <span class="at">option =</span> <span class="st">"D"</span>, <span class="at">end =</span> <span class="fl">0.9</span>) <span class="sc">+</span></span>
 <span id="cb37-289"><a href="#cb37-289" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
 <span id="cb37-290"><a href="#cb37-290" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Spatial regimes group adjacent departments into a few broad regional contexts"</span>,</span>
-<span id="cb37-291"><a href="#cb37-291" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"The partition is simplified on purpose so students can compare regional relationships without an overwhelming number of coefficients"</span></span>
+<span id="cb37-291"><a href="#cb37-291" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"The partition is simplified on purpose so regional relationships can be compared without an overwhelming number of coefficients"</span></span>
 <span id="cb37-292"><a href="#cb37-292" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb37-293"><a href="#cb37-293" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_map_course</span>()</span>
 <span id="cb37-294"><a href="#cb37-294" aria-hidden="true" tabindex="-1"></a></span>
@@ -2131,7 +2131,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb37-636"><a href="#cb37-636" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-637"><a href="#cb37-637" aria-hidden="true" tabindex="-1"></a><span class="fu">### Model prediction</span></span>
 <span id="cb37-638"><a href="#cb37-638" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-639"><a href="#cb37-639" aria-hidden="true" tabindex="-1"></a>Prediction is a useful final step because it turns the fitted model into something students can use. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.</span>
+<span id="cb37-639"><a href="#cb37-639" aria-hidden="true" tabindex="-1"></a>Prediction is a useful final step because it turns the fitted model into something that can be used directly. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.</span>
 <span id="cb37-640"><a href="#cb37-640" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb37-643"><a href="#cb37-643" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
 <span id="cb37-644"><a href="#cb37-644" aria-hidden="true" tabindex="-1"></a><span class="co"># Build a simple prediction scenario using typical covariate values</span></span>
