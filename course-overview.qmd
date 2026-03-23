@@ -1,22 +1,22 @@
 # Course Overview {.unnumbered}
 
-This chapter explains what the course is trying to do, how it is organised, and what you need to have ready before the first session. It is designed to be shared with students before the course begins so everyone arrives with the same expectations and a working setup. The practical sessions start straight away, so this overview should be read as preparation material as well as orientation.
+This chapter explains what the course aims, structure, content and what you need to have ready before our first session. 
 
 ## Course aims
 
-The course introduces a compact but useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied: students should leave with a clearer understanding of what makes spatial data distinctive, when different spatial methods are appropriate, and how to implement them in `R`.
+The course introduces a useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied. The course provides an understanding of what makes spatial data distinctive, when different spatial methods are appropriate, how to implement them in `R` and illustrates the use of methods using real-world data. The course aims to be reproducible and replicable so students can re-use the material for their own analysis and datasets.
 
-Rather than trying to cover every branch of spatial analysis, the course focuses on a coherent sequence of methods that build on one another. By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.
+By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.
 
 ## Who this course is for
 
-This course is designed primarily for MSc and PhD students in the social sciences, as well as applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with `R`, Quarto, or reproducible computational workflows.
+This course is designed primarily for MSc and PhD students in the social sciences, and applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with `R`, Quarto, or reproducible computational workflows.
 
-The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data, but it does not assume that students already have specialist training in GIS, spatial econometrics, or programming beyond basic familiarity.
+The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data. The course assumes students have some basic familiarity with GIS, spatial econometrics or programming. It does not assume they already have specialist training in these areas.
 
 ## How the course is organised
 
-The course is structured as a progression from spatial data foundations to applied modelling. Each chapter builds on the previous one, so the sequence matters even though the examples and geographies vary across the course.
+The course is structured as a progression from spatial data foundations and key concepts to applied modelling. Each chapter weakly builds on the previous, so there is sequence that matters. Examples and geographies in each individual chapter vary to provide students with exposure to different types of data and context.
 
 **Part I** introduces the main ideas behind spatial thinking and the practical tools needed to work with spatial data in `R`.  
 **Part II** focuses on point patterns and flows, showing how to analyse events in space and connections between places.  
@@ -34,9 +34,9 @@ The practical teaching sequence is:
 
 ## How this course fits in the wider toolkit
 
-This course does not try to replace a full GIS course, a full econometrics course, or a full statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in `R`, with an emphasis on social-science applications.
+This course does not try to replace a full GIS, econometrics or statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in `R`, with an emphasis on social-science applications.
 
-Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling, and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.
+Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.
 
 ## What you need before the course starts
 
@@ -60,41 +60,41 @@ After installing these, please check that:
 
 ## R package dependencies
 
-The course uses `R` packages for data manipulation, spatial data handling, mapping, and modelling. The full chapter sources for `01` to `06` are still being finalised in this repository, so the list below should be read as the **core install set** based on the methods already planned for the course. It is designed to minimise setup problems before the first class while keeping the installation burden manageable.
+The course uses `R` packages for data manipulation, spatial data handling, mapping, interpolation, and modelling. The list below has been checked against the package calls currently used in Chapters `01` to `06`, so it is a better guide to what students will actually need as they move through the course.
 
-The most important package groups include:
+The main package groups are:
 
-- tidy data tools such as `dplyr`, `tidyr`, `readr`, `stringr`, and `purrr`
-- date and data-cleaning tools such as `lubridate` and `janitor`
-- spatial data tools such as `sf` and `units`
-- mapping and visualisation tools such as `ggplot2`, `tmap`, `scales`, and `viridis`
-- point-pattern support tools such as `hexbin`
+- workflow and data tools such as `tidyverse`, `lubridate`, and `broom`
+- spatial data tools such as `sf` and `spData`
+- mapping and visualisation tools such as `tmap`, `viridis`, `scales`, and `ggthemes`
+- point-pattern and interpolation tools such as `MASS` and `gstat`
 - spatial analysis and modelling tools such as `spdep` and `spatialreg`
 
-To install packages from inside `R`, you can use commands such as:
+To install the packages needed across the course from inside `R`, use:
 
 ```r
 install.packages(c(
-  "dplyr",
-  "tidyr",
-  "readr",
-  "stringr",
-  "purrr",
-  "lubridate",
-  "janitor",
-  "ggplot2",
+  "tidyverse",
   "sf",
-  "units",
   "tmap",
-  "scales",
   "viridis",
-  "hexbin",
+  "ggthemes",
+  "spData",
+  "gstat",
+  "lubridate",
+  "broom",
+  "scales",
   "spdep",
   "spatialreg"
 ))
 ```
 
-If a package used in a chapter is missing on your machine, `R` will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter once those chapter files are released in their final course form.
+Two additional packages appear in the chapter code but usually do not need separate installation because they are distributed with `R`:
+
+- `MASS`
+- `grid`
+
+If a package used in a chapter is missing on your machine, `R` will usually tell you when you try to run the code. Students who want to prepare more fully can also look at the package calls at the top of each chapter and install anything extra in advance.
 
 Useful references:
 
@@ -107,7 +107,7 @@ Useful references:
 
 ## How to use the repository
 
-The course materials are organised as a Quarto book repository. This means the files include not only narrative text, but also executable code, figures, and references. Students are encouraged to download the repository, run the code locally, and reuse the structure for their own learning and future work.
+The course materials are organised as a Quarto book repository. This means the files include narrative text, executable code, figures and references. Students should download the repository, run the code locally, and are encouragued to reuse the structure for their own learning and future work.
 
 There are two simple ways to get the repository onto your computer:
 
@@ -145,9 +145,9 @@ Within RStudio, students should be able to:
 
 ## Reusing the repository for your own work
 
-One of the goals of the course is not only to teach specific methods, but also to provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.
+One of the goals of the course is to teach specific methods and provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.
 
-This is one of the strengths of working with Quarto and `R`: the narrative, code, and output live together in a form that is easier to reproduce, revise, and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.
+A key strength of working with Quarto and `R` is that narrative, code and output live together in a form that is easier to reproduce, revise and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.
 
 ## Preparation checklist
 

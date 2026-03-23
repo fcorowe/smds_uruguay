@@ -1,5 +1,5 @@
 # Welcome {.unnumbered}
 
-Welcome to the Uruguay course edition of *Spatial Data Modelling for Social Scientists*. This version of the course has been adapted from @rowe_arribas_2022 for the course at Universidad de la Republica, Uruguay, held from 23 to 27 March 2026.
+Welcome to the Uruguay course edition of *Spatial Data Modelling for Social Scientists*. This version of the course has been adapted from @rowe_arribas_2022 for the course at Universidad de la República, Uruguay, held from 23 to 27 March 2026.
 
-The aim is practical and focused: to help students understand what makes spatial data different, work with spatial objects in `R` and apply a small set of core methods to Uruguay-relevant examples. Rather than trying to cover the whole book, this course concentrates on a coherent sequence from introduction to modelling.
+The course aim is to help students understand what makes spatial data different, work with spatial objects in `R` and apply a set of core methods to real-work data using Uruguay as context. It seeks to cover fundamental tools, methods and models to visualise and analyse spatial data of various forms. It takes an applied, practical approach to tackle relevant social science questions.

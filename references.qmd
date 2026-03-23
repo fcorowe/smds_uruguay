@@ -6,6 +6,18 @@ nocite: |
   @bivand2013
   @arribas2014spatial
   @comber2015
+  @anselin1988spatial
+  @onnerfors2019eurostat
+  @tao2018
+  @kwan2004geovisualization
+  @kong2018
+  @openshaw1981modifiable
+  @fotheringham1991modifiable
+  @casado-díaz2017
+  @arribas-bel2021
+  @singleton2013
+  @patias2019
+  @robinson1950ecological
 ---
 
 # References {.unnumbered}

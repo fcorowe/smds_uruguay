@@ -1,8 +1,8 @@
 # Spatial data wrangling
 
-This chapter introduces the core practical skills needed to work with spatial data in `R`. The emphasis is on what is specific about spatial data rather than on general `R` basics: geometry, coordinate reference systems, the relationship between attributes and location, and the spatial operations that support later modelling work [@lovelace2019; @comber2015]. These are not just technical preliminaries. They shape what patterns we can see, what measurements we can trust, and how confidently we can interpret the outputs of later chapters.
+This chapter introduces the core practical skills needed to work with spatial data in `R`. The emphasis is on spatial data rather than on general `R` basics: geometry, coordinate reference systems, the relationship between attributes and location, and the spatial operations that support later modelling work [@lovelace2019; @comber2015]. These concepts shape the patterns we can see, provide measurements we can trust, and how confidently we can interpret the outputs of our analyses.
 
-The chapter follows a course logic. We begin with simple features and why they matter, then move through geometry types, Coordinate Reference Systems (CRS), attribute wrangling, topological relations, spatial joins and aggregation, and finally a small mapping progression from base `plot()` to `tmap` and `ggplot2`. Throughout, we use a coherent Montevideo case built from two local files in the `data` folder: traffic injury records stored as a CSV with coordinates and a roads layer stored as a GeoPackage. This pairing is especially useful for chapter 2 because it allows us to demonstrate both main routes into `sf`, work with both point and line geometries, and teach projection changes, topological relations, joins, and mapping using one consistent applied example.
+The chapter is structured as follows. We begin with the concept of simple features and why they matter. Then we move through geometry types, Coordinate Reference Systems (CRS), attribute wrangling, topological relations, spatial joins and aggregation before moving on to map making. We use traffic injury records for Montevideo. We will work with both point and line geometries, cover projection changes, topological relations, join, and mapping these data.
 
 ## Dependencies
 
@@ -20,61 +20,28 @@ library(viridis)
 library(ggthemes)
 library(grid)
 
-# Load the shared course plotting and mapping style when available
-theme_loaded <- try(source("style/data-visualisation_theme.R"), silent = TRUE)
-
-if (inherits(theme_loaded, "try-error")) {
-  course_text_theme <- function() {
-    theme(
-      text = element_text(family = "sans"),
-      plot.title = element_text(size = 18, face = "bold"),
-      plot.subtitle = element_text(size = 13, margin = margin(b = 10)),
-      plot.caption = element_text(size = 10, colour = "grey30"),
-      plot.title.position = "plot",
-      plot.caption.position = "plot",
-      legend.title = element_text(size = 11, face = "bold"),
-      legend.text = element_text(size = 10)
-    )
-  }
-
-  theme_map_course <- function(...) {
-    theme_tufte(...) +
-      course_text_theme() +
-      theme(
-        axis.text.x = element_blank(),
-        axis.text.y = element_blank(),
-        axis.ticks = element_blank(),
-        axis.title = element_blank(),
-        panel.grid = element_blank(),
-        legend.position = "right",
-        legend.key.height = unit(0.45, "cm")
-      )
-  }
-
-  scale_fill_course_seq_c <- function(...) {
-    scale_fill_viridis_c(...)
-  }
-}
+# Load the shared course plotting and mapping style
+source("style/data-visualisation_theme.R")
 ```
 
-## Why `sf` and simple features matter
+## The spatial stack
 
-Most of the course relies on the `sf` package. The name stands for **simple features**, a standard way of representing vector spatial data that is widely used across GIS software and open-source geospatial tools [@lovelace2019; @bivand2013]. In practice, `sf` matters because it lets us work with spatial data as if they were ordinary data frames while still preserving geometry, projection metadata, and spatial relationships. This makes it much easier to move between cleaning, mapping and analysis without constantly converting objects from one format to another.
+We will primarily use the `sf` package for spatial data manipulation. The name stands for **simple features**, a standard way of representing vector spatial data that is widely used across GIS software and open-source geospatial tools [@lovelace2019; @bivand2013]. `sf` let us work with spatial data as if they were standard data frames while still preserving geometry, projection metadata and spatial relationships. This makes it much easier to move between cleaning, mapping and analysis without constantly converting objects from one format to another.
 
 An `sf` object combines two things:
 
--   **attribute data**, the familiar columns that describe observations
--   **geometry**, a special list-column that stores location and shape
+-   **attribute data**: the familiar columns that describe observations
+-   **geometry**: a special list-column that stores location and shape
 
-That combination is one of the great strengths of modern spatial workflows in `R`. The same verbs used for tabular wrangling such as `select()`, `filter()`, `mutate()` and `summarise()` also work on spatial tables. Students therefore do not need to learn one workflow for tables and a separate one for maps. Instead, they can build a single pipeline in which geometry remains visible and usable throughout the analysis.
+That combination is a key strength of modern spatial workflows in `R`. The same verbs used for tabular wrangling such as `select()`, `filter()`, `mutate()` and `summarise()` also work on spatial tables. You therefore do not need to learn one workflow for tables and a separate for mapping. You can build a single pipeline in which geometry remains visible and usable throughout the analysis.
 
-This is also why `sf` has become such a useful bridge between GIS and data science. Earlier spatial workflows in `R` often relied on older class systems that were historically important but less intuitive for teaching and less aligned with contemporary data pipelines. For course purposes, `sf` is usually the best place to start because it makes the structure of spatial data easier to inspect, easier to manipulate, and easier to connect to visualisation packages such as `tmap` and `ggplot2`.
+This is also why `sf` has become such a useful bridge between GIS and data science. Earlier spatial workflows in `R` often relied on older class systems that were historically important but less intuitive for teaching and less aligned with contemporary data pipelines. `sf` is usually the best place to start because it makes the structure of spatial data easier to inspect, easier to manipulate and connect to visualisation packages such as `tmap` and `ggplot2`.
 
-## Reading spatial data: two common routes
+## Reading spatial data
 
-In applied work, spatial data usually arrive through one of two routes. Sometimes they already come as spatial files such as a GeoPackage, shapefile or GeoJSON. In those cases, we normally use `st_read()`. At other times, the data arrive as an ordinary table with coordinate columns. In that case, we first read the table with a function such as `read_csv()` and then convert it to an `sf` object with `st_as_sf()`.
+In applied work, spatial data usually arrive through one of two routes. They may come as spatial files such as a GeoPackage, shapefile or GeoJSON. In those cases, we normally use `st_read()`. Alternatively, they may come as an ordinary table with coordinate columns. In that case, we first read the table with a function such as `read_csv()` and then convert it to an `sf` object with `st_as_sf()`.
 
-This distinction is worth making explicit because it explains why different chapters may begin with different import steps. The important skill is not memorising a single command, but recognising the structure of the source data and choosing the correct route into an `sf` workflow. Once the data are in `sf` form, the later steps are much more consistent.
+This distinction is worth making explicit as we will use different import steps later. The important skill is recognising the structure of the source data and choosing the correct route into an `sf` workflow. Once the data are in `sf` form, the later steps are much more consistent.
 
 ```{r}
 #| eval: false
@@ -86,13 +53,13 @@ injuries_raw <- read_csv("data/montevideo-traffic-injuries-2022.csv")
 injuries <- st_as_sf(injuries_raw, coords = c("X", "Y"), crs = 32721)
 ```
 
-For this chapter, we use both routes. The Montevideo injuries data are stored as a CSV, and the course brief notes that the coordinate columns `X` and `Y` are already in **EPSG:32721**, a projected CRS for UTM zone 21S. The roads file, by contrast, is already a spatial layer and is stored in longitude and latitude. That contrast makes the pair a particularly good teaching example because students immediately encounter two core issues of spatial wrangling: different ways of reading data into `sf`, and different CRSs that must be understood before layers can be combined safely.
+For this chapter, we use both routes. We will use a Montevideo injuries dataset which is stored as a CSV, with coordinate columns `X` and `Y` are in **EPSG:32721**, a projected CRS for UTM zone 21S. The roads file, by contrast, is already a spatial layer and is stored in longitude and latitude. That contrast makes the pair a particularly good teaching example to deploy two different ways of reading data into `sf`, and different CRSs that must be understood before layers can be combined safely.
 
-## Reading and inspecting the working data
+## Reading and inspecting spatial data
 
-We begin by reading the Montevideo injuries table, converting it into an `sf` object, and collapsing person-level rows to unique crash events so the unit of analysis matches the point-pattern logic used in the next chapter. We also read the Montevideo roads GeoPackage and transform it into the same projected CRS so that points and lines can be overlaid, joined and measured consistently.
+We begin by reading the Montevideo injuries table, converting it into an `sf` object, and collapsing person-level rows to unique crash events so the unit of analysis. We also read the Montevideo roads GeoPackage and transform it into the same projected CRS so that points and lines can be overlaid, joined and measured consistently.
 
-To support polygon-based operations in the same local case study, we derive a set of Montevideo analytical units from the bounding box of the crash events. These are not official administrative areas, but they are a practical teaching device: they let us illustrate point-in-polygon joins, topological relations and choropleth mapping without leaving the Montevideo case. Unlike the earlier fallback design, this keeps the whole chapter anchored in real local files from the `data` folder.
+To support polygon-based operations, we derive a set of Montevideo analytical units from the bounding box of the crash events. These are not official administrative areas, but they are a practical teaching device. They let us illustrate point-in-polygon joins, topological relations and choropleth mapping.
 
 ```{r}
 injuries_raw <- read_csv(
@@ -144,17 +111,26 @@ analysis_units <- st_make_grid(
   mutate(unit_id = row_number())
 ```
 
-The first thing we should do after import is inspect the object carefully. Spatial analysis often goes wrong not because the later model is too advanced, but because the spatial object was poorly understood at the start. A few simple checks can prevent a lot of avoidable confusion.
+The first thing we should do after import is inspect the object carefully. Spatial data analysis or modelling often goes wrong because the spatial object was poorly understood at the start. A few simple checks can prevent a lot of avoidable confusion.
 
 ```{r}
+# Check the overall object class for the crash-event layer
 class(crash_events)
+# Confirm the geometry type stored in the crash-event layer
 st_geometry_type(crash_events, by_geometry = FALSE)
+# Inspect the coordinate reference system attached to the crash events
 st_crs(crash_events)
+# List the available attribute columns
 names(crash_events)
+# Preview the structure of the crash-event table
 glimpse(crash_events)
+
+# Repeat the same basic checks for the roads layer
 class(roads)
 st_geometry_type(roads, by_geometry = FALSE)
 st_crs(roads)
+
+# Inspect the polygon analytical units used later for joins and mapping
 class(analysis_units)
 st_geometry_type(analysis_units, by_geometry = FALSE)
 ```
@@ -165,11 +141,11 @@ Three basic questions are worth asking every time you load spatial data:
 2.  What geometry type does the object store?
 3.  What CRS is attached to the layer?
 
-For `crash_events`, one row represents one unique crash event, the geometry type is `POINT`, and the CRS is EPSG:32721. For `roads`, one row represents one road segment stored as a `LINESTRING` in geographic coordinates, while for `analysis_units` one row represents a polygonal analytical unit covering the Montevideo study area. These may sound like simple checks, but they answer the practical questions that shape everything that follows. What is the observational unit? What kinds of operations make sense for this object? What measurements can we trust? Many downstream errors in spatial analysis come from skipping exactly this stage.
+For `crash_events`, one row represents one unique crash event, the geometry type is `POINT`, and the CRS is EPSG:32721. For `roads`, one row represents one road segment stored as a `LINESTRING` in geographic coordinates, while for `analysis_units` one row represents a polygonal analytical unit covering the Montevideo study area. These may sound like simple checks, but they answer practical questions that shape everything that follows. What is the observational unit? What kinds of operations make sense for this object? What measurements can we trust? Many downstream errors in spatial analysis come from skipping exactly this stage.
 
 ## Attribute data versus geometry
 
-One of the most useful habits in spatial wrangling is to keep the distinction between **attribute data** and **geometry** very clear. The attributes tell us about the observation in substantive terms, such as injury outcome, time of day, vehicle type or locality. The geometry tells us where the observation is, and that location is what allows us to map it, join it to another layer, measure distance, or aggregate it into another geography.
+A useful habit in spatial wrangling is to keep the distinction between **attribute data** and **geometry**. The attributes tell us about the observation in substantive terms, such as injury outcome, time of day, vehicle type or locality. The geometry tells us where the observation is, and that location is what allows us to map it, join it to another layer, measure distance, or aggregate it into another geography.
 
 This distinction matters because not every operation is spatial in the same sense. Counting the number of injury outcomes is a tabular operation even if the data are stored in an `sf` object. By contrast, assigning each injury record to a grid cell or a polygon boundary depends on geometry and location. Good spatial work means recognising when we are operating on the attribute side of the data and when we are operating on the spatial side.
 
@@ -183,7 +159,7 @@ crash_events |>
   glimpse()
 ```
 
-`st_drop_geometry()` is especially useful because it allows us to switch temporarily into a purely tabular workflow without losing track of the fact that the original object is spatial. This is often the cleanest way to produce summary tables or quick diagnostic checks before returning to mapping or spatial joins. Learning when to keep the geometry and when to drop it is part of efficient spatial wrangling.
+`st_drop_geometry()` is especially useful because it allows us to switch temporarily into a purely tabular workflow without losing track of the fact that the original object is spatial. This is often the cleanest way to produce summary tables or quick diagnostic checks before returning to mapping or spatial joins. Learning when to keep or drop the geometry is part of efficient spatial wrangling.
 
 ## Geometry basics
 
@@ -193,13 +169,15 @@ Vector spatial data are usually represented with three main geometry types:
 -   **lines** for routes, flows or network segments
 -   **polygons** for areas such as departments, municipalities or census zones
 
-These geometry types are not merely visual conventions. They define what operations make sense and what kinds of questions are natural to ask. Point data often invite clustering or density analysis. Line data emphasise movement, connectivity and path structure. Polygon data bring in questions of area, adjacency, containment and aggregation. In other words, geometry is part of the analytical model, not just part of the display.
-
-The easiest way to see the difference is to build a tiny geometry collection from scratch.
+These geometry types define what operations make sense and what kinds of questions are natural to ask. Point data often invite clustering or density analysis. Line data emphasise movement, connectivity and path structure. Polygon data bring in questions of area, adjacency, containment and aggregation. Geometry guides the choice of an appropriate analytical model. It does not only matter for mapping. The easiest way to see the difference is to build a tiny geometry collection from scratch.
 
 ```{r}
+#| echo: false
 geom_examples <- st_sf(
-  type = c("Point", "Line", "Polygon"),
+  type = factor(
+    c("Point", "Line", "Polygon"),
+    levels = c("Point", "Line", "Polygon")
+  ),
   geometry = st_sfc(
     st_point(c(0, 0)),
     st_linestring(matrix(c(1, 0, 2, 1, 3, 1), ncol = 2, byrow = TRUE)),
@@ -218,6 +196,7 @@ plot(geom_examples["type"], key.pos = 1)
 We can also derive new geometry types from an existing layer. Starting from the polygon study window around the Montevideo crash events, `st_boundary()` returns lines and `st_centroid()` returns points. This is helpful because the same empirical unit is often represented in different ways depending on the task. A region may be treated as an area when mapping counts, as a centroid when measuring separation between units, and as a boundary when the concern is limit or edge rather than area.
 
 ```{r}
+#| echo: false
 study_window_boundary <- st_boundary(study_window)
 study_window_centroid <- st_centroid(study_window)
 
@@ -228,9 +207,9 @@ plot(st_geometry(study_window_centroid), main = "Centroid as point")
 par(mfrow = c(1, 1))
 ```
 
-This ability to move between geometry types is more important than it may first appear. Many later spatial methods depend on it, including distance matrices between centroids, polygon adjacency structures, flow-line construction and point aggregation. Once students understand that these are different representations of related spatial information, the logic of later chapters becomes much easier to follow.
+This ability to move between geometry types is more important than it may first appear. Many spatial methods depend on these operations, including distance matrices between centroids, polygon adjacency structures, flow-line construction and point aggregation. These are different representations of related spatial information.
 
-Another reason geometry types matter is that they imply different kinds of uncertainty. A point may represent an exact observed location, a geocoded approximation, or the centroid of a larger area. A polygon may represent a legal boundary, an administrative reporting unit, or an analytical zone that we created ourselves. Being clear about what the geometry actually stands for is therefore part of substantive interpretation, not just technical housekeeping.
+Another reason geometry types matter is that they imply different kinds of uncertainty. A point may represent an exact observed location, a geocoded approximation, or the centroid of a larger area. A polygon may represent a legal boundary, an administrative reporting unit, or an analytical zone that we created ourselves. Being clear about what the geometry actually stands for is therefore part of substantive interpretation.
 
 ## Coordinate Reference Systems
 
@@ -238,10 +217,10 @@ Coordinate Reference Systems tell us how coordinates relate to the Earth. In pra
 
 The two most common CRS situations you will encounter are:
 
--   **geographic CRS**, such as EPSG:4326, which use longitude and latitude
--   **projected CRS**, such as EPSG:32721, which use planar coordinates in meters
+-   **geographic CRS**: such as EPSG:4326, which use longitude and latitude
+-   **projected CRS**: such as EPSG:32721, which use planar coordinates in meters
 
-The Montevideo roads layer is stored in EPSG:4326. Our crash-events layer is in EPSG:32721. Before combining them, they need to share a common CRS. This is one of the most important practical checks in spatial analysis, because mismatched CRSs can produce overlays that fail silently or measurements that look plausible but are wrong.
+The Montevideo roads layer is stored in EPSG:4326. Our crash-events layer is in EPSG:32721. Before combining them, they need to share a common CRS. This is an important practical check in spatial analysis, because mismatched CRSs can produce overlays that fail silently or measurements that look plausible but are wrong.
 
 ```{r}
 st_crs(roads)
@@ -253,8 +232,8 @@ roads_utm <- st_transform(roads, 32721)
 
 A useful rule of thumb is:
 
--   use a projected CRS when measuring distance, length or area
--   use longitude/latitude mainly for storage, exchange and web mapping
+-   use a projected CRS when measuring distance, length or area.
+-   use longitude/latitude mainly for storage, exchange and web mapping.
 
 For example, the area of the Montevideo study window should be computed in a projected CRS rather than directly in longitude/latitude.
 
@@ -262,7 +241,7 @@ For example, the area of the Montevideo study window should be computed in a pro
 st_area(study_window) / 10^6
 ```
 
-The same logic applies to buffers, nearest-neighbour distances, travel-cost approximations and many accessibility indicators. Later chapters will rely on those ideas more heavily, so it is worth making the CRS logic explicit here rather than treating it as background trivia.
+The same logic applies to buffers, nearest-neighbour distances, travel-cost approximations and many accessibility indicators. We will rely on these ideas more heavily in later chapters, so keep the CRS logic in mind.
 
 Because both layers now have comparable CRSs, we can safely overlay crash events on the Montevideo roads network.
 
@@ -279,20 +258,21 @@ plot(
 
 The crash points line up with the local road network rather than floating in empty space. Even this very simple overlay is useful because it checks that the geometry and projection behave as expected. It also reminds us that a map can be both an analytical output and a data-quality diagnostic. Before asking substantive questions, it is good practice to first ask whether the layers line up in the way we would expect.
 
-One additional distinction is worth keeping in mind: **assigning** a CRS is not the same as **transforming** one. If a layer is missing CRS metadata but you know it is already in EPSG:32721, you would assign that CRS. If the layer is correctly labelled as EPSG:32721 and you want to convert it to EPSG:4326 for display or overlay, you would transform it with `st_transform()`. Confusing those two actions is a common source of avoidable mistakes.
+An additional distinction that should be kept in mind is between **assigning** and **transforming** a CRS. If a layer is missing CRS metadata but you know it is already in EPSG:32721, you would assign that CRS. If the layer is correctly labelled as EPSG:32721 and you want to convert it to EPSG:4326 for display or overlay, you would transform it with `st_transform()`. Confusing those two actions is a common source of avoidable mistakes.
 
 ## Topological relations
 
 Topological relations describe how spatial objects relate to one another in space. They are often introduced through binary predicates such as `st_intersects()`, `st_within()`, `st_contains()`, `st_touches()` and `st_disjoint()`, which return `TRUE` or `FALSE` statements about whether a given relation holds between two geometries. As treated in *Geocomputation with R*, these relations are especially useful because they make spatial subsetting and joining much more explicit than simply saying that one layer was “matched” to another [@lovelace2019].
 
-Some of these relations are symmetrical and some are not. If two polygons touch, the order does not matter: if A touches B, B touches A. But order does matter for relations such as `within` and `contains`. If a point is within a polygon, the polygon contains the point, but the reverse statements are not equivalent. That is why it is worth being precise about which geometry plays which role in the operation.
+Some of these relations are symmetrical and some are not. If two polygons touch, the order does not matter: if A touches B, B touches A. But order does matter for relations such as `within` and `contains`. If a point is within a polygon, the polygon contains the point, but the reverse statements are not equivalent. That is why we need to be precise about which geometry plays which role in the operation.
 
-Before applying these ideas to Uruguay data, it helps to visualise them in a very simple setting. In Figure @fig-topological-relations, the blue square is the reference geometry and the orange feature is the comparison geometry. The point of the diagram is not cartographic realism, but conceptual clarity: students can see at a glance what it means for two objects to intersect, touch, remain disjoint, or stand in an asymmetric relation such as `within` and `contains`.
+Before applying these ideas to Uruguay data, it helps to visualise them in a very simple setting. In @fig-topological-relations, the blue square is the reference geometry and the orange feature is the comparison geometry. The point of the diagram is to provide conceptual clarity. It usefully illustrates when two objects intersect, touch, remain disjoint or stand in an asymmetric relation such as `within` and `contains`.
 
 ```{r}
 #| label: fig-topological-relations
 #| fig-cap: "A simple diagram of common topological relations. The blue square is the reference geometry A and the orange geometry is B. The labels make the direction of asymmetric relations explicit."
 #| warning: false
+#| echo: false
 
 make_square <- function(xmin, ymin, xmax, ymax) {
   st_polygon(list(matrix(
@@ -387,24 +367,24 @@ st_contains(selected_unit, points_in_unit[1:min(5, nrow(points_in_unit)), ])
 st_within(points_in_unit[1:min(5, nrow(points_in_unit)), ], selected_unit)
 ```
 
-These topological relations matter because they sit underneath many spatial operations that otherwise look quite different. Spatial subsetting, point-in-polygon joins, neighbour definitions, overlay logic and even some forms of spatial weighting all rely on statements about which features intersect, touch, contain or remain separate from others. Once students become comfortable with this language, later spatial methods become easier to understand because they can see the relation being encoded rather than treating it as a black box.
+These topological relations matter because they sit underneath many spatial operations that otherwise look quite different. Spatial subsetting, point-in-polygon joins, neighbour definitions, overlay logic and even some forms of spatial weighting all rely on statements about which features intersect, touch, contain or remain separate from others.
 
 ## Geometry validity and safe workflows
 
-Before moving into joins and aggregation, it is worth checking geometry validity. Invalid geometries are more common with polygons than with points, but they matter because they can cause unexpected failures in overlays, intersections or neighbour calculations [@bivand2013]. In applied workflows, it is a good habit to validate layers that will be reused repeatedly.
+Before moving into joins and aggregation, we should briefly cover geometry validity. Invalid geometries are more common with polygons than with points, but they matter because they can cause unexpected failures in overlays, intersections or neighbour calculations [@bivand2013]. In applied workflows, it is a good habit to validate layers that will be reused repeatedly.
 
 ```{r}
 st_is_valid(roads_utm)[1:5]
 analysis_units <- st_make_valid(analysis_units)
 ```
 
-In this example the road and analytical-unit geometries are already usable, so `st_make_valid()` is mainly a defensive step. Even so, it introduces an important principle: spatial wrangling is not only about reshaping attributes. It is also about ensuring the geometry is analytically usable. Later chapters that work with more complex polygon systems will depend much more heavily on this kind of checking.
+In this example, the road and analytical-unit geometries are already usable, so `st_make_valid()` is mainly a defensive step. Even so, it introduces an important principle. Spatial wrangling is about reshaping attributes and ensuring that the geometry is analytically usable. Later chapters that work with more complex polygon systems will depend much more heavily on this kind of checking.
 
 ## Attribute operations with spatial tables
 
-One of the strengths of `sf` is that ordinary data manipulation and spatial operations can be combined in the same workflow. This is especially important in social-science applications, where we rarely work with geometry alone. Most tasks involve switching repeatedly between descriptive variables, geographic relations and derived indicators that bring the two together [@lovelace2019; @comber2015].
+A strength of `sf` is that ordinary data manipulation and spatial operations can be combined in the same workflow. This is especially important in social-science applications, where we rarely work with geometry alone. Most tasks involve switching repeatedly between descriptive variables, geographic relations and derived indicators that bring the two together [@lovelace2019; @comber2015].
 
-We can begin with familiar tabular tasks such as counting categories, selecting variables, and creating new fields. These are not separate from spatial analysis. A large share of spatial wrangling consists of preparing the attribute side of the data carefully enough that mapping, joining and modelling become meaningful rather than mechanical.
+We can begin with familiar tabular tasks such as counting categories, selecting variables and creating new fields. These are not separate from spatial analysis. A large share of spatial wrangling consists of preparing the attribute side of the data carefully enough that mapping, joining and modelling become meaningful rather than mechanical.
 
 ```{r}
 crash_events |>
@@ -442,18 +422,18 @@ serious_crashes <- crash_events_selected |>
 nrow(serious_crashes)
 ```
 
-This continuity is one of the main pedagogical advantages of `sf`. Students can carry over familiar `dplyr` habits while gradually adding spatial logic to their workflow. It also makes exploratory analysis faster, because we can create spatial subsets without first discarding the geometry.
+This continuity is one of the main pedagogical advantages of `sf`. You can carry over familiar `dplyr` habits while gradually adding spatial logic to their workflow. It also makes exploratory analysis faster, because we can create spatial subsets without first discarding the geometry.
 
 It is also useful to distinguish an **attribute join** from a **spatial join**. An attribute join, such as `left_join()`, matches records using a shared identifier such as an area code. A spatial join, such as `st_join()`, matches records using location, for example by assigning points to polygons. In real projects, both kinds of joining often appear in the same analysis, and the ability to tell them apart is important for both debugging and interpretation.
 
-## Basic spatial operations: join, aggregate, filter
+## Basic spatial operations
 
-The course brief highlights a practical set of spatial verbs: reading, inspecting, transforming, joining, aggregating and validating. We have already covered reading, inspection, transformation, topological relations and validation. We now add two especially important operations:
+We have already covered spatial data reading, inspection, transformation, topological relations and validation. We now add two especially important operations:
 
 -   **spatial join**: attach attributes based on location
 -   **spatial aggregation**: summarise many features into fewer spatial units
 
-To illustrate these ideas, we use the Montevideo analytical units created earlier and count how many crash events fall inside each one. We also calculate the amount of road length inside each unit so that the polygons carry more than one attribute and can support a more meaningful mapped comparison. This introduces a general workflow for turning fine-grained observations into an areal representation that is easier to compare across space.
+To illustrate these ideas, we use the Montevideo analytical units created earlier and count how many crash events fall inside each one. We also calculate the amount of road length inside each unit so that the polygons carry more than one attribut,e and can support a more meaningful mapped comparison. This introduces a general workflow for turning fine-grained observations into an areal representation that is easier to compare across space.
 
 ```{r}
 # Join point events to polygon units before counting them
@@ -490,18 +470,18 @@ This is a simple but very common pattern in spatial data wrangling:
 2.  join observations into that geography
 3.  aggregate the attributes you need
 
-Because the units were built directly from the local study area, we can move directly to summarising their crash and road attributes.
+Because the units were built from the local study area, we can move directly to summarising their crash and road attributes.
 
 ```{r}
 summary(analysis_units$n_injuries)
 summary(analysis_units$road_km)
 ```
 
-This example is deliberately basic, but it introduces the logic behind many later tasks: assigning point records to areas, building polygon summaries, and preparing mapped indicators. Students who want to go further will find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.
+This example is deliberately basic. But it introduces the logic behind many later tasks, such as assigning point records to areas, building polygon summaries and preparing mapped indicators. You will also find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.
 
-The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map: raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.
+The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.
 
-## Mapping from `plot()` to `tmap` to `ggplot2`
+## Spatial data mapping
 
 The same spatial object can be mapped at different levels of sophistication. A useful progression in applied work is:
 
@@ -519,7 +499,7 @@ plot(analysis_units["n_injuries"], key.pos = 1, main = "Crash events per Montevi
 
 ### A thematic map with `tmap`
 
-`tmap` is especially good for teaching because it makes the separation between data (`tm_shape()`) and visual layers (`tm_fill()`, `tm_borders()`, `tm_dots()`) very explicit. That layered logic helps students see how thematic maps are constructed and how cartographic choices affect interpretation [@lovelace2019]. It is also a useful stepping stone between quick diagnostics and more customised visual communication.
+`tmap` is especially good for teaching because it makes the separation between data (`tm_shape()`) and visual layers (`tm_fill()`, `tm_borders()`, `tm_dots()`) very explicit. That layered logic helps people see how thematic maps are constructed and how cartographic choices affect interpretation [@lovelace2019]. It is also a useful stepping stone between quick diagnostics and more customised visual communication.
 
 ```{r}
 tmap_mode("plot")
@@ -537,7 +517,7 @@ tm_shape(analysis_units) +
 
 ### A customised map with `ggplot2`
 
-`ggplot2` is not only for charts, but the `geom_sf()` layer makes it a powerful mapping tool when you want more control over themes, labels and layer composition. For students who continue beyond the course, this is often where spatial data work reconnects with a broader data-visualisation toolkit [@comber2015]. The same grammar can be used to build maps, charts and combined figure layouts in a consistent style.
+`ggplot2` is widerly used to create high-quality charts. The `geom_sf()` layer makes it also a powerful tool for mapping when you want more control over themes, labels and layer composition. `ggplot2` reconnects spatial data work with a broader data-visualisation toolkit [@comber2015]. The same grammar can be used to build maps, charts and combined figure layouts in a consistent style.
 
 ```{r}
 analysis_units_ll <- st_transform(analysis_units, 4326)
@@ -559,9 +539,9 @@ ggplot() +
   )
 ```
 
-The important point is not that one package is always better than another. The key lesson is that spatial data wrangling and mapping are tightly connected: once geometry and CRS are handled correctly, the same `sf` object can support quick checks, exploratory analysis and more polished communication. Learning when to move from one level of mapping to another is part of becoming an effective spatial analyst, because different stages of a project demand different balances between speed, clarity and control.
+An important point to note is that spatial data wrangling and mapping are tightly connected. Once geometry and CRS are handled correctly, the same `sf` object can support quick checks, exploratory analysis and more polished communication. Learning when to move from one level of mapping to another is part of becoming an effective spatial analyst, because different stages of a project demand different balances between speed, clarity and control.
 
-Students who want to explore further will also find that each mapping approach opens onto a slightly different set of skills. Base plotting encourages quick exploratory thinking, `tmap` makes thematic cartography especially accessible, and `ggplot2` connects spatial work to a wider grammar of visualisation. Developing comfort across all three is often more valuable than mastering only one.
+You may also find that each mapping approach opens onto a slightly different set of skills. Base plotting encourages quick exploratory thinking, `tmap` makes thematic cartography especially accessible, and `ggplot2` connects spatial work to a wider grammar of visualisation. Developing comfort across all three is often more valuable than mastering only one.
 
 ## Recap
 
@@ -577,9 +557,9 @@ This chapter has introduced the core spatial workflow used throughout the course
 -   connect point, line and polygon data within a single local case
 -   produce basic maps at increasing levels of control
 
-These are foundational skills. Later chapters build on them when we move to point patterns, flows, spatial dependence and spatial heterogeneity. In that sense, this chapter is not just a technical prelude. It establishes the conceptual and practical habits that make later modelling choices easier to interpret and easier to defend.
+These are foundational skills. Later chapters build on them when we move to point patterns, flows, spatial dependence and spatial heterogeneity. In that sense, this chapter establishes the conceptual and practical habits that make later modelling choices easier to interpret and easier to defend.
 
-For students revisiting the chapter on their own time, there are several productive follow-up directions. One is to experiment with alternative spatial units by changing the size and shape of the Montevideo analytical polygons. Another is to compare projected CRSs and think about why one may be more appropriate than another for a given country or research question. A third is to practice moving back and forth between attribute summaries and spatial summaries, since that rhythm is one of the recurring features of real spatial analysis.
+There are several productive follow-up directions from the material in this chapter. One is to experiment with alternative spatial units by changing the size and shape of the Montevideo analytical polygons. Another is to compare projected CRSs and think about why one may be more appropriate than another for a given country or research question. A third is to practice moving back and forth between attribute summaries and spatial summaries, since that rhythm is one of the recurring features of real spatial analysis.
 
 ## Tasks
 

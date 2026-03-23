@@ -316,20 +316,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>This chapter explains what the course is trying to do, how it is organised, and what you need to have ready before the first session. It is designed to be shared with students before the course begins so everyone arrives with the same expectations and a working setup. The practical sessions start straight away, so this overview should be read as preparation material as well as orientation.</p>
+<p>This chapter explains what the course aims, structure, content and what you need to have ready before our first session.</p>
 <section id="course-aims" class="level2">
 <h2 class="anchored" data-anchor-id="course-aims">Course aims</h2>
-<p>The course introduces a compact but useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied: students should leave with a clearer understanding of what makes spatial data distinctive, when different spatial methods are appropriate, and how to implement them in <code>R</code>.</p>
-<p>Rather than trying to cover every branch of spatial analysis, the course focuses on a coherent sequence of methods that build on one another. By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.</p>
+<p>The course introduces a useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied. The course provides an understanding of what makes spatial data distinctive, when different spatial methods are appropriate, how to implement them in <code>R</code> and illustrates the use of methods using real-world data. The course aims to be reproducible and replicable so students can re-use the material for their own analysis and datasets.</p>
+<p>By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.</p>
 </section>
 <section id="who-this-course-is-for" class="level2">
 <h2 class="anchored" data-anchor-id="who-this-course-is-for">Who this course is for</h2>
-<p>This course is designed primarily for MSc and PhD students in the social sciences, as well as applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with <code>R</code>, Quarto, or reproducible computational workflows.</p>
-<p>The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data, but it does not assume that students already have specialist training in GIS, spatial econometrics, or programming beyond basic familiarity.</p>
+<p>This course is designed primarily for MSc and PhD students in the social sciences, and applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with <code>R</code>, Quarto, or reproducible computational workflows.</p>
+<p>The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data. The course assumes students have some basic familiarity with GIS, spatial econometrics or programming. It does not assume they already have specialist training in these areas.</p>
 </section>
 <section id="how-the-course-is-organised" class="level2">
 <h2 class="anchored" data-anchor-id="how-the-course-is-organised">How the course is organised</h2>
-<p>The course is structured as a progression from spatial data foundations to applied modelling. Each chapter builds on the previous one, so the sequence matters even though the examples and geographies vary across the course.</p>
+<p>The course is structured as a progression from spatial data foundations and key concepts to applied modelling. Each chapter weakly builds on the previous, so there is sequence that matters. Examples and geographies in each individual chapter vary to provide students with exposure to different types of data and context.</p>
 <p><strong>Part I</strong> introduces the main ideas behind spatial thinking and the practical tools needed to work with spatial data in <code>R</code>.<br>
 <strong>Part II</strong> focuses on point patterns and flows, showing how to analyse events in space and connections between places.<br>
 <strong>Part III</strong> introduces models for spatial dependence and spatial heterogeneity, helping us understand why spatial relationships are often clustered and uneven across space.</p>
@@ -346,8 +346,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="how-this-course-fits-in-the-wider-toolkit" class="level2">
 <h2 class="anchored" data-anchor-id="how-this-course-fits-in-the-wider-toolkit">How this course fits in the wider toolkit</h2>
-<p>This course does not try to replace a full GIS course, a full econometrics course, or a full statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in <code>R</code>, with an emphasis on social-science applications.</p>
-<p>Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling, and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.</p>
+<p>This course does not try to replace a full GIS, econometrics or statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in <code>R</code>, with an emphasis on social-science applications.</p>
+<p>Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.</p>
 </section>
 <section id="what-you-need-before-the-course-starts" class="level2">
 <h2 class="anchored" data-anchor-id="what-you-need-before-the-course-starts">What you need before the course starts</h2>
@@ -380,36 +380,36 @@ Important
 </section>
 <section id="r-package-dependencies" class="level2">
 <h2 class="anchored" data-anchor-id="r-package-dependencies">R package dependencies</h2>
-<p>The course uses <code>R</code> packages for data manipulation, spatial data handling, mapping, and modelling. The full chapter sources for <code>01</code> to <code>06</code> are still being finalised in this repository, so the list below should be read as the <strong>core install set</strong> based on the methods already planned for the course. It is designed to minimise setup problems before the first class while keeping the installation burden manageable.</p>
-<p>The most important package groups include:</p>
+<p>The course uses <code>R</code> packages for data manipulation, spatial data handling, mapping, interpolation, and modelling. The list below has been checked against the package calls currently used in Chapters <code>01</code> to <code>06</code>, so it is a better guide to what students will actually need as they move through the course.</p>
+<p>The main package groups are:</p>
 <ul>
-<li>tidy data tools such as <code>dplyr</code>, <code>tidyr</code>, <code>readr</code>, <code>stringr</code>, and <code>purrr</code></li>
-<li>date and data-cleaning tools such as <code>lubridate</code> and <code>janitor</code></li>
-<li>spatial data tools such as <code>sf</code> and <code>units</code></li>
-<li>mapping and visualisation tools such as <code>ggplot2</code>, <code>tmap</code>, <code>scales</code>, and <code>viridis</code></li>
-<li>point-pattern support tools such as <code>hexbin</code></li>
+<li>workflow and data tools such as <code>tidyverse</code>, <code>lubridate</code>, and <code>broom</code></li>
+<li>spatial data tools such as <code>sf</code> and <code>spData</code></li>
+<li>mapping and visualisation tools such as <code>tmap</code>, <code>viridis</code>, <code>scales</code>, and <code>ggthemes</code></li>
+<li>point-pattern and interpolation tools such as <code>MASS</code> and <code>gstat</code></li>
 <li>spatial analysis and modelling tools such as <code>spdep</code> and <code>spatialreg</code></li>
 </ul>
-<p>To install packages from inside <code>R</code>, you can use commands such as:</p>
+<p>To install the packages needed across the course from inside <code>R</code>, use:</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyr"</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"readr"</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringr"</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"purrr"</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lubridate"</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggplot2"</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sf"</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"units"</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tmap"</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"viridis"</span>,</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hexbin"</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spdep"</span>,</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spatialreg"</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<p>If a package used in a chapter is missing on your machine, <code>R</code> will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter once those chapter files are released in their final course form.</p>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sf"</span>,</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tmap"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"viridis"</span>,</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggthemes"</span>,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spData"</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"gstat"</span>,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lubridate"</span>,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spdep"</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spatialreg"</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Two additional packages appear in the chapter code but usually do not need separate installation because they are distributed with <code>R</code>:</p>
+<ul>
+<li><code>MASS</code></li>
+<li><code>grid</code></li>
+</ul>
+<p>If a package used in a chapter is missing on your machine, <code>R</code> will usually tell you when you try to run the code. Students who want to prepare more fully can also look at the package calls at the top of each chapter and install anything extra in advance.</p>
 <p>Useful references:</p>
 <ul>
 <li><a href="https://cran.r-project.org/doc/manuals/r-release/R-admin.html#Installing-packages">Installing packages in R</a></li>
@@ -422,7 +422,7 @@ Important
 </section>
 <section id="how-to-use-the-repository" class="level2">
 <h2 class="anchored" data-anchor-id="how-to-use-the-repository">How to use the repository</h2>
-<p>The course materials are organised as a Quarto book repository. This means the files include not only narrative text, but also executable code, figures, and references. Students are encouraged to download the repository, run the code locally, and reuse the structure for their own learning and future work.</p>
+<p>The course materials are organised as a Quarto book repository. This means the files include narrative text, executable code, figures and references. Students should download the repository, run the code locally, and are encouragued to reuse the structure for their own learning and future work.</p>
 <p>There are two simple ways to get the repository onto your computer:</p>
 <section id="option-1-download-the-repository-as-a-zip-file" class="level3">
 <h3 class="anchored" data-anchor-id="option-1-download-the-repository-as-a-zip-file">Option 1: Download the repository as a ZIP file</h3>
@@ -459,8 +459,8 @@ Important
 </section>
 <section id="reusing-the-repository-for-your-own-work" class="level2">
 <h2 class="anchored" data-anchor-id="reusing-the-repository-for-your-own-work">Reusing the repository for your own work</h2>
-<p>One of the goals of the course is not only to teach specific methods, but also to provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.</p>
-<p>This is one of the strengths of working with Quarto and <code>R</code>: the narrative, code, and output live together in a form that is easier to reproduce, revise, and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.</p>
+<p>One of the goals of the course is to teach specific methods and provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.</p>
+<p>A key strength of working with Quarto and <code>R</code> is that narrative, code and output live together in a form that is easier to reproduce, revise and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.</p>
 </section>
 <section id="preparation-checklist" class="level2">
 <h2 class="anchored" data-anchor-id="preparation-checklist">Preparation checklist</h2>
@@ -945,23 +945,23 @@ Important
 </nav><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Source Code</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Course Overview {.unnumbered}</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>This chapter explains what the course is trying to do, how it is organised, and what you need to have ready before the first session. It is designed to be shared with students before the course begins so everyone arrives with the same expectations and a working setup. The practical sessions start straight away, so this overview should be read as preparation material as well as orientation.</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>This chapter explains what the course aims, structure, content and what you need to have ready before our first session. </span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">## Course aims</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>The course introduces a compact but useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied: students should leave with a clearer understanding of what makes spatial data distinctive, when different spatial methods are appropriate, and how to implement them in <span class="in">`R`</span>.</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>The course introduces a useful set of ideas and techniques for working with spatial data in the social sciences. The emphasis is practical and applied. The course provides an understanding of what makes spatial data distinctive, when different spatial methods are appropriate, how to implement them in <span class="in">`R`</span> and illustrates the use of methods using real-world data. The course aims to be reproducible and replicable so students can re-use the material for their own analysis and datasets.</span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>Rather than trying to cover every branch of spatial analysis, the course focuses on a coherent sequence of methods that build on one another. By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>By the end of the course, students should be able to read and handle spatial data, visualise spatial patterns, analyse point events and flows, and understand the logic behind models of spatial dependence and spatial heterogeneity.</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## Who this course is for</span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>This course is designed primarily for MSc and PhD students in the social sciences, as well as applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with <span class="in">`R`</span>, Quarto, or reproducible computational workflows.</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>This course is designed primarily for MSc and PhD students in the social sciences, and applied researchers who want to bring spatial thinking into their work. Some participants may already feel comfortable with statistics but have limited experience with spatial data. Others may know the substantive problems they want to study, but be less familiar with <span class="in">`R`</span>, Quarto, or reproducible computational workflows.</span>
 <span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data, but it does not assume that students already have specialist training in GIS, spatial econometrics, or programming beyond basic familiarity.</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>The course is written with both groups in mind. It assumes curiosity and a willingness to work practically with data. The course assumes students have some basic familiarity with GIS, spatial econometrics or programming. It does not assume they already have specialist training in these areas.</span>
 <span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## How the course is organised</span></span>
 <span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>The course is structured as a progression from spatial data foundations to applied modelling. Each chapter builds on the previous one, so the sequence matters even though the examples and geographies vary across the course.</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>The course is structured as a progression from spatial data foundations and key concepts to applied modelling. Each chapter weakly builds on the previous, so there is sequence that matters. Examples and geographies in each individual chapter vary to provide students with exposure to different types of data and context.</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>**Part I** introduces the main ideas behind spatial thinking and the practical tools needed to work with spatial data in <span class="in">`R`</span>.  </span>
 <span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>**Part II** focuses on point patterns and flows, showing how to analyse events in space and connections between places.  </span>
@@ -979,9 +979,9 @@ Important
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="fu">## How this course fits in the wider toolkit</span></span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>This course does not try to replace a full GIS course, a full econometrics course, or a full statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in <span class="in">`R`</span>, with an emphasis on social-science applications.</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>This course does not try to replace a full GIS, econometrics or statistics course. Instead, it acts as a bridge between general data analysis and explicitly spatial data analysis in <span class="in">`R`</span>, with an emphasis on social-science applications.</span>
 <span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling, and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>Students who continue beyond the course should see this material as a foundation rather than an endpoint. The methods introduced here can be extended into more advanced work in spatial econometrics, point process modelling, geocomputation, network analysis, spatio-temporal modelling and causal analysis with spatial data. The aim is to give students enough conceptual grounding and practical fluency that they can continue exploring these areas independently.</span>
 <span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="fu">## What you need before the course starts</span></span>
 <span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
@@ -1005,41 +1005,41 @@ Important
 <span id="cb2-60"><a href="#cb2-60" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-61"><a href="#cb2-61" aria-hidden="true" tabindex="-1"></a><span class="fu">## R package dependencies</span></span>
 <span id="cb2-62"><a href="#cb2-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>The course uses <span class="in">`R`</span> packages for data manipulation, spatial data handling, mapping, and modelling. The full chapter sources for <span class="in">`01`</span> to <span class="in">`06`</span> are still being finalised in this repository, so the list below should be read as the **core install set** based on the methods already planned for the course. It is designed to minimise setup problems before the first class while keeping the installation burden manageable.</span>
+<span id="cb2-63"><a href="#cb2-63" aria-hidden="true" tabindex="-1"></a>The course uses <span class="in">`R`</span> packages for data manipulation, spatial data handling, mapping, interpolation, and modelling. The list below has been checked against the package calls currently used in Chapters <span class="in">`01`</span> to <span class="in">`06`</span>, so it is a better guide to what students will actually need as they move through the course.</span>
 <span id="cb2-64"><a href="#cb2-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>The most important package groups include:</span>
+<span id="cb2-65"><a href="#cb2-65" aria-hidden="true" tabindex="-1"></a>The main package groups are:</span>
 <span id="cb2-66"><a href="#cb2-66" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>tidy data tools such as <span class="in">`dplyr`</span>, <span class="in">`tidyr`</span>, <span class="in">`readr`</span>, <span class="in">`stringr`</span>, and <span class="in">`purrr`</span></span>
-<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>date and data-cleaning tools such as <span class="in">`lubridate`</span> and <span class="in">`janitor`</span></span>
-<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>spatial data tools such as <span class="in">`sf`</span> and <span class="in">`units`</span></span>
-<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>mapping and visualisation tools such as <span class="in">`ggplot2`</span>, <span class="in">`tmap`</span>, <span class="in">`scales`</span>, and <span class="in">`viridis`</span></span>
-<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>point-pattern support tools such as <span class="in">`hexbin`</span></span>
-<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>spatial analysis and modelling tools such as <span class="in">`spdep`</span> and <span class="in">`spatialreg`</span></span>
-<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a>To install packages from inside <span class="in">`R`</span>, you can use commands such as:</span>
-<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
-<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
-<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  <span class="st">"dplyr"</span>,</span>
-<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyr"</span>,</span>
-<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="st">"readr"</span>,</span>
-<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="st">"stringr"</span>,</span>
-<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>  <span class="st">"purrr"</span>,</span>
-<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lubridate"</span>,</span>
-<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="st">"janitor"</span>,</span>
-<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggplot2"</span>,</span>
-<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sf"</span>,</span>
-<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  <span class="st">"units"</span>,</span>
-<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tmap"</span>,</span>
-<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,</span>
-<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a>  <span class="st">"viridis"</span>,</span>
-<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a>  <span class="st">"hexbin"</span>,</span>
-<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spdep"</span>,</span>
-<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spatialreg"</span></span>
-<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a>))</span>
-<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-67"><a href="#cb2-67" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>workflow and data tools such as <span class="in">`tidyverse`</span>, <span class="in">`lubridate`</span>, and <span class="in">`broom`</span></span>
+<span id="cb2-68"><a href="#cb2-68" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>spatial data tools such as <span class="in">`sf`</span> and <span class="in">`spData`</span></span>
+<span id="cb2-69"><a href="#cb2-69" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>mapping and visualisation tools such as <span class="in">`tmap`</span>, <span class="in">`viridis`</span>, <span class="in">`scales`</span>, and <span class="in">`ggthemes`</span></span>
+<span id="cb2-70"><a href="#cb2-70" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>point-pattern and interpolation tools such as <span class="in">`MASS`</span> and <span class="in">`gstat`</span></span>
+<span id="cb2-71"><a href="#cb2-71" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>spatial analysis and modelling tools such as <span class="in">`spdep`</span> and <span class="in">`spatialreg`</span></span>
+<span id="cb2-72"><a href="#cb2-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-73"><a href="#cb2-73" aria-hidden="true" tabindex="-1"></a>To install the packages needed across the course from inside <span class="in">`R`</span>, use:</span>
+<span id="cb2-74"><a href="#cb2-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-75"><a href="#cb2-75" aria-hidden="true" tabindex="-1"></a><span class="in">```r</span></span>
+<span id="cb2-76"><a href="#cb2-76" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="fu">c</span>(</span>
+<span id="cb2-77"><a href="#cb2-77" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>,</span>
+<span id="cb2-78"><a href="#cb2-78" aria-hidden="true" tabindex="-1"></a>  <span class="st">"sf"</span>,</span>
+<span id="cb2-79"><a href="#cb2-79" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tmap"</span>,</span>
+<span id="cb2-80"><a href="#cb2-80" aria-hidden="true" tabindex="-1"></a>  <span class="st">"viridis"</span>,</span>
+<span id="cb2-81"><a href="#cb2-81" aria-hidden="true" tabindex="-1"></a>  <span class="st">"ggthemes"</span>,</span>
+<span id="cb2-82"><a href="#cb2-82" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spData"</span>,</span>
+<span id="cb2-83"><a href="#cb2-83" aria-hidden="true" tabindex="-1"></a>  <span class="st">"gstat"</span>,</span>
+<span id="cb2-84"><a href="#cb2-84" aria-hidden="true" tabindex="-1"></a>  <span class="st">"lubridate"</span>,</span>
+<span id="cb2-85"><a href="#cb2-85" aria-hidden="true" tabindex="-1"></a>  <span class="st">"broom"</span>,</span>
+<span id="cb2-86"><a href="#cb2-86" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scales"</span>,</span>
+<span id="cb2-87"><a href="#cb2-87" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spdep"</span>,</span>
+<span id="cb2-88"><a href="#cb2-88" aria-hidden="true" tabindex="-1"></a>  <span class="st">"spatialreg"</span></span>
+<span id="cb2-89"><a href="#cb2-89" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb2-90"><a href="#cb2-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb2-91"><a href="#cb2-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-92"><a href="#cb2-92" aria-hidden="true" tabindex="-1"></a>Two additional packages appear in the chapter code but usually do not need separate installation because they are distributed with <span class="in">`R`</span>:</span>
+<span id="cb2-93"><a href="#cb2-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-94"><a href="#cb2-94" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`MASS`</span></span>
+<span id="cb2-95"><a href="#cb2-95" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`grid`</span></span>
 <span id="cb2-96"><a href="#cb2-96" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>If a package used in a chapter is missing on your machine, <span class="in">`R`</span> will usually tell you when you try to run the code. Students who want to prepare more fully should also review the package calls listed at the top of each chapter once those chapter files are released in their final course form.</span>
+<span id="cb2-97"><a href="#cb2-97" aria-hidden="true" tabindex="-1"></a>If a package used in a chapter is missing on your machine, <span class="in">`R`</span> will usually tell you when you try to run the code. Students who want to prepare more fully can also look at the package calls at the top of each chapter and install anything extra in advance.</span>
 <span id="cb2-98"><a href="#cb2-98" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-99"><a href="#cb2-99" aria-hidden="true" tabindex="-1"></a>Useful references:</span>
 <span id="cb2-100"><a href="#cb2-100" aria-hidden="true" tabindex="-1"></a></span>
@@ -1052,7 +1052,7 @@ Important
 <span id="cb2-107"><a href="#cb2-107" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-108"><a href="#cb2-108" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to use the repository</span></span>
 <span id="cb2-109"><a href="#cb2-109" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>The course materials are organised as a Quarto book repository. This means the files include not only narrative text, but also executable code, figures, and references. Students are encouraged to download the repository, run the code locally, and reuse the structure for their own learning and future work.</span>
+<span id="cb2-110"><a href="#cb2-110" aria-hidden="true" tabindex="-1"></a>The course materials are organised as a Quarto book repository. This means the files include narrative text, executable code, figures and references. Students should download the repository, run the code locally, and are encouragued to reuse the structure for their own learning and future work.</span>
 <span id="cb2-111"><a href="#cb2-111" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-112"><a href="#cb2-112" aria-hidden="true" tabindex="-1"></a>There are two simple ways to get the repository onto your computer:</span>
 <span id="cb2-113"><a href="#cb2-113" aria-hidden="true" tabindex="-1"></a></span>
@@ -1090,9 +1090,9 @@ Important
 <span id="cb2-145"><a href="#cb2-145" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-146"><a href="#cb2-146" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reusing the repository for your own work</span></span>
 <span id="cb2-147"><a href="#cb2-147" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>One of the goals of the course is not only to teach specific methods, but also to provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.</span>
+<span id="cb2-148"><a href="#cb2-148" aria-hidden="true" tabindex="-1"></a>One of the goals of the course is to teach specific methods and provide a reusable structure for your own projects. Students can adapt the repository by replacing the example datasets with their own data, modifying the code chunks, and using the chapter workflows as templates for future assignments or research notebooks.</span>
 <span id="cb2-149"><a href="#cb2-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>This is one of the strengths of working with Quarto and <span class="in">`R`</span>: the narrative, code, and output live together in a form that is easier to reproduce, revise, and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.</span>
+<span id="cb2-150"><a href="#cb2-150" aria-hidden="true" tabindex="-1"></a>A key strength of working with Quarto and <span class="in">`R`</span> is that narrative, code and output live together in a form that is easier to reproduce, revise and extend. Even after the course ends, the repository should remain useful as a reference and a starting point for independent work.</span>
 <span id="cb2-151"><a href="#cb2-151" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-152"><a href="#cb2-152" aria-hidden="true" tabindex="-1"></a><span class="fu">## Preparation checklist</span></span>
 <span id="cb2-153"><a href="#cb2-153" aria-hidden="true" tabindex="-1"></a></span>
