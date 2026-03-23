@@ -964,7 +964,7 @@ was `within'
 </div>
 </div>
 <p>This example is deliberately basic. But it introduces the logic behind many later tasks, such as assigning point records to areas, building polygon summaries and preparing mapped indicators. You will also find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.</p>
-<p>The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.</p>
+<p>The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions. In the next three examples, we keep the mapped variable fixed as raw crash counts so the comparison is about the mapping systems rather than about a changing indicator.</p>
 </section><section id="spatial-data-mapping" class="level2" data-number="2.12"><h2 data-number="2.12" class="anchored" data-anchor-id="spatial-data-mapping">
 <span class="header-section-number">2.12</span> Spatial data mapping</h2>
 <p>The same spatial object can be mapped at different levels of sophistication. A useful progression in applied work is:</p>
@@ -980,7 +980,7 @@ was `within'
 <span class="header-section-number">2.12.1</span> A quick base plot</h3>
 <p>Base plotting is ideal for first inspection because it is fast and requires little setup. In practical workflows, this matters because many maps are made first to check geometry, extent, missing values or obvious outliers rather than to communicate final results. Quick plotting is therefore part of good analysis, not a lesser version of “real” mapping.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">analysis_units</span><span class="op">[</span><span class="st">"n_injuries"</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, main <span class="op">=</span> <span class="st">"Crash events per Montevideo analytical unit"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="downlit sourceCode r code-with-copy"><code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">analysis_units</span><span class="op">[</span><span class="st">"n_injuries"</span><span class="op">]</span>, key.pos <span class="op">=</span> <span class="fl">1</span>, main <span class="op">=</span> <span class="st">"Crash events, Montevideo"</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure"><p><img src="02-spatial-data-wrangling_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid figure-img" width="672"></p>
@@ -997,10 +997,10 @@ was `within'
 <span></span>
 <span><span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_shape.html">tm_shape</a></span><span class="op">(</span><span class="va">analysis_units</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_fill</a></span><span class="op">(</span></span>
-<span>    col <span class="op">=</span> <span class="st">"injuries_per_km"</span>,</span>
+<span>    col <span class="op">=</span> <span class="st">"n_injuries"</span>,</span>
 <span>    palette <span class="op">=</span> <span class="st">"viridis"</span>,</span>
 <span>    style <span class="op">=</span> <span class="st">"cont"</span>,</span>
-<span>    title <span class="op">=</span> <span class="st">"Crashes per km"</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Crash events"</span></span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_polygons.html">tm_borders</a></span><span class="op">(</span>col <span class="op">=</span> <span class="st">"white"</span>, lwd <span class="op">=</span> <span class="fl">0.4</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://r-tmap.github.io/tmap/reference/tm_layout.html">tm_layout</a></span><span class="op">(</span>frame <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1020,14 +1020,13 @@ was `within'
 <span></span>
 <span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html">ggplot</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># Fill polygons with a sequential palette from the shared course style</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">analysis_units_ll</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">injuries_per_km</span><span class="op">)</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">analysis_units_ll</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html">aes</a></span><span class="op">(</span>fill <span class="op">=</span> <span class="va">n_injuries</span><span class="op">)</span>, colour <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="co"># Add the road network to keep the analytical units in local context</span></span>
-<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">roads</span>, colour <span class="op">=</span> <span class="st">"grey50"</span>, linewidth <span class="op">=</span> <span class="fl">0.15</span>, alpha <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">geom_sf</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">roads</span>, colour <span class="op">=</span> <span class="st">"grey50"</span>, linewidth <span class="op">=</span> <span class="fl">0.15</span>, alpha <span class="op">=</span> <span class="fl">0.35</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggsf.html">coord_sf</a></span><span class="op">(</span>expand <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_fill_course_seq_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Crashes per km"</span><span class="op">)</span> <span class="op">+</span></span>
+<span>  <span class="fu">scale_fill_course_seq_c</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"Crash events"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html">labs</a></span><span class="op">(</span></span>
-<span>    title <span class="op">=</span> <span class="st">"Montevideo crash events aggregated to analytical units"</span>,</span>
-<span>    subtitle <span class="op">=</span> <span class="st">"Crash counts standardised by local road length"</span></span>
+<span>    title <span class="op">=</span> <span class="st">"Crash events, Montevideo"</span>,</span>
 <span>  <span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu">theme_map_course</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html">theme</a></span><span class="op">(</span></span>
@@ -2024,7 +2023,7 @@ Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation wi
 <span id="cb61-521"><a href="#cb61-521" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-522"><a href="#cb61-522" aria-hidden="true" tabindex="-1"></a>This example is deliberately basic. But it introduces the logic behind many later tasks, such as assigning point records to areas, building polygon summaries and preparing mapped indicators. You will also find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.</span>
 <span id="cb61-523"><a href="#cb61-523" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-524"><a href="#cb61-524" aria-hidden="true" tabindex="-1"></a>The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.</span>
+<span id="cb61-524"><a href="#cb61-524" aria-hidden="true" tabindex="-1"></a>The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions. In the next three examples, we keep the mapped variable fixed as raw crash counts so the comparison is about the mapping systems rather than about a changing indicator.</span>
 <span id="cb61-525"><a href="#cb61-525" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-526"><a href="#cb61-526" aria-hidden="true" tabindex="-1"></a><span class="fu">## Spatial data mapping</span></span>
 <span id="cb61-527"><a href="#cb61-527" aria-hidden="true" tabindex="-1"></a></span>
@@ -2039,7 +2038,7 @@ Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation wi
 <span id="cb61-536"><a href="#cb61-536" aria-hidden="true" tabindex="-1"></a>Base plotting is ideal for first inspection because it is fast and requires little setup. In practical workflows, this matters because many maps are made first to check geometry, extent, missing values or obvious outliers rather than to communicate final results. Quick plotting is therefore part of good analysis, not a lesser version of “real” mapping.</span>
 <span id="cb61-537"><a href="#cb61-537" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-540"><a href="#cb61-540" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb61-541"><a href="#cb61-541" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(analysis_units[<span class="st">"n_injuries"</span>], <span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Crash events per Montevideo analytical unit"</span>)</span>
+<span id="cb61-541"><a href="#cb61-541" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(analysis_units[<span class="st">"n_injuries"</span>], <span class="at">key.pos =</span> <span class="dv">1</span>, <span class="at">main =</span> <span class="st">"Crash events, Montevideo"</span>)</span>
 <span id="cb61-542"><a href="#cb61-542" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb61-543"><a href="#cb61-543" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-544"><a href="#cb61-544" aria-hidden="true" tabindex="-1"></a><span class="fu">### A thematic map with `tmap`</span></span>
@@ -2051,10 +2050,10 @@ Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation wi
 <span id="cb61-552"><a href="#cb61-552" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-553"><a href="#cb61-553" aria-hidden="true" tabindex="-1"></a><span class="fu">tm_shape</span>(analysis_units) <span class="sc">+</span></span>
 <span id="cb61-554"><a href="#cb61-554" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_fill</span>(</span>
-<span id="cb61-555"><a href="#cb61-555" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"injuries_per_km"</span>,</span>
+<span id="cb61-555"><a href="#cb61-555" aria-hidden="true" tabindex="-1"></a>    <span class="at">col =</span> <span class="st">"n_injuries"</span>,</span>
 <span id="cb61-556"><a href="#cb61-556" aria-hidden="true" tabindex="-1"></a>    <span class="at">palette =</span> <span class="st">"viridis"</span>,</span>
 <span id="cb61-557"><a href="#cb61-557" aria-hidden="true" tabindex="-1"></a>    <span class="at">style =</span> <span class="st">"cont"</span>,</span>
-<span id="cb61-558"><a href="#cb61-558" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crashes per km"</span></span>
+<span id="cb61-558"><a href="#cb61-558" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crash events"</span></span>
 <span id="cb61-559"><a href="#cb61-559" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
 <span id="cb61-560"><a href="#cb61-560" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_borders</span>(<span class="at">col =</span> <span class="st">"white"</span>, <span class="at">lwd =</span> <span class="fl">0.4</span>) <span class="sc">+</span></span>
 <span id="cb61-561"><a href="#cb61-561" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tm_layout</span>(<span class="at">frame =</span> <span class="cn">FALSE</span>)</span>
@@ -2069,50 +2068,49 @@ Lovelace, Robin, Jakub Nowosad, and Jannes Muenchow. 2019. <em>Geocomputation wi
 <span id="cb61-572"><a href="#cb61-572" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb61-573"><a href="#cb61-573" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>() <span class="sc">+</span></span>
 <span id="cb61-574"><a href="#cb61-574" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Fill polygons with a sequential palette from the shared course style</span></span>
-<span id="cb61-575"><a href="#cb61-575" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> analysis_units_ll, <span class="fu">aes</span>(<span class="at">fill =</span> injuries_per_km), <span class="at">colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb61-575"><a href="#cb61-575" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> analysis_units_ll, <span class="fu">aes</span>(<span class="at">fill =</span> n_injuries), <span class="at">colour =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
 <span id="cb61-576"><a href="#cb61-576" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Add the road network to keep the analytical units in local context</span></span>
-<span id="cb61-577"><a href="#cb61-577" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> roads, <span class="at">colour =</span> <span class="st">"grey50"</span>, <span class="at">linewidth =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb61-577"><a href="#cb61-577" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="at">data =</span> roads, <span class="at">colour =</span> <span class="st">"grey50"</span>, <span class="at">linewidth =</span> <span class="fl">0.15</span>, <span class="at">alpha =</span> <span class="fl">0.35</span>) <span class="sc">+</span></span>
 <span id="cb61-578"><a href="#cb61-578" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_sf</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb61-579"><a href="#cb61-579" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_course_seq_c</span>(<span class="at">name =</span> <span class="st">"Crashes per km"</span>) <span class="sc">+</span></span>
+<span id="cb61-579"><a href="#cb61-579" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_course_seq_c</span>(<span class="at">name =</span> <span class="st">"Crash events"</span>) <span class="sc">+</span></span>
 <span id="cb61-580"><a href="#cb61-580" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb61-581"><a href="#cb61-581" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Montevideo crash events aggregated to analytical units"</span>,</span>
-<span id="cb61-582"><a href="#cb61-582" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Crash counts standardised by local road length"</span></span>
-<span id="cb61-583"><a href="#cb61-583" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb61-584"><a href="#cb61-584" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_map_course</span>() <span class="sc">+</span></span>
-<span id="cb61-585"><a href="#cb61-585" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
-<span id="cb61-586"><a href="#cb61-586" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
-<span id="cb61-587"><a href="#cb61-587" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb61-588"><a href="#cb61-588" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb61-589"><a href="#cb61-589" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-590"><a href="#cb61-590" aria-hidden="true" tabindex="-1"></a>An important point to note is that spatial data wrangling and mapping are tightly connected. Once geometry and CRS are handled correctly, the same <span class="in">`sf`</span> object can support quick checks, exploratory analysis and more polished communication. Learning when to move from one level of mapping to another is part of becoming an effective spatial analyst, because different stages of a project demand different balances between speed, clarity and control.</span>
-<span id="cb61-591"><a href="#cb61-591" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-592"><a href="#cb61-592" aria-hidden="true" tabindex="-1"></a>You may also find that each mapping approach opens onto a slightly different set of skills. Base plotting encourages quick exploratory thinking, <span class="in">`tmap`</span> makes thematic cartography especially accessible, and <span class="in">`ggplot2`</span> connects spatial work to a wider grammar of visualisation. Developing comfort across all three is often more valuable than mastering only one.</span>
-<span id="cb61-593"><a href="#cb61-593" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-594"><a href="#cb61-594" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recap</span></span>
-<span id="cb61-595"><a href="#cb61-595" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-596"><a href="#cb61-596" aria-hidden="true" tabindex="-1"></a>This chapter has introduced the core spatial workflow used throughout the course:</span>
-<span id="cb61-597"><a href="#cb61-597" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-598"><a href="#cb61-598" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>read spatial and non-spatial data</span>
-<span id="cb61-599"><a href="#cb61-599" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>convert tabular coordinates into simple features</span>
-<span id="cb61-600"><a href="#cb61-600" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>inspect geometry type, attributes and CRS</span>
-<span id="cb61-601"><a href="#cb61-601" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>distinguish the attribute side of the data from the geometry side</span>
-<span id="cb61-602"><a href="#cb61-602" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>transform CRSs before overlay or measurement</span>
-<span id="cb61-603"><a href="#cb61-603" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>validate geometry before repeated use</span>
-<span id="cb61-604"><a href="#cb61-604" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>combine attribute wrangling with spatial joins and aggregation</span>
-<span id="cb61-605"><a href="#cb61-605" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>connect point, line and polygon data within a single local case</span>
-<span id="cb61-606"><a href="#cb61-606" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>produce basic maps at increasing levels of control</span>
-<span id="cb61-607"><a href="#cb61-607" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-608"><a href="#cb61-608" aria-hidden="true" tabindex="-1"></a>These are foundational skills. Later chapters build on them when we move to point patterns, flows, spatial dependence and spatial heterogeneity. In that sense, this chapter establishes the conceptual and practical habits that make later modelling choices easier to interpret and easier to defend.</span>
-<span id="cb61-609"><a href="#cb61-609" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-610"><a href="#cb61-610" aria-hidden="true" tabindex="-1"></a>There are several productive follow-up directions from the material in this chapter. One is to experiment with alternative spatial units by changing the size and shape of the Montevideo analytical polygons. Another is to compare projected CRSs and think about why one may be more appropriate than another for a given country or research question. A third is to practice moving back and forth between attribute summaries and spatial summaries, since that rhythm is one of the recurring features of real spatial analysis.</span>
-<span id="cb61-611"><a href="#cb61-611" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-612"><a href="#cb61-612" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tasks</span></span>
-<span id="cb61-613"><a href="#cb61-613" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb61-614"><a href="#cb61-614" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Use <span class="in">`st_drop_geometry()`</span> and <span class="in">`count()`</span> to identify the most common <span class="in">`tipo.de.vehiculo`</span> values in the crash-events table.</span>
-<span id="cb61-615"><a href="#cb61-615" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Create a new time-of-day grouping with your own cut-points and compare it with the one used above.</span>
-<span id="cb61-616"><a href="#cb61-616" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Change the analytical-unit <span class="in">`cellsize`</span> and see how the mapped pattern changes. What does this suggest about scale and aggregation?</span>
-<span id="cb61-617"><a href="#cb61-617" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Modify the <span class="in">`ggplot2`</span> map so that crash events are shown as points on top of the polygon units.</span>
-<span id="cb61-618"><a href="#cb61-618" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Create a second polygon-based representation using a different unit size and compare it with the current analytical units.</span>
+<span id="cb61-581"><a href="#cb61-581" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Crash events, Montevideo"</span>,</span>
+<span id="cb61-582"><a href="#cb61-582" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb61-583"><a href="#cb61-583" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_map_course</span>() <span class="sc">+</span></span>
+<span id="cb61-584"><a href="#cb61-584" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb61-585"><a href="#cb61-585" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"right"</span></span>
+<span id="cb61-586"><a href="#cb61-586" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb61-587"><a href="#cb61-587" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb61-588"><a href="#cb61-588" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-589"><a href="#cb61-589" aria-hidden="true" tabindex="-1"></a>An important point to note is that spatial data wrangling and mapping are tightly connected. Once geometry and CRS are handled correctly, the same <span class="in">`sf`</span> object can support quick checks, exploratory analysis and more polished communication. Learning when to move from one level of mapping to another is part of becoming an effective spatial analyst, because different stages of a project demand different balances between speed, clarity and control.</span>
+<span id="cb61-590"><a href="#cb61-590" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-591"><a href="#cb61-591" aria-hidden="true" tabindex="-1"></a>You may also find that each mapping approach opens onto a slightly different set of skills. Base plotting encourages quick exploratory thinking, <span class="in">`tmap`</span> makes thematic cartography especially accessible, and <span class="in">`ggplot2`</span> connects spatial work to a wider grammar of visualisation. Developing comfort across all three is often more valuable than mastering only one.</span>
+<span id="cb61-592"><a href="#cb61-592" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-593"><a href="#cb61-593" aria-hidden="true" tabindex="-1"></a><span class="fu">## Recap</span></span>
+<span id="cb61-594"><a href="#cb61-594" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-595"><a href="#cb61-595" aria-hidden="true" tabindex="-1"></a>This chapter has introduced the core spatial workflow used throughout the course:</span>
+<span id="cb61-596"><a href="#cb61-596" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-597"><a href="#cb61-597" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>read spatial and non-spatial data</span>
+<span id="cb61-598"><a href="#cb61-598" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>convert tabular coordinates into simple features</span>
+<span id="cb61-599"><a href="#cb61-599" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>inspect geometry type, attributes and CRS</span>
+<span id="cb61-600"><a href="#cb61-600" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>distinguish the attribute side of the data from the geometry side</span>
+<span id="cb61-601"><a href="#cb61-601" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>transform CRSs before overlay or measurement</span>
+<span id="cb61-602"><a href="#cb61-602" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>validate geometry before repeated use</span>
+<span id="cb61-603"><a href="#cb61-603" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>combine attribute wrangling with spatial joins and aggregation</span>
+<span id="cb61-604"><a href="#cb61-604" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>connect point, line and polygon data within a single local case</span>
+<span id="cb61-605"><a href="#cb61-605" aria-hidden="true" tabindex="-1"></a><span class="ss">-   </span>produce basic maps at increasing levels of control</span>
+<span id="cb61-606"><a href="#cb61-606" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-607"><a href="#cb61-607" aria-hidden="true" tabindex="-1"></a>These are foundational skills. Later chapters build on them when we move to point patterns, flows, spatial dependence and spatial heterogeneity. In that sense, this chapter establishes the conceptual and practical habits that make later modelling choices easier to interpret and easier to defend.</span>
+<span id="cb61-608"><a href="#cb61-608" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-609"><a href="#cb61-609" aria-hidden="true" tabindex="-1"></a>There are several productive follow-up directions from the material in this chapter. One is to experiment with alternative spatial units by changing the size and shape of the Montevideo analytical polygons. Another is to compare projected CRSs and think about why one may be more appropriate than another for a given country or research question. A third is to practice moving back and forth between attribute summaries and spatial summaries, since that rhythm is one of the recurring features of real spatial analysis.</span>
+<span id="cb61-610"><a href="#cb61-610" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-611"><a href="#cb61-611" aria-hidden="true" tabindex="-1"></a><span class="fu">## Tasks</span></span>
+<span id="cb61-612"><a href="#cb61-612" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-613"><a href="#cb61-613" aria-hidden="true" tabindex="-1"></a><span class="ss">1.  </span>Use <span class="in">`st_drop_geometry()`</span> and <span class="in">`count()`</span> to identify the most common <span class="in">`tipo.de.vehiculo`</span> values in the crash-events table.</span>
+<span id="cb61-614"><a href="#cb61-614" aria-hidden="true" tabindex="-1"></a><span class="ss">2.  </span>Create a new time-of-day grouping with your own cut-points and compare it with the one used above.</span>
+<span id="cb61-615"><a href="#cb61-615" aria-hidden="true" tabindex="-1"></a><span class="ss">3.  </span>Change the analytical-unit <span class="in">`cellsize`</span> and see how the mapped pattern changes. What does this suggest about scale and aggregation?</span>
+<span id="cb61-616"><a href="#cb61-616" aria-hidden="true" tabindex="-1"></a><span class="ss">4.  </span>Modify the <span class="in">`ggplot2`</span> map so that crash events are shown as points on top of the polygon units.</span>
+<span id="cb61-617"><a href="#cb61-617" aria-hidden="true" tabindex="-1"></a><span class="ss">5.  </span>Create a second polygon-based representation using a different unit size and compare it with the current analytical units.</span>
 </code></pre></div><button title="Copy to Clipboard" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->

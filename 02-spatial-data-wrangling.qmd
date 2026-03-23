@@ -479,7 +479,7 @@ summary(analysis_units$road_km)
 
 This example is deliberately basic. But it introduces the logic behind many later tasks, such as assigning point records to areas, building polygon summaries and preparing mapped indicators. You will also find the same ideas in choropleth preparation, exposure modelling, area interpolation and many forms of spatial smoothing. The exact technique may change, but the workflow of defining a geography, attaching observations and summarising attributes is foundational.
 
-The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions.
+The choice of unit size still matters. Smaller polygon units reveal more local variation but can create many sparse areas and a noisier pattern. Larger units smooth the data more strongly and may hide local concentration. This is a useful early reminder that spatial wrangling is never only technical. Choices about representation and aggregation shape the patterns that we later describe and explain. The same is true of the attribute we choose to map. Raw crash counts and crashes per kilometre of road are both informative, but they answer slightly different questions. In the next three examples, we keep the mapped variable fixed as raw crash counts so the comparison is about the mapping systems rather than about a changing indicator.
 
 ## Spatial data mapping
 
@@ -494,7 +494,7 @@ The same spatial object can be mapped at different levels of sophistication. A u
 Base plotting is ideal for first inspection because it is fast and requires little setup. In practical workflows, this matters because many maps are made first to check geometry, extent, missing values or obvious outliers rather than to communicate final results. Quick plotting is therefore part of good analysis, not a lesser version of “real” mapping.
 
 ```{r}
-plot(analysis_units["n_injuries"], key.pos = 1, main = "Crash events per Montevideo analytical unit")
+plot(analysis_units["n_injuries"], key.pos = 1, main = "Crash events, Montevideo")
 ```
 
 ### A thematic map with `tmap`
@@ -506,10 +506,10 @@ tmap_mode("plot")
 
 tm_shape(analysis_units) +
   tm_fill(
-    col = "injuries_per_km",
+    col = "n_injuries",
     palette = "viridis",
     style = "cont",
-    title = "Crashes per km"
+    title = "Crash events"
   ) +
   tm_borders(col = "white", lwd = 0.4) +
   tm_layout(frame = FALSE)
@@ -524,14 +524,13 @@ analysis_units_ll <- st_transform(analysis_units, 4326)
 
 ggplot() +
   # Fill polygons with a sequential palette from the shared course style
-  geom_sf(data = analysis_units_ll, aes(fill = injuries_per_km), colour = NA) +
+  geom_sf(data = analysis_units_ll, aes(fill = n_injuries), colour = NA) +
   # Add the road network to keep the analytical units in local context
-  geom_sf(data = roads, colour = "grey50", linewidth = 0.15, alpha = 0.5) +
+  geom_sf(data = roads, colour = "grey50", linewidth = 0.15, alpha = 0.35) +
   coord_sf(expand = FALSE) +
-  scale_fill_course_seq_c(name = "Crashes per km") +
+  scale_fill_course_seq_c(name = "Crash events") +
   labs(
-    title = "Montevideo crash events aggregated to analytical units",
-    subtitle = "Crash counts standardised by local road length"
+    title = "Crash events, Montevideo",
   ) +
   theme_map_course() +
   theme(
