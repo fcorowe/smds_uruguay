@@ -177,7 +177,7 @@ A useful way to introduce point analysis is to begin with a simple univariate qu
 ```{r}
 hist_daily_crashes <- ggplot(daily_crashes, aes(x = daily_crashes)) +
   # Bin daily crash totals into a standard histogram
-  geom_histogram(bins = 20, fill = "#9E2A2B", colour = "white", linewidth = 0.2) +
+  geom_histogram(bins = 100, fill = "#9E2A2B", colour = "white", linewidth = 0.2) +
   labs(
     title = "Histogram of daily crash frequency",
     subtitle = "Each bar groups days with similar numbers of crash events",
@@ -204,7 +204,7 @@ dens_daily_crashes <- ggplot(daily_crashes, aes(x = daily_crashes)) +
     linewidth = 0.2
   ) +
   # Overlay the one-dimensional kernel density estimate
-  geom_density(fill = "#9E2A2B", alpha = 0.45, colour = "#9E2A2B", linewidth = 0.5) +
+  geom_density(fill = "#9E2A2B", alpha = 0.45, adjust = 0.9, colour = "#9E2A2B", linewidth = 0.5) +
   labs(
     title = "Kernel of daily crash frequency",
     subtitle = "Daily crash totals represented as a continuous density curve",
