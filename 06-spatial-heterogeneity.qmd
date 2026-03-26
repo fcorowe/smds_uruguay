@@ -27,12 +27,13 @@ source("style/data-visualisation_theme.R")
 
 ## Data description
 
-The data source is the same as in Chapter 05 so the focus can remain on the new modelling idea rather than on learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family:
+The data source is the same as in Chapter 05 so the focus can remain on the new modelling idea rather than on learning a new dataset. We combine the Uruguay ADM2 boundary file with four tables from the risk-indicator data family and one derived population table:
 
 - `URY_ADM2_access.csv` for the ingredients used to construct `hospital_access_30min_share`
 - `URY_ADM2_rural_population.csv` for `rural_pop_perc`
 - `URY_ADM2_facilities.csv` for `hospitals_count`
 - `URY_ADM2_demographics.csv` for the `elderly` count used to construct `elderly_share`
+- `ury_adm2_population_worldpop_2020.csv` for `total_population`, obtained by aggregating the WorldPop 2020 Uruguay population raster to ADM2 boundaries
 
 The unit of analysis remains the **ADM2 area**. We are modelling differences between areas, and then asking whether those area-level relationships look similar across the whole country or whether they shift across regional contexts.
 
@@ -64,6 +65,11 @@ demographics_tbl <- read_csv(
   "data/risk-assessment-indicators/URY_ADM2_demographics.csv",
   show_col_types = FALSE
 )
+
+population_tbl <- read_csv(
+  "data/derived/ury_adm2_population_worldpop_2020.csv",
+  show_col_types = FALSE
+)
 ```
 
 ```{r}
@@ -74,39 +80,41 @@ data_snapshot <- tibble(
     "Hospital access indicators",
     "Rural population indicators",
     "Facility counts",
-    "Demographic indicators"
+    "Demographic indicators",
+    "WorldPop ADM2 population"
   ),
   rows = c(
     nrow(adm2_boundaries),
     nrow(access_tbl),
     nrow(rural_tbl),
     nrow(facilities_tbl),
-    nrow(demographics_tbl)
+    nrow(demographics_tbl),
+    nrow(population_tbl)
   ),
   key_variable = c(
     "ADM2_PCODE",
     "hospital_access_30min_share",
     "rural_pop_perc",
     "hospitals_count",
-    "elderly"
+    "elderly",
+    "total_population"
   )
 )
 
 data_snapshot
 ```
 
-All tables use the same key, `ADM2_PCODE`, so the practical join structure is straightforward. As in Chapter 05, `elderly_share` is not supplied directly and therefore has to be constructed before modelling.
+All tables use the same key, `ADM2_PCODE`, so the join structure is clean. As in Chapter 05, `elderly_share` is not supplied directly and therefore has to be constructed before modelling, but it now uses an ADM2 population denominator derived from WorldPop rather than a proxy built from other indicators.
 
 ## Data wrangling
 
-The wrangling step closely reuses Chapter 05. We keep the same share outcome and the same covariates so the story continues directly, then add one new piece for this chapter: a small set of broad regional regimes. Those regimes are not meant to be the only possible partition of Uruguay. They are a teaching device that lets us test whether the same covariates behave differently across larger, contiguous parts of the country.
+The wrangling step closely reuses Chapter 05. We keep the same share outcome and the same covariates so the story continues directly, and we keep the same WorldPop-based population denominator for `elderly_share`. We then add one new piece for this chapter: a small set of broad regional regimes. Those regimes are not meant to be the only possible partition of Uruguay. They are a teaching device that lets us test whether the same covariates behave differently across larger, contiguous parts of the country.
 
 ```{r}
 # Join the requested indicators into one ADM2-level modelling table
 risk_indicators <- access_tbl |>
   select(
     ADM2_PCODE,
-    access_pop_education_20km,
     access_pop_hospitals_30min,
     access_pop_hospitals_2h
   ) |>
@@ -122,23 +130,19 @@ risk_indicators <- access_tbl |>
   ) |>
   left_join(
     demographics_tbl |>
-      select(ADM2_PCODE, elderly, female_pop, pop_u15),
+      select(ADM2_PCODE, elderly),
+    by = "ADM2_PCODE"
+  ) |>
+  left_join(
+    population_tbl |>
+      select(ADM2_PCODE, total_population),
     by = "ADM2_PCODE"
   ) |>
   mutate(
     # Build the same share outcome used in Chapter 05
     hospital_access_30min_share = access_pop_hospitals_30min / pmax(access_pop_hospitals_2h, 1),
-    # Build a conservative population proxy from the counts available in the source bundle
-    population_proxy = pmax(
-      female_pop,
-      elderly,
-      pop_u15,
-      access_pop_hospitals_2h,
-      access_pop_education_20km,
-      na.rm = TRUE
-    ),
     # Convert the elderly count into the requested share variable
-    elderly_share = elderly / pmax(population_proxy, 1)
+    elderly_share = elderly / pmax(total_population, 1)
   )
 
 # Attach the indicators to the ADM2 geometries and create broad spatial regimes
@@ -208,7 +212,7 @@ regime_summary <- adm2_risk |>
 regime_summary
 ```
 
-The modelling table is now ready. It contains the same core variables as Chapter 05, plus a practical regional grouping for the regimes exercise. That lets us compare three increasingly flexible stories: one national relationship, one national relationship with department intercept shifts, and one set of relationships that can vary across broader regions.
+The modelling table is now ready. It contains the same core variables as Chapter 05, plus a practical regional grouping for the regimes exercise. That allows us to compare three increasingly flexible stories: one national relationship, one national relationship with department intercept shifts, and one set of relationships that can vary across broader regional contexts.
 
 ## Data exploration
 
@@ -230,8 +234,7 @@ plot_access_distribution <- adm2_risk |>
   geom_density(fill = "#2A6F97", alpha = 0.45, colour = "#2A6F97", linewidth = 0.5) +
   scale_x_continuous(labels = label_percent(accuracy = 1)) +
   labs(
-    title = "Fast hospital access still varies markedly across ADM2 areas",
-    subtitle = "The outcome now measures the share of each area's wider two-hour hospital catchment that is reachable within 30 minutes",
+    title = "30-minute hospital access share",
     x = "Share of the two-hour hospital catchment reachable within 30 minutes",
     y = "Density"
   ) +
@@ -251,8 +254,7 @@ map_access_outcome <- ggplot(adm2_risk) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "The mapped outcome suggests broad regional structure as well as local variation",
-    subtitle = "Some parts of the country convert their wider hospital catchment into short travel times much more effectively than others"
+    title = "30-minute hospital access share by ADM2"
   ) +
   theme_map_course()
 
@@ -267,8 +269,7 @@ map_regimes <- ggplot(adm2_risk) +
   geom_sf(aes(fill = regime_4), colour = "white", linewidth = 0.08) +
   scale_fill_viridis_d(name = "Spatial regime", option = "D", end = 0.9) +
   labs(
-    title = "Spatial regimes group adjacent departments into a few broad regional contexts",
-    subtitle = "The partition is simplified on purpose so regional relationships can be compared without an overwhelming number of coefficients"
+    title = "Spatial regimes"
   ) +
   theme_map_course()
 
@@ -290,8 +291,7 @@ plot_covariates <- adm2_risk |>
   facet_wrap(~variable, scales = "free_x") +
   scale_fill_viridis_d(name = "Spatial regime", option = "D", end = 0.9) +
   labs(
-    title = "The covariates also vary across the broad regional regimes",
-    subtitle = "That variation is exactly why a single national coefficient may be too restrictive",
+    title = "Covariates by regime",
     x = "Value",
     y = "ADM2 areas"
   ) +
@@ -304,7 +304,7 @@ The covariates do not overlap perfectly across regimes. That does not prove hete
 
 ## Baseline modelling
 
-We again begin with a standard linear regression. This keeps the workflow familiar and gives us a direct comparison with Chapter 05. If we estimate one national model with one coefficient per covariate, what do we conclude before adding any regional flexibility?
+We again begin with a standard linear regression. This keeps the workflow familiar and provides a direct comparison with Chapter 05. If we estimate one national model with one coefficient per covariate, what do we conclude before allowing relationships to differ across space?
 
 ```{r}
 # Fit the shared baseline model before moving to heterogeneous relationships
@@ -342,7 +342,7 @@ baseline_fit_summary <- glance(ols_model) |>
 baseline_fit_summary
 ```
 
-The baseline model still gives a useful national summary. But a heterogeneity chapter asks whether that summary is masking place-specific differences. One quick way to see the problem is to map the OLS residuals. If broad regional blocks are consistently over- or under-predicted, then a constant-intercept, constant-slope model may be too rigid.
+The baseline model still gives a useful national summary, but a heterogeneity chapter asks whether that summary is concealing place-specific differences. One quick way to see the problem is to map the OLS residuals. If broad regional blocks are consistently over- or under-predicted, then a constant-intercept, constant-slope model is likely to be too rigid for the pattern we are trying to explain.
 
 ```{r}
 plot_ols_residuals <- ggplot(adm2_risk) +
@@ -353,8 +353,7 @@ plot_ols_residuals <- ggplot(adm2_risk) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "The national baseline leaves broad regional over- and under-prediction",
-    subtitle = "That pattern suggests geography may matter through more than one common national relationship"
+    title = "OLS residuals by ADM2"
   ) +
   theme_map_course()
 
@@ -419,15 +418,14 @@ map_fixed_effects <- ggplot(adm1_effect_map) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "Spatial fixed effects absorb persistent department-level differences",
-    subtitle = "Positive values indicate departments that sit above the reference intercept after controlling for the covariates"
+    title = "ADM1 fixed effects"
   ) +
   theme_map_course()
 
 print(map_fixed_effects)
 ```
 
-The fixed-effects model is useful because it recognises that departments can differ for reasons not fully captured by our three observed covariates. The trade-off is that the model still assumes that the *slopes* for rurality, age structure, and hospitals count are the same everywhere.
+The fixed-effects model is useful as a way of recognising that departments can differ for reasons not fully captured by our three observed covariates. Its strength is that it absorbs persistent regional differences without abandoning a relatively simple specification. Its limitation is that it still assumes the *slopes* for rurality, age structure, and hospital count are the same everywhere.
 
 ```{r}
 # Summarise the main fixed-effects coefficients for interpretation
@@ -519,8 +517,7 @@ plot_regime_slopes <- ggplot(
   facet_wrap(~variable, scales = "free_x") +
   scale_colour_course_div_c(name = "Slope") +
   labs(
-    title = "Spatial regimes show that the covariate relationships are not constant everywhere",
-    subtitle = "The same predictor can have a different estimated slope depending on the regional context",
+    title = "Regime-specific slopes",
     x = "Estimated slope",
     y = NULL
   ) +
@@ -530,7 +527,7 @@ plot_regime_slopes <- ggplot(
 print(plot_regime_slopes)
 ```
 
-This is the key substantive payoff of the chapter. The regimes model says that one national coefficient may be too simple. In one part of the country, the local hospital stock may be much more strongly associated with fast access than in another. Rurality may also matter differently across regions. For social-science applications, that is often the most useful lesson: the direction and size of an association can depend on where it is being estimated.
+This is the key substantive payoff of the chapter. The regimes model shows that one national coefficient may be too simple to describe a geographically differentiated process. In one part of the country, the local hospital stock may be much more strongly associated with fast access than in another. Rurality may also matter differently across regions. For social-science applications, that is often the central lesson: the direction and size of an association can depend on where it is estimated.
 
 ```{r}
 # Extract the interaction terms so the heterogeneity evidence is easy to inspect
@@ -549,7 +546,7 @@ regime_inference_summary
 
 ### Model assessment
 
-Once we have fitted the three models, we should compare whether the extra spatial flexibility actually improves fit. For teaching purposes, it helps to look at more than one metric. Adjusted R-squared gives a familiar summary of explained variation, AIC penalises unnecessary complexity, and RMSE or MAE show prediction error in the outcome's own units.
+Once the three models are fitted, the next task is to compare whether the extra spatial flexibility actually improves fit. No single metric is decisive on its own. Adjusted R-squared gives a familiar summary of explained variation, AIC penalises unnecessary complexity, and RMSE or MAE show prediction error in the outcome's own units.
 
 ```{r}
 # Compare fit and error across the baseline and heterogeneous models
@@ -586,11 +583,11 @@ model_assessment <- tibble(
 model_assessment
 ```
 
-The comparison is informative rather than mechanical. Adjusted `R2` summarises explained variation, `AIC` tells us whether that improvement is worth the added complexity, and RMSE and MAE keep the assessment in the outcome's own units. The fixed-effects model often captures important baseline structure, while the regimes model adds a different kind of value: it shows where relationships vary rather than only where average levels differ.
+The comparison should be read analytically rather than mechanically. Adjusted `R2` summarises explained variation, `AIC` tells us whether that improvement is worth the added complexity, and RMSE and MAE keep the assessment in the outcome's own units. The fixed-effects model often captures important baseline structure, while the regimes model adds a different kind of insight by showing where relationships vary rather than only where average levels differ.
 
 ### Model prediction
 
-Prediction is a useful final step because it turns the fitted model into something that can be used directly. With a regimes model, prediction is straightforward: provide a new observation with the covariates and the regime label, then ask the model for the fitted outcome or a prediction interval.
+Prediction is the final step because it turns the fitted model into something that can be used directly. With a regimes model, prediction requires a new observation with the covariates and the regime label, after which the model can return a fitted outcome or a prediction interval.
 
 ```{r}
 # Build a simple prediction scenario using typical covariate values
@@ -638,8 +635,7 @@ plot_regime_predictions <- ggplot(
   geom_point(colour = "#2A6F97", size = 2.7) +
   scale_x_continuous(labels = label_percent(accuracy = 1)) +
   labs(
-    title = "The same covariate profile can imply different expected access across regimes",
-    subtitle = "Prediction makes the heterogeneous model practical by turning slope differences into expected outcomes",
+    title = "Predicted access shares by regime",
     x = "Predicted 30-minute access share",
     y = NULL
   ) +
@@ -648,12 +644,12 @@ plot_regime_predictions <- ggplot(
 print(plot_regime_predictions)
 ```
 
-This prediction exercise is deliberately simple, but it makes the chapter's lesson concrete. If two places have the same broad covariate profile but belong to different spatial regimes, the expected outcome need not be the same. That is exactly what a heterogeneous model is designed to capture.
+This prediction exercise is deliberately simple, but it makes the chapter's lesson concrete. If two places have the same broad covariate profile but belong to different spatial regimes, the expected outcome need not be the same. That is what a heterogeneous model is designed to capture, and it is why spatial heterogeneity matters in applied analysis rather than only in methodological discussion.
 
 ### What changed, assumptions, and remaining gaps
 
-This chapter now aligns directly with the revised Chapter 05. It keeps the same share-based hospital-access outcome and the same covariates, starts with the required kernel histogram, fits the standard OLS baseline, and then extends the analysis into ADM1 spatial fixed effects and four-region spatial regimes. It also uses the shared plotting style from `style/data-visualisation_theme.R` throughout rather than defining local plotting helpers.
+This chapter aligns directly with the revised Chapter 05. It keeps the same share-based hospital-access outcome and the same covariates, starts with the required kernel histogram, fits the standard OLS baseline, and then extends the analysis into ADM1 spatial fixed effects and four-region spatial regimes. It also uses the shared plotting style from `style/data-visualisation_theme.R` throughout rather than defining local plotting helpers.
 
-The main assumption is unchanged from Chapter 05: `elderly_share` is derived because the source bundle provides `elderly` as a count rather than as a ready-made share. The chapter therefore constructs a conservative population proxy from the available count variables and makes that step explicit in both code and text. A second assumption is the four-regime partition itself. That grouping is designed to be contiguous and interpretable for teaching purposes, not to claim that there is one uniquely correct regionalisation of Uruguay.
+The key assumption is unchanged from the revised Chapter 05: `elderly_share` combines an `elderly` count from the risk-indicator bundle with ADM2 population totals derived from WorldPop 2020. That is a much cleaner denominator than the earlier proxy, but it still assumes those two sources can be used together as a sensible area-level share. A second assumption is the four-regime partition itself. That grouping is designed to be contiguous and interpretable for teaching purposes, not to claim that there is one uniquely correct regionalisation of Uruguay.
 
-The main remaining gap is that the outcome is still a relative accessibility share within the observed hospital-access system rather than a full share of total population. If a better denominator becomes available later, both Chapters 05 and 06 could be updated again so the accessibility outcome and `elderly_share` are anchored to a clearer population base.
+The remaining gap is that the outcome is still a relative accessibility share within the observed hospital-access system rather than a full share of total population. In other words, the chapter explains variation in fast access within the wider hospital catchment, not variation in direct hospital access for the full resident population.

@@ -1,10 +1,12 @@
 # Spatial Dependence
 
-## Introduction / context and aims
+This chapter introduces the concept of spatial dependence. To this end, we will seek to undertand spatial dependence in hospital accessibility. Spatial dependence may manifest as neighbouring areas may show similar levels of access because they share the same hospitals, transport corridors and wider service catchments. So accessibility in one area is partly shaped by accessibility in nearby areas. The chapter seeks to provide an understanding of appropriate methods, tools and skills to analyse data with potentially strong spatial dependence. The chapter will move from a familiar non-spatial regression to a spatial workflow that introduces weights, autocorrelation and spatial regression.
 
-This chapter introduces spatial dependence through a policy-relevant Uruguay example: the share of each ADM2 area's wider hospital catchment that is reachable within 30 minutes. The raw count `access_pop_hospitals_30min` is heavily concentrated in Montevideo and the surrounding urban system, so it is not a very helpful main modelling outcome on its own. A share-based outcome gives us a better comparative question: once a population can reach hospital care within two hours, how much of that access is available within a faster 30-minute threshold?
+By the end of this chapter, you should be able to:
 
-That shift keeps the chapter close to the original course plan while making the analysis more meaningful across the whole country. Areas are not isolated containers. Fast hospital access in one municipality is shaped by nearby facilities, transport links, settlement structure, and the wider pattern of neighbouring areas. The aim is therefore to move from a familiar non-spatial regression to a spatial workflow that introduces weights, autocorrelation, and spatial regression in an applied and interpretable way.
+- prepare areal data for spatial modelling, define neighbourhood relationships, and construct a spatial weights matrix appropriate to the research question;
+- diagnose spatial dependence in an outcome and in regression residuals using descriptive graphics, Moran's I, and local cluster summaries;
+- fit, interpret, assess, and use basic spatial regression models in `R`, including comparing them with a non-spatial baseline and using fitted values for prediction in practice;
 
 ## Dependencies
 
@@ -29,13 +31,12 @@ source("style/data-visualisation_theme.R")
 
 ## Data description
 
-The chapter combines the Uruguay ADM2 boundary file with three tables from the risk-indicator dataset family:
+The chapter uses Uruguay ADM2 indicators drawn from the **Uruguay Risk Assessment Indicators** dataset family, downloaded from the **Humanitarian Data Exchange (HDX)**. These files report accessibility, facilities and demographic indicators for ADM2 areas. We also use a small derived ADM2 population table created by aggregating the **WorldPop 2020 Uruguay population-count raster** to the same ADM2 boundaries. The main advantage of this combination is that it keeps the substantive focus on accessibility while giving us a defensible population denominator for share variables.
 
-- `URY_ADM2_access.csv` for the ingredients used to construct the outcome
-- `URY_ADM2_rural_population.csv` for `rural_pop_perc`
-- `URY_ADM2_facilities.csv` for `hospitals_count`
+Each observation in the dataset refers to one **ADM2 area** in Uruguay. The access file contains counts of the population that can reach hospitals within different distance or time thresholds. For our purposes, the most useful variables are `access_pop_hospitals_30min` and `access_pop_hospitals_2h`. Rather than model the 30-minute count directly, we use both fields to construct a more comparable outcome: the share of the wider two-hour hospital catchment that is reachable within 30 minutes.
 
-The demographic file adds the `elderly` count used to construct `elderly_share`. The observation unit is an **ADM2 area**, not an individual or a point event. This matters because the chapter asks how fast hospital access varies across neighbouring areas and whether those area-level outcomes are spatially clustered.
+We combine that access file with two further indicator tables. `URY_ADM2_rural_population.csv` contributes `rural_pop_perc`, while `URY_ADM2_facilities.csv` contributes `hospitals_count`. The demographic file adds the `elderly` count, and the derived WorldPop table contributes `total_population`, which we use to construct `elderly_share`. The unit of analysis is therefore an **ADM2 area**, not an individual or a point event. The chapter then focusing on seeking answer to the question how fast hospital access varies across neighbouring areas and whether those area-level outcomes are spatially clustered.
+
 
 ```{r}
 # Read the official ADM2 boundary layer used for joins and neighbour links
@@ -65,6 +66,11 @@ demographics_tbl <- read_csv(
   "data/risk-assessment-indicators/URY_ADM2_demographics.csv",
   show_col_types = FALSE
 )
+
+population_tbl <- read_csv(
+  "data/derived/ury_adm2_population_worldpop_2020.csv",
+  show_col_types = FALSE
+)
 ```
 
 ```{r}
@@ -75,43 +81,40 @@ data_snapshot <- tibble(
     "Hospital access indicators",
     "Rural population indicators",
     "Facility counts",
-    "Demographic indicators"
+    "Demographic indicators",
+    "WorldPop ADM2 population"
   ),
   rows = c(
     nrow(adm2_boundaries),
     nrow(access_tbl),
     nrow(rural_tbl),
     nrow(facilities_tbl),
-    nrow(demographics_tbl)
+    nrow(demographics_tbl),
+    nrow(population_tbl)
   ),
   key_variable = c(
     "ADM2_PCODE",
     "hospital_access_30min_share",
     "rural_pop_perc",
     "hospitals_count",
-    "elderly"
+    "elderly",
+    "total_population"
   )
 )
 
 data_snapshot
 ```
 
-The practical point is simple: all tables use the same administrative code, `ADM2_PCODE`. That gives us a clean path from tabular indicators to mapped areas and then to spatial weights.
-
 ## Data wrangling
 
-The main outcome in this revised version is:
-
-`hospital_access_30min_share = access_pop_hospitals_30min / access_pop_hospitals_2h`
-
-This keeps the chapter focused on hospital accessibility while avoiding an outcome that mostly reflects where the largest populations live. The chapter brief also asks us to use `elderly_share`, but the source data provide `elderly` as a count rather than as a ready-made share. Because the indicator bundle does not include an explicit total-population variable, we create a transparent proxy denominator from the available count fields and make that assumption explicit.
+We focus on the share of the wider two-hour hospital catchment that is reachable within 30 minutes. In practice, this means taking the ratio between hospital accessibility within 30 minutes and hospital accessibility within two hours. This gives us an outcome that is much more useful for comparison across areas because it does not mostly reproduce where the largest populations live. The same logic applies to `elderly_share`. The source data provide `elderly` as a count, not as a proportion, so we join a separate ADM2 population table derived from the WorldPop 2020 Uruguay population raster and use that as the denominator.
 
 ```{r}
 # Join the requested indicators and derive the share outcome and elderly share
 risk_indicators <- access_tbl |>
+  # Keep the accessibility fields needed for the main share outcome
   select(
     ADM2_PCODE,
-    access_pop_education_20km,
     access_pop_hospitals_30min,
     access_pop_hospitals_2h
   ) |>
@@ -127,30 +130,28 @@ risk_indicators <- access_tbl |>
   ) |>
   left_join(
     demographics_tbl |>
-      select(ADM2_PCODE, elderly, female_pop, pop_u15),
+      select(ADM2_PCODE, elderly),
+    by = "ADM2_PCODE"
+  ) |>
+  left_join(
+    population_tbl |>
+      select(ADM2_PCODE, total_population),
     by = "ADM2_PCODE"
   ) |>
   mutate(
     # Build the share outcome from the wider two-hour hospital catchment
     hospital_access_30min_share = access_pop_hospitals_30min / pmax(access_pop_hospitals_2h, 1),
-    # Build a conservative population proxy from the counts available in the source bundle
-    population_proxy = pmax(
-      female_pop,
-      elderly,
-      pop_u15,
-      access_pop_hospitals_2h,
-      access_pop_education_20km,
-      na.rm = TRUE
-    ),
-    # Convert the elderly count into a bounded share for the requested covariate
-    elderly_share = elderly / pmax(population_proxy, 1)
+    # Convert the elderly count into the requested share using ADM2 population totals
+    elderly_share = elderly / pmax(total_population, 1)
   )
 
 # Attach the indicators to the ADM2 geometries
 adm2_risk <- adm2_boundaries |>
+  # Keep only the identifiers and geometry needed for the chapter workflow
   select(ADM1_ES, ADM1_PCODE, ADM2_ES, ADM2_PCODE, geometry) |>
   left_join(risk_indicators, by = "ADM2_PCODE") |>
   mutate(
+    # Convert the modelling variables into clean numeric fields
     hospital_access_30min_share = as.numeric(hospital_access_30min_share),
     rural_pop_perc = as.numeric(rural_pop_perc),
     hospitals_count = as.numeric(hospitals_count),
@@ -166,12 +167,15 @@ adm2_risk <- adm2_boundaries |>
 # Keep a projected copy for centroid calculations when needed later
 adm2_risk_utm <- st_transform(adm2_risk, 32721)
 adm2_centroids_utm <- st_point_on_surface(adm2_risk_utm)
+
+head(risk_indicators)
 ```
 
 ```{r}
 # Check the ranges of the outcome and the requested covariates
 variable_summary <- adm2_risk |>
   st_drop_geometry() |>
+  # Summarise each modelling variable with a few simple descriptive statistics
   summarise(
     across(
       c(hospital_access_30min_share, rural_pop_perc, elderly_share, hospitals_count),
@@ -179,6 +183,7 @@ variable_summary <- adm2_risk |>
       na.rm = TRUE
     )
   ) |>
+  # Reshape the summary so each variable reads as one row
   pivot_longer(
     everything(),
     names_to = c("variable", ".value"),
@@ -189,11 +194,11 @@ variable_summary <- adm2_risk |>
 variable_summary
 ```
 
-At this point we have a clean area-level layer with geometry, the share outcome, and the three requested covariates. That is enough for descriptive analysis, a baseline linear model, and then the explicitly spatial extension.
+We now have a clean area-level dataset with geometry, an outcome, and three covariates of interest. That gives us a coherent analytical base for the rest of the chapter: first describing the pattern, then estimating a familiar non-spatial model, and finally asking whether the remaining structure is spatial.
 
 ## Data exploration
 
-We start with the outcome variable itself. A kernel histogram is useful here because it keeps the first step descriptive and familiar. It shows how many ADM2 areas convert very little of their wider two-hour hospital catchment into 30-minute access and how many convert most of it. In policy terms, the question is now more useful than before: where is fast hospital access relatively strong, given the wider hospital reach already available?
+We begin gaining an understanding of our accessibility outcome. We create a kernel histogram. It hows the distributions of areas based on their accessibility, to address our question as to: Of the population that can reach a hospital within 2 hours, what share can do so within 30 minutes? It reveals that a large share near 0%, indicating that in many areas a small share of the population with hospital access within 2 hours can reach a hospital within 30 minutes. The pile-up near 100% indicates a smaller but still noticeable group of areas have very high short-travel access, meaning most of their 2-hour catchment is already reachable within 30 minutes.
 
 ```{r}
 plot_access_distribution <- adm2_risk |>
@@ -211,8 +216,7 @@ plot_access_distribution <- adm2_risk |>
   geom_density(fill = "#2A6F97", alpha = 0.45, colour = "#2A6F97", linewidth = 0.5) +
   scale_x_continuous(labels = label_percent(accuracy = 1)) +
   labs(
-    title = "Fast hospital access varies sharply across Uruguay's ADM2 areas",
-    subtitle = "The outcome measures the share of each area's wider two-hour hospital catchment that is reachable within 30 minutes",
+    title = "30-minute hospital access share",
     x = "Share of the two-hour hospital catchment reachable within 30 minutes",
     y = "Density"
   ) +
@@ -221,7 +225,7 @@ plot_access_distribution <- adm2_risk |>
 print(plot_access_distribution)
 ```
 
-The distribution is still uneven, but it is no longer dominated by population size alone. Some ADM2 areas have very little short-travel hospital access even though they are part of a broader hospital catchment, while others convert most of that wider reach into much faster access. That is substantively useful because it shifts the emphasis from settlement size to relative accessibility performance.
+The key conclusion is that accessibility to hospital is very uneven across localidades in Uruguay. Let us map the our accessibility score to identify areas of relatively low and high access.
 
 ```{r}
 map_access_outcome <- ggplot(adm2_risk) +
@@ -232,49 +236,55 @@ map_access_outcome <- ggplot(adm2_risk) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "Fast hospital access remains spatially clustered across Uruguay",
-    subtitle = "Some areas convert most of their wider hospital catchment into short travel times, while others do not"
+    title = "30-minute hospital access share by ADM2"
   ) +
   theme_map_course()
 
 print(map_access_outcome)
 ```
 
-It also helps to look at the covariates before modelling. Rurality, older age structure, and the local count of hospitals are all plausible correlates of fast hospital access, but they may also cluster geographically.
+Before modelling, a recommended approach is to examine the association between accessibility outcome and covariates to start building some intuition. A correlogram gives a compact view of the strength, direction and statistical significance of the pairwise relationships.
 
 ```{r}
-exploration_long <- adm2_risk |>
+# Create a temporary data frame without geometry for the correlogram
+correlogram_df <- adm2_risk |>
   st_drop_geometry() |>
-  select(ADM2_PCODE, rural_pop_perc, elderly_share, hospitals_count) |>
-  pivot_longer(
-    cols = c(rural_pop_perc, elderly_share, hospitals_count),
-    names_to = "variable",
-    values_to = "value"
+  select(
+    hospital_access_30min_share,
+    rural_pop_perc,
+    elderly_share,
+    hospitals_count
   )
 
-plot_covariates <- ggplot(exploration_long, aes(x = value)) +
-  # Compare the covariate distributions with the same simple histogram template
-  geom_histogram(
-    bins = 25,
-    fill = "#9E2A2B",
-    colour = "white",
-    linewidth = 0.2
-  ) +
-  facet_wrap(~variable, scales = "free_x") +
-  labs(
-    title = "The covariates also vary markedly across ADM2 areas",
-    subtitle = "That variation gives the baseline model something meaningful to explain",
-    x = "Value",
-    y = "ADM2 areas"
-  ) +
-  theme_plot_course()
+# Obtain Pearson correlation coefficients for the accessibility outcome and covariates
+cormat <- cor(
+  correlogram_df,
+  use = "complete.obs",
+  method = "pearson"
+)
 
-print(plot_covariates)
+# Test which pairwise correlations are statistically significant
+sig_corr <- corrplot::cor.mtest(correlogram_df, conf.level = 0.95)
+
+# Plot the correlation matrix
+corrplot::corrplot(
+  cormat,
+  type = "lower",
+  method = "circle",
+  order = "original",
+  tl.cex = 0.8,
+  p.mat = sig_corr$p,
+  sig.level = 0.05,
+  col = viridis::viridis(100, option = "plasma"),
+  diag = FALSE
+)
 ```
+
+The correlogram shows the strength and significance of the linear relationship between the accessibility outcome and the covariates. Larger circles indicate stronger correlations. Warm and cool colours distinguish positive from negative associations. Crosses mark relationships that are not statistically significant at the 95% level.
 
 ## Baseline modelling
 
-The baseline step is an ordinary linear regression. This is deliberate. Before introducing explicitly spatial models, we want a familiar benchmark that tells us what a non-spatial analysis would conclude if it ignored neighbour relationships.
+The baseline step is an ordinary linear regression. A baseline model is useful to understand the properties of spatial models. We need to know what a conventional non-spatial analysis would conclude if neighbour relationships were ignored.
 
 ```{r}
 # Fit the non-spatial baseline model required by the shared chapter template
@@ -297,11 +307,13 @@ ols_coefficients
 # Add fitted values and residuals back to the spatial layer for diagnostics
 adm2_risk <- adm2_risk |>
   mutate(
+    # Store the baseline fitted values for later comparison with spatial models
     ols_fitted = fitted(ols_model),
     ols_residual = resid(ols_model)
   )
 
 baseline_fit_summary <- glance(ols_model) |>
+  # Keep a compact set of familiar fit statistics for the teaching summary
   transmute(
     r_squared = round(r.squared, 3),
     adj_r_squared = round(adj.r.squared, 3),
@@ -312,7 +324,7 @@ baseline_fit_summary <- glance(ols_model) |>
 baseline_fit_summary
 ```
 
-The baseline model gives us a first explanatory story, but the main teaching question is whether it leaves a spatial pattern behind. If nearby residuals still resemble one another, then the non-spatial model is not fully capturing the spatial structure in the data.
+The baseline model gives us a first explanatory account of the outcome, but the central question is whether that account is sufficient. If nearby residuals still resemble one another, then the model is leaving spatial structure behind. At that point, a non-spatial regression is no longer a neutral simplification. It is an incomplete account of the process we are trying to explain.
 
 ```{r}
 plot_ols_residuals <- ggplot(adm2_risk) +
@@ -323,19 +335,26 @@ plot_ols_residuals <- ggplot(adm2_risk) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "The baseline regression still leaves a visible spatial pattern",
-    subtitle = "Positive residuals show areas with higher fast-access shares than the non-spatial model predicts"
+    title = "OLS residuals across localities"
   ) +
   theme_map_course()
 
 print(plot_ols_residuals)
 ```
 
-## Spatial weights, autocorrelation, and spatial regression
+These implications matter for how we read the OLS model. If the spatial dependence is mainly in the residuals, OLS coefficients can still be unbiased, but the standard errors are usually wrong. If standard errors are wrong, `p`-values and confidence intervals become unreliable. If the spatial dependence reflects omitted spatial processes that are correlated with the covariates, OLS coefficients can also become biased or misleading. More broadly, OLS becomes an incomplete model because part of the pattern is being generated by spatial spillovers or unmeasured spatial structure, not only by the observed covariates.
 
-The first explicitly spatial ingredient is a **spatial weights matrix**. In plain language, this is just a formal definition of who counts as a neighbour. Here we use a queen-contiguity rule, which treats ADM2 areas as neighbours when they share either a boundary segment or a corner.
+## Spatial regression
 
-A simple way to think about a spatial weights matrix is as a structured table of spatial relationships. Each row refers to one area, each column refers to another area, and each cell records whether those two areas are treated as connected and, if so, how strongly. In a basic contiguity matrix the entries often begin as `1` for neighbours and `0` for non-neighbours. After row standardisation, each area shares a total weight of `1` across its neighbours, so an area with two neighbours gives each a weight of `0.5`, while an area with four neighbours gives each a weight of `0.25`. This turns the intuitive idea of "nearby areas may matter" into something we can calculate with directly.
+The first thing then that we need is to establish if significant spatial autocorrelation exists. To this end, there are few key concepts and tools we first need to cover: *spatial weights matrix*, *spatial autocorrelation* and *spatial lag*. All of these are important elements of what is known as *Exploratory Spatial Data Analysis*. We begin with spatial weight matrix.
+
+### Spatial weights
+
+A spatial weights matrix is a structured way of representing spatial relationships between observations. Each row refers to one area, each column to another, and each cell records whether those two areas are treated as connected and, if so, how strongly. In applied work, the matrix is the device that turns the intuitive idea of “nearby places may matter” into something that can be calculated and tested.
+
+There are several ways to define those connections. One common family is **contiguity-based weights**, where areas are linked because they share a geographical boundary. Here we use a **queen-contiguity** rule. Under the queen criterion, two ADM2 areas are neighbours if they share either a boundary segment or even a single corner. This is a slightly more inclusive definition than **rook contiguity**, which only treats areas as neighbours when they share part of an edge. For irregular administrative polygons such as Uruguay's ADM2 units, queen contiguity is often a sensible starting point because it captures a broader set of plausible local interactions.
+
+The raw entries of a contiguity matrix usually begin as `1` for neighbours and `0` for non-neighbours. In practice, those raw values are often transformed before analysis. We use **row-standardised weights**, which means each area distributes a total weight of `1` across all of its neighbours. An area with two neighbours assigns each a weight of `0.5`, while an area with four neighbours assigns each a weight of `0.25`. This matters because the influence of neighbouring areas is expressed on a comparable scale even when the number of neighbours differs across the country.
 
 ```{r}
 # Build a queen-contiguity neighbour structure from the ADM2 polygons
@@ -347,6 +366,28 @@ lw_queen <- nb2listw(nb_queen, style = "W", zero.policy = TRUE)
 # Count how many neighbours each ADM2 area has
 adm2_risk <- adm2_risk |>
   mutate(n_neighbours = card(nb_queen))
+```
+
+```{r}
+# Summarise how many neighbours areas have under the queen rule
+neighbour_summary <- adm2_risk |>
+  st_drop_geometry() |>
+  summarise(
+    min_neighbours = min(n_neighbours),
+    median_neighbours = median(n_neighbours),
+    mean_neighbours = round(mean(n_neighbours), 2),
+    max_neighbours = max(n_neighbours)
+  )
+
+# Show how row standardisation distributes a total weight of 1 across neighbours
+weights_example <- tibble(
+  adm2_pcode = adm2_risk$ADM2_PCODE[1],
+  neighbour_count = length(lw_queen$weights[[1]]),
+  weights = paste(round(lw_queen$weights[[1]], 3), collapse = ", ")
+)
+
+neighbour_summary
+weights_example
 ```
 
 ```{r}
@@ -363,15 +404,79 @@ map_neighbours <- ggplot() +
   geom_sf(data = nb_lines, colour = "#2A6F97", linewidth = 0.2, alpha = 0.5) +
   geom_sf(data = st_transform(adm2_centroids_utm, st_crs(adm2_risk)), colour = "#9E2A2B", size = 0.35) +
   labs(
-    title = "Spatial weights turn adjacency into an explicit analytical object",
-    subtitle = "Queen contiguity links ADM2 areas that touch along an edge or even at a corner"
+    title = "ADM2 neighbours"
   ) +
   theme_map_course()
 
 print(map_neighbours)
 ```
 
-Once the weights are defined, we can test for spatial autocorrelation. Moran's I asks whether similar values tend to occur near one another more than we would expect under spatial randomness. We calculate it twice: first for the outcome itself, then for the OLS residuals.
+The map makes the neighbour structure visible, while the summary table shows that the number of neighbours varies across areas. Some ADM2 units are only lightly connected, while others sit within denser local networks. Row standardisation matters precisely because of that variation. It ensures that the total neighbouring influence remains comparable even when areas differ markedly in how many neighbours they have. Once the weights are defined, we can test for spatial autocorrelation. 
+
+### Spatial autocorrelation
+
+To conduct exploratory spatial data analysis, a central question is whether the observed geography looks close to **spatial randomness** or whether similar values tend to group together in space. Spatial autocorrelation can be thought of as the absence of spatial randomness. When similar values cluster together nearby, we observe **positive spatial autocorrelation**. When similar values are pushed apart, we observe **negative spatial autocorrelation**.
+
+A useful way to build intuition is through the idea of a **spatial lag**. The spatial lag of a variable is the weighted average of neighbouring values, using the spatial weights matrix we have just defined. If areas with high accessibility tend to be surrounded by neighbours with high accessibility, and low values tend to be surrounded by low values, the relationship between the variable and its spatial lag will slope upward. That is the visual intuition behind the Moran plot. 
+
+ESDAs are usually divided into two main groups: (1) global spatial autocorrelation: which focuses on the overall trend or the degree of spatial clustering in a variable; and, (2) local spatial autocorrelation: which focuses on spatial instability: the departure of parts of a map from the general trend. it is useful to identify hot or cold spots.
+
+**Global spatial autocorrelation**
+
+To test for global spatial autocorrelation, we will use the Moran Plot and Moran’s I statistics. The **Moran Plot** is a way of visualising the nature and strength of spatial autocorrelation. It’s essentially a scatter plot between a variable and its spatial lag. To more easily interpret the plot, variables are standardised. In a standardised Moran Plot, average values are centered around zero and dispersion is expressed in standard deviations. The rule of thumb is that values greater or smaller than two standard deviations can be considered outliers. 
+
+A standardised Moran Plot can also be used to visualise local spatial autocorrelation. We can observe local spatial autocorrelation by partitioning the Moran Plot into four quadrants that represent different situations:
+
+- High-High (HH): values above average surrounded by values above average.
+- Low-Low (LL): values below average surrounded by values below average.
+- High-Low (HL): values above average surrounded by values below average.
+- Low-High (LH): values below average surrounded by values above average.
+
+To measure global spatial autocorrelation, we can use the Moran’s I. The Moran Plot and intrinsically related. The value of **Moran’s I** corresponds with the slope of the linear fit on the Moran Plot. 
+
+```{r}
+# Compute the spatial lag of the accessibility outcome and the OLS residuals
+accessibility_lag <- lag.listw(
+  lw_queen,
+  adm2_risk$hospital_access_30min_share,
+  zero.policy = TRUE
+)
+
+residual_lag <- lag.listw(
+  lw_queen,
+  adm2_risk$ols_residual,
+  zero.policy = TRUE
+)
+
+# Standardise the outcome and its spatial lag for the Moran plot
+moran_plot_df <- adm2_risk |>
+  st_drop_geometry() |>
+  transmute(
+    access_std = as.numeric(scale(hospital_access_30min_share)),
+    lag_std = as.numeric(scale(accessibility_lag))
+  )
+```
+
+```{r}
+plot_moran <- ggplot(moran_plot_df, aes(x = access_std, y = lag_std)) +
+  # Compare each area's value with the average value in its neighbourhood
+  geom_point(colour = "#2A6F97", alpha = 0.65, size = 1.3) +
+  geom_smooth(method = "lm", se = FALSE, colour = "#9E2A2B", linewidth = 0.7) +
+  geom_hline(yintercept = 0, colour = "grey75", linewidth = 0.3) +
+  geom_vline(xintercept = 0, colour = "grey75", linewidth = 0.3) +
+  labs(
+    title = "Moran plot",
+    x = "Standardised accessibility share",
+    y = "Standardised spatial lag"
+  ) +
+  theme_plot_course()
+
+print(plot_moran)
+```
+
+The Moran plot shows the relationship between the accessibility score and the average accessibility score in neighbouring areas. An upward slope indicates positive spatial autocorrelation. High values tend to sit near high values, and low values near low values. The quadrants also help with interpretation. The upper-right quadrant corresponds to high-high observations, the lower-left to low-low observations, and the off-diagonal quadrants to spatial outliers.
+
+Moran's I provides the formal summary of that relationship. The statistic is closely related to the slope of the Moran plot. We calculate it twice: first for the outcome itself, and then for the OLS residuals. The first test tells us whether the observed accessibility pattern is spatial. The second tells us whether the non-spatial regression has left spatial structure behind.
 
 ```{r}
 # Measure global spatial autocorrelation for the outcome and the OLS residuals
@@ -399,6 +504,7 @@ moran_summary <- tibble(
   ),
   p_value = c(moran_outcome$p.value, moran_residuals$p.value)
 ) |>
+  # Round the diagnostics into a compact table for discussion in the text
   mutate(
     across(c(moran_i, expectation), round, 3),
     p_value = round(p_value, 4)
@@ -406,6 +512,12 @@ moran_summary <- tibble(
 
 moran_summary
 ```
+
+The table lets us distinguish between descriptive clustering and modelling failure. A significant Moran's I for the outcome shows that accessibility is spatially patterned overall. A significant Moran's I for the OLS residuals shows that the baseline regression has not absorbed that pattern fully. That is the point at which a spatial model becomes substantively justified.
+
+**Local spatial autocorrelation**
+
+Global autocorrelation tells us whether the map is spatially structured overall. However, it does not tell us where that structure is strongest or whether some places depart from the general pattern. **Local spatial autocorrelation** addresses that question by measuring spatial association for each individual area in relation to its neighbours. The most common tool here is **LISA**, or **Local Indicators of Spatial Association**. LISA helps identify local clusters such as high values surrounded by high values and low values surrounded by low values, as well as spatial outliers where an area's value differs from the values around it. 
 
 ```{r}
 # Add a local Moran classification to show where clustering happens
@@ -415,18 +527,14 @@ local_moran <- localmoran(
   zero.policy = TRUE
 )
 
-lagged_outcome <- lag.listw(
-  lw_queen,
-  adm2_risk$hospital_access_30min_share,
-  zero.policy = TRUE
-)
-
 adm2_risk <- adm2_risk |>
   mutate(
+    # Store the local Moran statistic and p-value for each area
     local_i = local_moran[, "Ii"],
     local_p = local_moran[, "Pr(z != E(Ii))"],
+    # Centre the outcome and its spatial lag so cluster types are easy to classify
     outcome_centered = hospital_access_30min_share - mean(hospital_access_30min_share, na.rm = TRUE),
-    lag_centered = lagged_outcome - mean(lagged_outcome, na.rm = TRUE),
+    lag_centered = accessibility_lag - mean(accessibility_lag, na.rm = TRUE),
     lisa_cluster = case_when(
       local_p > 0.05 ~ "Not significant",
       outcome_centered > 0 & lag_centered > 0 ~ "High-High",
@@ -457,15 +565,26 @@ map_lisa <- ggplot(adm2_risk) +
     name = "Local cluster"
   ) +
   labs(
-    title = "Local Moran clusters show where similar fast-access outcomes gather together",
-    subtitle = "High-High and Low-Low areas are especially useful because they suggest broader regional structures rather than isolated cases"
+    title = "Local Moran clusters"
   ) +
   theme_map_course()
 
 print(map_lisa)
 ```
 
-The global and local results motivate the next step. If the outcome and the OLS residuals are spatially correlated, we should consider models that incorporate that dependence directly rather than leaving it in the error term.
+The global and local results sharpen the argument for spatial modelling. If both the outcome and the OLS residuals are spatially correlated, then dependence is not simply a visual feature of the map. It is part of the data-generating process we are trying to represent. 
+
+### Estimation of spatial effects models
+
+We now know that a standard OLS model is unlikely to be sufficient because neighbouring areas appear to be connected through the outcome and through the unexplained component of the regression. A common next step in spatial econometrics is therefore to estimate models that incorporate spatial dependence directly. Two of the most widely used specifications are the **spatial lag model** and the **spatial error model**.
+
+The **spatial lag model** assumes that the outcome in one area is shaped in part by the outcome in neighbouring areas. In substantive terms, this is a spillover model. It is appropriate when accessibility in one ADM2 may depend on accessibility in nearby ADM2 units because they share service catchments, transport corridors, or wider regional infrastructure systems. In this specification, the key spatial parameter is `rho`, which captures the strength of dependence in the dependent variable itself.
+
+The **spatial error model** takes a different view. It assumes that spatial dependence sits mainly in the unobserved part of the process rather than directly in the outcome. This is useful when nearby areas resemble one another because of omitted spatial factors that are not fully captured by the observed covariates, such as regional settlement patterns, unmeasured transport frictions, or institutional arrangements. In this specification, the key spatial parameter is `lambda`, which captures dependence in the error term.
+
+These two models answer related but distinct questions. The lag model asks whether neighbouring outcomes directly influence one another. The error model asks whether the remaining unexplained variation is spatially structured. In practice, it is often useful to estimate both and compare them, especially in an introductory chapter where the goal is to understand what each model is designed to capture.
+
+We therefore fit both models using the same outcome, covariates, and queen-contiguity weights matrix:
 
 ```{r}
 # Fit two standard spatial regression extensions using the same covariates
@@ -488,9 +607,8 @@ error_model <- suppressWarnings(
 )
 ```
 
-### Statistical inference and interpretation
 
-The first inferential question is whether the relationships remain similar once spatial dependence is included directly in the model. That is why it is helpful to compare the OLS coefficients with the spatial lag and spatial error results rather than treating the spatial models as a completely separate exercise.
+The inferential question at this stage is whether the main relationships look similar once spatial dependence enters the model directly. Comparing the OLS coefficients with the spatial lag and spatial error results therefore does more than add technical detail. It reveals whether the non-spatial baseline was broadly adequate or whether some coefficients were partly absorbing omitted spatial structure.
 
 ```{r}
 # Compare the main coefficients across the baseline and spatial models
@@ -499,6 +617,7 @@ lag_coef <- as_tibble(summary(lag_model)$Coef, rownames = "term") |>
     model = "Spatial lag",
     term,
     estimate = Estimate,
+    std_error = `Std. Error`,
     p_value = `Pr(>|z|)`
   )
 
@@ -507,22 +626,58 @@ error_coef <- as_tibble(summary(error_model)$Coef, rownames = "term") |>
     model = "Spatial error",
     term,
     estimate = Estimate,
+    std_error = `Std. Error`,
     p_value = `Pr(>|z|)`
   )
 
-coef_table <- bind_rows(
+coef_plot_df <- bind_rows(
+  # Start with the familiar OLS coefficients
   tidy(ols_model) |>
-    transmute(model = "OLS", term, estimate, p_value = p.value),
+    transmute(model = "OLS", term, estimate, std_error = std.error, p_value = p.value),
+  # Add the two spatial alternatives for direct comparison
   lag_coef,
   error_coef
 ) |>
+  filter(term != "(Intercept)") |>
   mutate(
-    estimate = round(estimate, 3),
-    p_value = round(p_value, 4)
+    conf_low = estimate - 1.96 * std_error,
+    conf_high = estimate + 1.96 * std_error,
+    term = recode(
+      term,
+      rural_pop_perc = "Rural population share",
+      elderly_share = "Elderly share",
+      hospitals_count = "Hospitals count"
+    )
+  ) |>
+  mutate(
+    term = factor(
+      term,
+      levels = c("Hospitals count", "Elderly share", "Rural population share")
+    )
   )
 
-coef_table
+plot_coefficients <- ggplot(
+  coef_plot_df,
+  aes(x = estimate, y = term, colour = model)
+) +
+  # Mark zero so the direction of each estimate is easy to read
+  geom_vline(xintercept = 0, colour = "grey75", linewidth = 0.3) +
+  # Show 95% confidence intervals around each coefficient
+  geom_errorbarh(aes(xmin = conf_low, xmax = conf_high), height = 0.15, linewidth = 0.5,
+                 position = position_dodge(width = 0.5)) +
+  geom_point(size = 2.2, position = position_dodge(width = 0.5)) +
+  labs(
+    title = "Regression coefficients",
+    x = "Coefficient estimate",
+    y = NULL,
+    colour = "Model"
+  ) +
+  theme_plot_course()
+
+print(plot_coefficients)
 ```
+
+The coefficient plot shows that spatial dependence is present. But they suggest that adding spatial lag or spatial error terms does not dramatically alter the estimated covariate relationships. The three models tell a broadly similar substantive story. In this case, the main gain from the spatial models is likely to come from handling residual spatial structure more appropriately and improving the reliability of inference rather than from producing a radically different substantive conclusion.
 
 ```{r}
 # Summarise the spatial parameters that capture dependence directly
@@ -536,18 +691,17 @@ spatial_parameter_summary <- tibble(
 spatial_parameter_summary
 ```
 
-In this share-based version, `hospitals_count` is easier to interpret than before. A positive coefficient means that additional hospitals are associated with a larger share of the broader hospital catchment being reachable within 30 minutes, not just with higher population totals. `rural_pop_perc` and `elderly_share` should still be read more cautiously, especially because `elderly_share` depends on a derived denominator.
-
-The spatial parameters matter too. In the spatial lag model, `rho` captures the extent to which fast access in one ADM2 is associated with fast access in neighbouring ADM2 areas. In the spatial error model, `lambda` captures spatial dependence in the remaining unexplained component.
+The spatial parameters indicates that spatial dependence matters. In the spatial lag model, `rho` captures the extent to which fast access in one ADM2 is associated with fast access in neighbouring ADM2 areas. In the spatial error model, `lambda` captures spatial dependence in the remaining unexplained component. In practice, these parameters tell us whether neighbouring context continues to matter once the observed covariates are already in the model.
 
 ### Model assessment
 
-Once we fit the spatial models, we should check whether they actually improve on the baseline model. If a spatial model is worthwhile, it should usually do at least one of two things: fit the data better and leave less spatial structure in the residuals.
+Once the spatial models are fitted, we need to ask whether they improve on the baseline in a meaningful way. A spatial model should not be preferred simply because it is more specialised. Its value lies in whether it fits the data better and whether it leaves less spatial structure behind in the residuals.
 
 ```{r}
 # Generate fitted values and residuals for model comparison
 adm2_risk <- adm2_risk |>
   mutate(
+    # Store fitted values from the two spatial models
     lag_fitted = as.numeric(fitted(lag_model)),
     lag_residual = hospital_access_30min_share - lag_fitted,
     error_fitted = as.numeric(fitted(error_model)),
@@ -584,6 +738,7 @@ model_fit_compare <- tibble(
     moran.test(adm2_risk$error_residual, lw_queen, zero.policy = TRUE)$p.value
   )
 ) |>
+  # Round the comparison metrics for a compact assessment table
   mutate(
     aic = round(aic, 1),
     fit_r2 = round(fit_r2, 3),
@@ -599,12 +754,14 @@ model_fit_compare
 ```{r}
 plot_predicted_vs_observed <- adm2_risk |>
   st_drop_geometry() |>
+  # Gather observed and fitted values into one tidy comparison table
   select(
     observed = hospital_access_30min_share,
     OLS = ols_fitted,
     `Spatial lag` = lag_fitted,
     `Spatial error` = error_fitted
   ) |>
+  # Reshape to one row per model prediction so the plot can facet cleanly
   pivot_longer(
     cols = c(OLS, `Spatial lag`, `Spatial error`),
     names_to = "model",
@@ -618,8 +775,7 @@ plot_predicted_vs_observed <- adm2_risk |>
   scale_x_continuous(labels = label_percent(accuracy = 1)) +
   scale_y_continuous(labels = label_percent(accuracy = 1)) +
   labs(
-    title = "The spatial models track the observed fast-access shares more closely",
-    subtitle = "A tighter cloud around the 45-degree line suggests better in-sample fit",
+    title = "Observed and predicted access shares",
     x = "Predicted 30-minute access share",
     y = "Observed 30-minute access share"
   ) +
@@ -628,13 +784,13 @@ plot_predicted_vs_observed <- adm2_risk |>
 print(plot_predicted_vs_observed)
 ```
 
-These diagnostics make the modelling logic more concrete. `AIC` tells us whether the extra spatial structure is improving fit enough to justify the added complexity, while the `fit_r2` column gives a simple summary of how closely each model tracks the observed outcome. RMSE keeps the assessment in the outcome's own units, and residual Moran's I checks whether spatial structure is still left behind after modelling. If a spatial model is doing useful work, we would usually expect lower `AIC`, lower RMSE, a stronger fit measure, and less residual spatial autocorrelation than the plain OLS benchmark.
+These diagnostics make the modelling argument much more concrete. `AIC` tells us whether the extra spatial structure improves fit enough to justify the added complexity. `fit_r2` summarises how closely each model tracks the observed outcome. RMSE keeps the comparison in the outcome's own units, while residual Moran's I shows whether spatial structure is still left behind after modelling. If a spatial model is materially improving the analysis, we would expect lower `AIC`, lower RMSE, a stronger fit measure, and weaker residual spatial autocorrelation than the plain OLS benchmark.
 
-### Model prediction in practice
+### Model prediction
 
-Prediction does not always mean forecasting the future. In applied spatial policy work it often means using a fitted model to estimate what level of fast accessibility we would expect in each area, given its observed characteristics and its wider spatial context. That creates a practical benchmark: which places are doing better or worse than the model would lead us to expect?
+Next we use the model for prediction. We use the fitted model to estimate what level of fast accessibility we would expect in each area, given its observed characteristics and wider spatial context. That creates a practical benchmark against which observed outcomes can be judged. If an area's observed value is close to its predicted value, the model says that area is behaving broadly as expected. If an area's observed value is much lower than predicted, the area may be underperforming relative to places with similar characteristics. If an area's observed value is much higher than predicted, the area may be outperforming relative to expectation.
 
-Here we use the spatial error model as a working model because it often performs well when residual dependence remains important. We compare the model's fitted values with the observed outcome and look for large negative gaps, meaning areas whose realised fast-access share is lower than the model would predict.
+Here we use the spatial error model as a working model because it is designed precisely for cases in which residual dependence remains important. We compare the model's fitted values with the observed outcome and look for large negative gaps. These are areas whose realised fast-access share is lower than the model would predict given their observed characteristics and neighbouring context.
 
 ```{r}
 # Use the selected spatial model to identify areas that underperform relative to expectations
@@ -647,6 +803,7 @@ prediction_gap_table <- adm2_risk |>
     predicted_share = error_fitted,
     prediction_gap = observed_share - predicted_share
   ) |>
+  # Sort from the largest negative gaps upward
   arrange(prediction_gap) |>
   slice_head(n = 10) |>
   mutate(
@@ -665,20 +822,56 @@ map_prediction_gap <- ggplot(adm2_risk) +
     labels = label_percent(accuracy = 1)
   ) +
   labs(
-    title = "Prediction gaps help flag areas that over- or under-perform",
-    subtitle = "Negative values mark places with lower fast hospital access than the spatial model would expect"
+    title = "Prediction gaps"
   ) +
   theme_map_course()
 
 print(map_prediction_gap)
 ```
 
-This kind of prediction is useful because it gives policy teams a first-screening tool. Areas with large negative gaps may deserve closer investigation: perhaps road connectivity, river crossings, facility concentration in neighbouring municipalities, or institutional barriers are limiting short-travel access more than the simple covariate set suggests.
+This prediction gives policy teams a first-screening tool. Areas with large negative gaps may deserve closer investigation. Road connectivity, river crossings, facility concentration in neighbouring municipalities, or institutional barriers may be limiting short-travel access more than the simple covariate set suggests. The value of the exercise lies in identifying where further substantive inquiry is most needed rather than treating the prediction as a final judgement.
 
-### What changed, assumptions, and remaining gaps
+We can push this one step further by using the model for a simple policy counterfactual. Suppose `hospitals_count` increases by one in two different areas. Which area would gain more in predicted accessibility? Under the current spatial error model, the answer is revealing: the marginal effect of one additional hospital is the same everywhere because the coefficient on `hospitals_count` is global rather than area-specific. What differs across areas is their starting predicted level, not the size of the model-implied gain from one extra hospital. That is a useful result because it clarifies the limits of the current specification and points directly toward the motivation for Chapter 06, where effects are allowed to vary across space.
 
-This chapter now uses a share-based hospital accessibility outcome rather than the raw count in the earlier draft. That makes the chapter much better aligned with the substantive goal of teaching spatial dependence rather than simply reproducing Montevideo's population concentration. The rest of the workflow remains the same: descriptive kernel histogram, baseline OLS, spatial weights, Moran's I, spatial regression, model assessment, and practical prediction.
+```{r}
+# Illustrate a simple policy counterfactual for two contrasting observed areas
+hospital_effect <- coef(error_model)[["hospitals_count"]]
 
-The main assumption is still `elderly_share`. The source bundle provides `elderly` as a count rather than as a ready-made share, so the chapter constructs a conservative population proxy from the available count variables and makes that step explicit in both code and text.
+policy_example <- adm2_risk |>
+  st_drop_geometry() |>
+  select(ADM1_ES, ADM2_PCODE, rural_pop_perc, elderly_share, hospitals_count, predicted_share = error_fitted) |>
+  mutate(rural_rank = min_rank(rural_pop_perc)) |>
+  slice(c(which.min(rural_pop_perc), which.max(rural_pop_perc))) |>
+  mutate(
+    scenario = c("Least rural area", "Most rural area"),
+    baseline_hospitals = hospitals_count,
+    counterfactual_hospitals = hospitals_count + 1,
+    baseline_prediction = predicted_share,
+    counterfactual_prediction = predicted_share + hospital_effect,
+    predicted_gain = counterfactual_prediction - baseline_prediction
+  ) |>
+  transmute(
+    scenario,
+    ADM1_ES,
+    ADM2_PCODE,
+    baseline_hospitals,
+    counterfactual_hospitals,
+    baseline_prediction = round(baseline_prediction, 3),
+    counterfactual_prediction = round(counterfactual_prediction, 3),
+    predicted_gain = round(predicted_gain, 3)
+  )
 
-The main remaining gap is that the outcome is a relative accessibility share within the observed hospital-access system, not a full share of total population. If a cleaner total-population field becomes available later, both this chapter and `06-spatial-heterogeneity.qmd` could be updated again so the accessibility outcome and `elderly_share` are anchored to an explicit population denominator.
+policy_example
+```
+
+This illustration shows how the fitted model can be used for policy-oriented comparison, but it also highlights an important limitation. If the objective is to decide where an additional hospital would produce the largest accessibility gain, a model with one common hospital coefficient will not distinguish strongly between places. For that question, we need a framework that allows relationships to vary across space. That is precisely the motivation for the next chapter on spatial heterogeneity.
+
+## What to take away
+
+The main general take away points are:
+
+- spatial dependence starts from non-independence between nearby observations
+- the role of the spatial weights matrix in formalising neighbourhood structure
+- the purpose of Moran’s I, the Moran plot, and LISA within exploratory spatial data analysis
+- the modelling logic behind OLS, spatial lag, and spatial error models
+- the comparative strategy of using spatial models to improve fit, inference, and residual structure diagnostics

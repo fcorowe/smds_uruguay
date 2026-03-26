@@ -1,7 +1,5 @@
 # Point Patterns
 
-## Introduction and aims
-
 This chapter introduces point-pattern thinking through a Montevideo case: traffic injury records from 2022. The aim is to cover key techniques on how to visualise and analyse point patterns, such as spatial concentration and clustering. Before building formal models, we usually want to know where events are concentrated, whether that concentration is local or widespread, and how different mapping choices change what we see.
 
 By the end of this chapter, you should be able to:
